@@ -25,6 +25,31 @@ body {
   background-color: #fff;
 }
 
+/*idioma*/
+#language-selector {
+  position: relative;
+  display: inline-block;
+}
+
+#language-selector select:hover {
+  color: #0B6938;
+}
+
+#language-selector select {
+  color: #333;
+  border: none;
+  padding: 0px 10px;
+  cursor: pointer;
+}
+
+#language-selector select:focus {
+  outline: none;
+}
+
+#language-selector select option {
+  color: #333;
+}
+
 .logo {
   font-size: 1.3rem;
   font-weight: bold;

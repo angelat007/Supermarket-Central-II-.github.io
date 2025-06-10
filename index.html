@@ -17,6 +17,17 @@
     <div class="acciones">
       <a class="btn ingresar" href="#containerHelp">Ayuda</a>
       <a class="btn ingresar" href="#redes">Redes Sociales</a>
+      <a>
+        <div class="btn ingresar" id="language-selector">
+          <select id="idioma" onchange="cambiarIdioma()">
+            <option value="es">Español</option>
+            <option value="en">Inglés</option>
+            <option value="pt">Portugués</option>
+          </select>
+        </div>
+      </a>
+    </div>
+
     </div>
   </header>
 
@@ -31,7 +42,7 @@
 
       <label for="participantes">Participantes</label>
       <input type="file" id="fileInput" style="display:none;">
-      <textarea id="participantes" rows="10" placeholder=""></textarea>
+      <textarea id="participantes" rows="10"></textarea>
       <small class="error" id="errorParticipantes"></small>
 
       <input type="file" id="fileInput" accept=".txt, .csv" style="display:none;">
@@ -96,8 +107,10 @@
         <ul>
           <li><a href="https://www.instagram.com/angelpj007/" target="_blank"><img src="Media/Insta.webp" width="20px">
               Instagram</a></li>
-          <li id="numberPhone1">📞809-575-3854 <span class="copy-msg" style="display: none; color: #0B6938; margin-left: 10px;"></span></li>
-          <li id="numberPhone2">📞829-745-2433 <span class="copy-msg" style="display: none; color: #0B6938; margin-left: 10px;"></span></li>
+          <li id="numberPhone1">📞809-575-3854 <span class="copy-msg"
+              style="display: none; color: #0B6938; margin-left: 10px;"></span></li>
+          <li id="numberPhone2">📞829-745-2433 <span class="copy-msg"
+              style="display: none; color: #0B6938; margin-left: 10px;"></span></li>
           <li><a href="https://maps.app.goo.gl/syGxfdKwZaqkD4sG6" target="_blank">📍Avenida Estrella Sadhala, Santiago,
               Dominican Republic 51000</a></li>
         </ul>
