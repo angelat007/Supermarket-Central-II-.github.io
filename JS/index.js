@@ -219,4 +219,62 @@ const traducciones = {
   document.querySelectorAll("#containerHelp p")[0].innerHTML = t.parrafo1;
   document.querySelectorAll("#containerHelp p")[1].innerHTML = t.parrafo2;
   document.querySelectorAll("#containerHelp p")[2].innerHTML = t.parrafo3;
-}
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  const tituloInput = document.getElementById('titulo');
+  const participantesInput = document.getElementById('participantes');
+  const fileInput = document.getElementById('fileInput');
+
+  // Restaurar datos guardados al cargar
+  const tituloGuardado = sessionStorage.getItem('tituloSorteo');
+  const participantesGuardado = sessionStorage.getItem('participantesTexto');
+
+  if (tituloGuardado) tituloInput.value = tituloGuardado;
+  if (participantesGuardado) participantesInput.value = participantesGuardado;
+
+  // Guardar cambios al escribir
+  tituloInput.addEventListener('input', () => {
+    sessionStorage.setItem('tituloSorteo', tituloInput.value.trim());
+  });
+
+  participantesInput.addEventListener('input', () => {
+    sessionStorage.setItem('participantesTexto', participantesInput.value.trim());
+  });
+
+  // Guardar también al cargar desde archivo
+  fileInput.addEventListener('change', function () {
+    const file = this.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+      const contenido = e.target.result;
+      const lineasBrutas = contenido.split(/\r?\n/).filter(linea => linea.trim() !== '');
+
+      // Detectar separador
+      const muestras = lineasBrutas.slice(0, 3);
+      const separadores = [',', ';', '\t', /\s{2,}/];
+      const conteos = separadores.map(sep => muestras.reduce((acc, linea) => {
+        return acc + (typeof sep === 'string' ? linea.split(sep).length : linea.split(sep).length);
+      }, 0));
+      const maxIndex = conteos.indexOf(Math.max(...conteos));
+      const separador = separadores[maxIndex];
+
+      // Procesar líneas
+      const lineasFinales = lineasBrutas.map(linea => {
+        let columnas = typeof separador === 'string' ? linea.split(separador) : linea.split(separador);
+        return columnas.map(col => col.trim()).join('\t');
+      });
+
+      const participantesTexto = lineasFinales.join('\n');
+      participantesInput.value = participantesTexto;
+
+      // Guardar en sessionStorage
+      sessionStorage.setItem('participantesTexto', participantesTexto);
+    };
+
+    reader.readAsText(file);
+  });
+});
