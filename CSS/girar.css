@@ -1,0 +1,107 @@
+body {
+	font-family: Arial, sans-serif;
+	background-color: #f0f0f0;
+	font-size: 1.2em;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+.containerImg {
+	text-align: center;
+	margin: 20px 0;
+}
+
+.scroll-container {
+	width: 100%;
+	height: 250px;
+	overflow: hidden;
+	position: relative;
+	border-radius: 10px;
+	box-sizing: border-box;
+	margin: 0 auto;
+	max-width: 600px;
+}
+
+.lista-participantes {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.lista-participantes li {
+	height: 50px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 1.2em;
+	background-color: #fff;
+	border-bottom: 1px solid #ccc;
+	border-radius: 10px;
+}
+
+.highlight-overlay {
+	position: absolute;
+	top: 100px;
+	left: 0;
+	right: 0;
+	height: 50px;
+	pointer-events: none;
+}
+
+.boton-contenedor {
+	text-align: center;
+	margin-top: 20px;
+}
+
+.GirarSorteo {
+	background-color: #F6BE0D;
+	font-weight: bold;
+	color: white;
+	border: none;
+	padding: 12px 24px;
+	font-size: 1.2em;
+	border-radius: 8px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+
+.GirarSorteo:hover {
+	background-color: #e1af0a;
+}
+
+
+@keyframes aparecer {
+	from {
+		transform: translateX(-50%) translateY(20px);
+		opacity: 0;
+	}
+
+	to {
+		transform: translateX(-50%) translateY(0);
+		opacity: 1;
+	}
+}
+
+/*ganador animacion*/
+@keyframes agrandarGanador {
+	0% {
+		transform: scale(1);
+	}
+
+	50% {
+		transform: scale(1.4);
+	}
+
+	100% {
+		transform: scale(1.2);
+	}
+}
+
+.ganador-efecto {
+	animation: agrandarGanador 0.8s ease-in-out;
+	z-index: 10;
+}

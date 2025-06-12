@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="CSS/config.css">
+  <link rel="styles icon" href="Media/Log-super-plaza-venezuela_2.webp">
+  <title>Super Plaza Venezuela Sorteo</title>
+</head>
+
+<body>
+  <header class="logo-header">
+    <a href="index.html">
+      <img class="logo" src="Media/Log-wsuper-plaza-venezuela_2.webp" width="250px" alt="SUPER PLAZA VENEZUELA">
+    </a>
+  </header>
+  <section class="panel-opciones" id="panel">
+    <h2>Opciones</h2>
+
+    <hr>
+
+    <label for="tituloSorteo">Título</label>
+    <input type="text" id="tituloSorteo" placeholder="Ej. Sorteo especial" />
+
+    <div class="input-group">
+      <label for="numGanadores"># Ganadores</label>
+      <div class="number-control">
+        <input type="number" id="numGanadores" value="1" min="1">
+        <div class="arrow-buttons">
+          <button type="button" class="btn-arrow up" onclick="changeValue('numGanadores', 1)">▲</button>
+          <button type="button" class="btn-arrow down" onclick="changeValue('numGanadores', -1)">▼</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label for="numSuplentes"># Suplentes</label>
+      <div class="number-control">
+        <input type="number" id="numSuplentes" value="0" min="0">
+        <div class="arrow-buttons">
+          <button type="button" class="btn-arrow up" onclick="changeValue('numSuplentes', 1)">▲</button>
+          <button type="button" class="btn-arrow down" onclick="changeValue('numSuplentes', -1)">▼</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="toggle-container">
+      <span>Filtrar Duplicados</span>
+      <div class="switch-wrapper">
+        <label class="switch">
+          <input type="checkbox" id="filtrarDuplicados" onchange="toggleText(this)">
+          <span class="slider"></span>
+        </label>
+        <span class="toggle-text">NO</span>
+      </div>
+    </div>
+    <hr>
+
+    <label for="animacionTipo">Animación</label>
+    <select id="animacionTipo">
+      <option value="ruleta">Nombres Giratorios</option>
+      <option value="cuenta">Cuenta Regresiva</option>
+      <option value="fortuna">Ruleta de la Fortuna</option>
+    </select>
+
+    <div class="toggle-container">
+      <span>Activar Sonido</span>
+      <div class="switch-wrapper">
+        <label class="switch">
+          <input type="checkbox" id="filtrarDuplicados" onchange="toggleText(this)">
+          <span class="slider"></span>
+        </label>
+        <span class="toggle-text">NO</span>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label for="duracionAnimacion">Duración en seg.</label>
+      <div class="number-control">
+        <input type="number" id="duracionAnimacion" value="5" min="1">
+        <div class="arrow-buttons">
+          <button type="button" class="btn-arrow up" onclick="changeValue('duracionAnimacion', 1)">▲</button>
+          <button type="button" class="btn-arrow down" onclick="changeValue('duracionAnimacion', -1)">▼</button>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <label for="colorPrincipal">Color Principal</label>
+    <input type="color" id="colorPrincipal" value="#0a5c2f" />
+
+<div class="logo-upload-container">
+  <div class="logo-label">
+    <span>Logo</span>
+    <small>Tamaño recomendado (200×50px)</small>
+  </div>
+  <input type="file" id="logoInput" accept="image/*" style="display: none;" />
+  <div id="logoPreview" style="margin-top: 10px;"></div>
+  <label for="logoInput" class="upload-button">Subir</label>
+</div>
+
+
+    <button class="btn confirmar" onclick="guardarOpciones()">Confirmar</button>
+    <div id="mensajeError" style="color: red; font-weight: bold;"></div>
+  </section>
+
+  <section class="participantes-container">
+    <div class="contenedor-participantes" id="contenedorParticipantes">
+      <div class="encabezado">
+        <strong>Participantes</strong>
+        <span id="totalParticipantes">Total: 0</span>
+        <button id="shuffleBtn" class="shuffle-btn" title="Mezclar participantes"><img
+            src="https://cdn-icons-png.flaticon.com/512/724/724863.png" width="30px" alt="🔄"></button>
+      </div>
+      <ul id="listaParticipantes" class="lista-participantes"></ul>
+    </div>
+  </section>
+
+  <!--Copyright-->
+  <footer>
+    <div class="conteiner">
+      <p>&copy;Super Plaza Venezuela</p>
+    </div>
+  </footer>
+
+  <script src="JS/config.js"></script>
+
+</body>
+
+</html>

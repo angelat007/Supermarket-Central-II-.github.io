@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../CSS/giratorio.css">
+  <link rel="icon" href="../Media/Log-super-plaza-venezuela_2.webp">
+  <title>Super Plaza Venezuela Sorteo</title>
+</head>
+
+<body>
+  <div class="containerImg">
+    <a href="../config.html"><img src="../Media/Log-super-plaza-venezuela_2.webp" width="200" alt=""></a>
+  </div>
+
+  <section class="participantes-container">
+    <div class="contenedor-participantes" id="contenedorParticipantes">
+      <div class="encabezado">
+        <strong>Participantes</strong>
+        <span id="totalParticipantes">Total: 0</span>
+      </div>
+      <div class="scroll-container">
+        <ul id="listaParticipantesfinal" class="lista-participantes"></ul>
+        <div class="highlight-overlay"></div>
+      </div>
+    </div>
+    <div class="contenedorbuton">
+      <button class="btn confirmar" onclick="comenzarRulea(), guardarOpciones()">Comenzar</button>
+    </div>
+  </section><br><br>
+
+  <script src="../JS/giratorio.js"></script>
+</body>
+
+</html>
