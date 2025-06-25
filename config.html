@@ -45,6 +45,30 @@
       </div>
     </div>
 
+    <div class="divPremio">
+      <div class="premio-header">
+        <h3>Premios</h3>
+        <a href="#IrVentanaFlotante">
+          <button type="button" class="premios">Definir</button>
+        </a>
+      </div>
+
+      <ul id="premiosConfirmados" class="premio-confirmado-lista"></ul>
+
+      <!-- Ventana flotante -->
+      <form id="IrVentanaFlotante" class="modal">
+        <div class="ventana">
+          <h1>Lista de Premios</h1>
+          <p>Crea una lista de premios para cada ganador</p>
+          <input type="text" id="prmios" placeholder="Premio 1" />
+          <button class="boton-confirmar" id="btnConfirmar">Confirmar</button>
+          <button type="button" class="boton-cancelar" id="btnCancelar">Cancelar</button>
+
+        </div>
+      </form>
+    </div>
+    <!---->
+
     <div class="toggle-container">
       <span>Filtrar Duplicados</span>
       <div class="switch-wrapper">
@@ -60,8 +84,8 @@
     <label for="animacionTipo">Animación</label>
     <select id="animacionTipo">
       <option value="ruleta">Nombres Giratorios</option>
-      <option value="cuenta">Cuenta Regresiva</option>
       <option value="fortuna">Ruleta de la Fortuna</option>
+      <option value="cuenta">Cuenta Regresiva</option>
     </select>
 
     <div class="toggle-container">
@@ -91,15 +115,15 @@
     <label for="colorPrincipal">Color Principal</label>
     <input type="color" id="colorPrincipal" value="#0a5c2f" />
 
-<div class="logo-upload-container">
-  <div class="logo-label">
-    <span>Logo</span>
-    <small>Tamaño recomendado (200×50px)</small>
-  </div>
-  <input type="file" id="logoInput" accept="image/*" style="display: none;" />
-  <div id="logoPreview" style="margin-top: 10px;"></div>
-  <label for="logoInput" class="upload-button">Subir</label>
-</div>
+    <div class="logo-upload-container">
+      <div class="logo-label">
+        <span>Logo</span>
+        <small>Tamaño recomendado (200×50px)</small>
+      </div>
+      <input type="file" id="logoInput" accept="image/*" style="display: none;" />
+      <div id="logoPreview" style="margin-top: 10px;"></div>
+      <label for="logoInput" class="upload-button">Subir</label>
+    </div>
 
 
     <button class="btn confirmar" onclick="guardarOpciones()">Confirmar</button>

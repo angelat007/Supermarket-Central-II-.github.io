@@ -59,6 +59,7 @@ body {
 
 .GirarSorteo {
 	background-color: #F6BE0D;
+	box-shadow: 1px 1px 05px 0px rgb(0, 0, 0, 0.5);
 	font-weight: bold;
 	color: white;
 	border: none;
@@ -105,3 +106,5 @@ body {
 	animation: agrandarGanador 0.8s ease-in-out;
 	z-index: 10;
 }
+
+/*responsive*/

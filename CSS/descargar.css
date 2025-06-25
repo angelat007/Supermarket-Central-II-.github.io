@@ -1,0 +1,187 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.certificado {
+  width: 320px;
+  height: 570px;
+  border-radius: 10px;
+  position: relative;
+  color: white;
+  padding: 30px 20px;
+  text-align: center;
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.4)),
+    url(../Media/descargaFondo3.jpg);
+  background-size: cover;
+  background-position: center;
+}
+
+/* Texto más legible con sombra */
+.certificado h1,
+.certificado h2,
+.certificado h3,
+.certificado .ribbon,
+.certificado .footer,
+.certificado .datos-texto {
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+
+.certificado h1 {
+  font-size: 2em;
+  margin: 10px 0;
+}
+
+.certificado h4 {
+  font-size: 15px;
+}
+
+.ribbon {
+  background: white;
+  color: black;
+  font-weight: bold;
+  font-size: 1.1em;
+  padding: 15px;
+  margin: 20px 0;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.footer {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  background: white;
+  padding: 10px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  /* centra el logo horizontalmente */
+  align-items: center;
+  /* centra verticalmente */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.footer img {
+  height: 40px;
+  /* aumenta el tamaño para mejor visibilidad */
+  width: auto;
+  /* mantiene la proporción */
+}
+
+.footer div {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  border: none;
+  background: #0B6938;
+  color: white;
+  font-weight: bold;
+  border-radius: 8px;
+  box-shadow: 1px 1px 05px 0px rgb(0, 0, 0, 0.5);
+}
+
+button:hover {
+  cursor: pointer;
+  background-color: #0f8a46;
+}
+
+.botones {
+  display: flex;
+  gap: 10px;
+  /* espacio entre los botones */
+}
+
+.ribbon {
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+}
+
+/*section*/
+.detalle-sorteo {
+  margin: 80px auto;
+  max-width: 400px;
+  padding: 80px;
+  border-radius: 12px;
+  background-color: #ffffff;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.detalle-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #0B6938;
+}
+
+.info-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.1em;
+  padding: 10px 15px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  border-left: 5px solid #12aa57;
+}
+
+.label {
+  font-weight: 600;
+  color: #0B6938;
+}
+
+.value {
+  color: #333;
+}
+
+li.logo {
+  list-style: none;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Alternativa más específica si no funciona la anterior */
+.certificado li.logo {
+  list-style: none !important;
+  list-style-type: none !important;
+  margin: 0;
+  padding: 0;
+}
+
+/* Si quieres quitar los bullets de todos los li dentro del certificado */
+.certificado li {
+  list-style: none;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* O si quieres ser más general y quitar todos los bullets de cualquier lista */
+ul,
+ol {
+  list-style: none;
+  padding-left: 0;
+}
+
+ul li,
+ol li {
+  list-style: none;
+  list-style-type: none;
+}

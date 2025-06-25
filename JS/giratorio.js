@@ -52,5 +52,5 @@ function comenzarRulea() {
   localStorage.setItem("participantes", JSON.stringify(lista));
 
   // Redirigir a giratorio.html
-  window.location.href = "giratorio.html";
+  window.location.href = "opciones/giratorio.html";
 }

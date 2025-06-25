@@ -173,34 +173,141 @@
   });
 
   // Al hacer clic en "Confirmar"
-function guardarOpciones() {
-  const mensajeError = document.getElementById('mensajeError');
-  mensajeError.textContent = ''; // limpiar mensaje previo
+  function guardarOpciones() {
+    const mensajeError = document.getElementById('mensajeError');
+    const titulo = document.getElementById("tituloSorteo").value;
+    localStorage.setItem("tituloSorteo", titulo);
+    mensajeError.textContent = ''; // Limpiar mensaje previo
 
-  const animacionSeleccionada = document.getElementById('animacionTipo').value;
+    const animacionSeleccionada = document.getElementById('animacionTipo').value;
 
-  const opciones = {
-    titulo: document.getElementById('tituloSorteo').value,
-    ganadores: +document.getElementById('numGanadores').value,
-    suplentes: +document.getElementById('numSuplentes').value,
-    filtrarDuplicados: document.getElementById('filtrarDuplicados').checked,
-    excluirParticipantes: false,
-    animacion: animacionSeleccionada,
-    sonidos: false,
-    duracion: +document.getElementById('duracionAnimacion').value,
-    color: document.getElementById('colorPrincipal').value,
-  };
+    const opciones = {
+      titulo: document.getElementById('tituloSorteo').value,
+      ganadores: +document.getElementById('numGanadores').value,
+      suplentes: +document.getElementById('numSuplentes').value,
+      filtrarDuplicados: document.getElementById('filtrarDuplicados').checked,
+      excluirParticipantes: false,
+      animacion: animacionSeleccionada,
+      sonidos: false,
+      duracion: +document.getElementById('duracionAnimacion').value,
+      color: document.getElementById('colorPrincipal').value,
+    };
 
-  aplicarColorPrincipal(opciones.color);
+    aplicarColorPrincipal(opciones.color);
 
-  const listaItems = document.querySelectorAll('#listaParticipantes li');
-  const nombres = Array.from(listaItems).map(li => li.textContent.trim()).filter(n => n !== '');
-  sessionStorage.setItem('participantesFinal', JSON.stringify(nombres));
-  sessionStorage.setItem('opcionesSorteo', JSON.stringify(opciones));
+    const listaItems = document.querySelectorAll('#listaParticipantes li');
+    const nombres = Array.from(listaItems).map(li => li.textContent.trim()).filter(n => n !== '');
 
-  if (animacionSeleccionada === 'ruleta') {
-    window.location.href = 'nombresAleatorios/nombresGiratorios.html';
-  } else {
-    mensajeError.textContent = 'Error: Debes seleccionar "Nombres Giratorios" para iniciar el sorteo.';
+    if (nombres.length === 0) {
+      mensajeError.textContent = 'Error: Debes ingresar al menos un participante.';
+      return;
+    }
+
+    sessionStorage.setItem('participantesFinal', JSON.stringify(nombres));
+    sessionStorage.setItem('opcionesSorteo', JSON.stringify(opciones));
+
+    if (animacionSeleccionada === 'ruleta') {
+      window.location.href = 'nombresAleatorios/nombresGiratorios.html';
+    } else if (animacionSeleccionada === 'fortuna') {
+      window.location.href = 'nombresAleatorios/viewRuleta.html';
+    } else if (animacionSeleccionada === 'cuenta') {
+      window.location.href = 'nombresAleatorios/cuentaRegresiva.html';
+    } else {
+      mensajeError.textContent = 'Error: Debes seleccionar una animación válida.';
+    }
   }
-}
+
+  function guardarLogo() {
+    const logoInput = document.getElementById('logoInput');
+    const file = logoInput.files[0];
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        // Guardar la imagen como base64 en localStorage
+        localStorage.setItem('logoSorteo', e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  // Modificar el evento del input del logo en config.js
+  document.getElementById('logoInput').addEventListener('change', function () {
+    guardarLogo();
+    // Código existente para mostrar preview...
+  });
+
+  //funcion de premios
+  //boton cancelar
+  const modal = document.getElementById("IrVentanaFlotante");
+  const cancelarBtn = document.getElementById("btnCancelar");
+
+  cancelarBtn.addEventListener("click", () => {
+    modal.style.display = "none";
+    // Opcional: limpiar el input
+    document.getElementById("username").value = "";
+  });
+
+  // Mostrar el modal al hacer clic en "Definir"
+  document.querySelector(".premios").addEventListener("click", (e) => {
+    e.preventDefault();
+    modal.style.display = "flex";
+  });
+
+  //no scrool en la ventana
+  const definirBtn = document.querySelector(".premios");
+
+  definirBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    modal.style.display = "flex";
+    document.body.classList.add("modal-abierto");
+  });
+
+  cancelarBtn.addEventListener("click", () => {
+    modal.style.display = "none";
+    document.body.classList.remove("modal-abierto");
+    document.getElementById("username").value = "";
+  });
+
+
+  //añadir premios
+    const confirmarBtn = document.getElementById("btnConfirmar");
+    const inputPremio = document.getElementById("prmios");
+    const premiosConfirmados = document.getElementById("premiosConfirmados");
+
+    // Mostrar modal
+    definirBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      modal.style.display = "flex";
+      document.body.classList.add("modal-abierto");
+    });
+
+    // Ocultar modal
+    cancelarBtn.addEventListener("click", () => {
+      modal.style.display = "none";
+      document.body.classList.remove("modal-abierto");
+      inputPremio.value = "";
+    });
+
+    // Confirmar premio
+  confirmarBtn.addEventListener("click", () => {
+    const premioTexto = inputPremio.value.trim();
+
+    if (premioTexto !== "") {
+      const li = document.createElement("li");
+      li.textContent = premioTexto;
+      premiosConfirmados.appendChild(li);
+
+      // Mostrar la lista si estaba oculta
+      premiosConfirmados.style.display = "block";
+
+      // Limpiar input y cerrar modal
+      inputPremio.value = "";
+      modal.style.display = "none";
+      document.body.classList.remove("modal-abierto");
+    }
+  });
+
+
+  //limite de ganadores y premios
+  

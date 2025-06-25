@@ -35,7 +35,7 @@ function girarSorteo() {
 	const ganadorIndex = 50 + Math.floor(Math.random() * 10);
 	const distancia = (ganadorIndex - centerOffset) * itemHeight;
 
-	lista.style.transition = "transform 4s cubic-bezier(0.1, 0.1, 0.2, 1)";
+	lista.style.transition = "transform 4.3s cubic-bezier(0.1, 0.1, 0.2, 1)";
 	lista.style.transform = `translateY(-${distancia}px)`;
 
 	ruletaYaGiró = true;
@@ -43,6 +43,7 @@ function girarSorteo() {
 	setTimeout(() => {
 		const ganador = lista.children[ganadorIndex];
 
+		ganador.style.transition = "all 0.5s ease";
 		ganador.style.backgroundColor = "green";
 		ganador.style.color = "white";
 		ganador.style.fontWeight = "bold";
@@ -77,6 +78,6 @@ function mostrarGanador(nombre) {
 }
 
 function verGanadores() {
-	window.location.href = 'ganadores.html';
+	window.location.href = '../ganadores/ganadores.html';
 }
 

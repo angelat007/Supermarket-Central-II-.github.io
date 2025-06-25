@@ -155,6 +155,7 @@ section {
 
 .comenzar {
   background-color: #0B6938;
+  box-shadow: 1px 1px 05px 0px rgb(0, 0, 0, 0.5);
   color: white;
   font-weight: bold;
   font-size: 1rem;
@@ -166,6 +167,7 @@ section {
 .crear:hover {
   background-color: #0a5c2f;
 }
+
 .sociales:hover,
 .ingresar:hover {
   color: #0a5c2f;
@@ -301,10 +303,122 @@ textarea.error-border {
   color: #0a5c2f;
   cursor: pointer;
 }
+
 .footer-copy {
   text-align: center;
   margin-top: 20px;
   padding-top: 10px;
   font-size: 14px;
   color: #ccc;
+}
+
+/*responsive*/
+/* Responsive para tablets */
+@media (max-width: 992px) {
+  .navbar {
+    flex-direction: column;
+    height: auto;
+    gap: 1rem;
+    padding: 1rem 0.5rem;
+  }
+
+  nav a {
+    margin: 0.5rem;
+  }
+
+  .acciones {
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+  }
+
+  section {
+    width: 80%;
+    padding: 1.5rem;
+  }
+
+  .contenedor {
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+
+  .footer-contenido {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .footer-seccion {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* Responsive para celulares */
+@media (max-width: 600px) {
+  .navbar {
+    flex-direction: column;
+    height: auto;
+    gap: 1rem;
+    padding: 1rem 0.5rem;
+  }
+
+  .logo {
+    font-size: 1.1rem;
+    text-align: center;
+  }
+
+  nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  nav a {
+    margin: 0.5rem 0;
+  }
+
+  .acciones {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  section {
+    width: 90%;
+    padding: 1rem;
+  }
+
+  .contenedor {
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  h2 {
+    font-size: 1.2rem;
+  }
+
+  .formulario input,
+  .formulario textarea {
+    font-size: 0.95rem;
+  }
+
+  .btn {
+    font-size: 0.95rem;
+    padding: 0.6rem 1rem;
+  }
+
+  .footer-seccion h3,
+  .footer-seccion h4 {
+    font-size: 1rem;
+  }
+
+  .footer-copy {
+    font-size: 12px;
+  }
 }

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../CSS/descargar.css">
+    <link rel="styles icon" href="../../Media/Log-super-plaza-venezuela_2.webp">
+    <title>Super Plaza Venezuela Sorteo - Download</title>
+</head>
+
+<body>
+    <div id="certificado" class="certificado">
+        <li class="logo"></li>
+        <h4 class="titulo"></h4>
+        <h1>Ganador</h1>
+        <div class="ribbon" id="datosGanador"></div>
+        <div class="footer">
+            <img src="../../Media/Log-super-plaza-venezuela_2.webp" width="50px" alt="Logo">
+        </div>
+    </div>
+
+    <div class="botones">
+        <button onclick="descargarPNG()">Descargar PNG</button>
+        <button onclick="descargarPDF()">Descargar PDF</button>
+        <button onclick="document.getElementById('fondoInput').click()">Cambiar fondo</button>
+        <input type="file" id="fondoInput" accept="image/*" style="display: none;" />
+    </div>
+
+    <section class="detalle-sorteo">
+        <div class="detalle-container">
+            <h2>Detalles del Sorteo</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="label">📅 Fecha del sorteo:</span>
+                    <span class="value Fecha">--/--/----</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">👥 Participantes:</span>
+                    <span class="value numParticipantes">0</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">🏆 Ganador:</span>
+                    <span class="value nombreGanador">---</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script src="../../JS/descargar.js"></script>
+</body>
+
+</html>
