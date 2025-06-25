@@ -1,5 +1,9 @@
+html {
+  overflow-x: hidden; /* Solo oculta el scroll horizontal */
+}	
+
 body {
-	font-family: Arial, sans-serif;
+	font-family: "Century Gothic Family", sans-serif;
 	background-color: #f0f0f0;
 	font-size: 1.2em;
 }
@@ -13,6 +17,11 @@ body {
 .containerImg {
 	text-align: center;
 	margin: 20px 0;
+	transition: transform 0.3s ease;
+}
+
+.containerImg:hover {
+	transform: scale(1.03);
 }
 
 .scroll-container {
@@ -58,7 +67,7 @@ body {
 }
 
 .GirarSorteo {
-	background-color: #F6BE0D;
+	background-color: #F7BE00;
 	box-shadow: 1px 1px 05px 0px rgb(0, 0, 0, 0.5);
 	font-weight: bold;
 	color: white;
@@ -66,12 +75,12 @@ body {
 	padding: 12px 24px;
 	font-size: 1.2em;
 	border-radius: 8px;
-	cursor: pointer;
 	transition: background-color 0.3s ease;
 }
 
 .GirarSorteo:hover {
-	background-color: #e1af0a;
+	cursor: pointer;
+	background-color: #dfab00;
 }
 
 

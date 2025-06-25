@@ -9,7 +9,7 @@ html {
 }
 
 body {
-  font-family: "Segoe UI", sans-serif;
+  font-family: "Century Gothic Family", sans-serif;
   background: linear-gradient(to bottom, #ffffff, #f8f8fc);
   color: #1f1f1f;
 }
@@ -53,6 +53,11 @@ body {
 .logo {
   font-size: 1.3rem;
   font-weight: bold;
+  transition: transform 0.3s ease;
+}
+
+.logo:hover {
+  transform: scale(1.03);
 }
 
 nav a {

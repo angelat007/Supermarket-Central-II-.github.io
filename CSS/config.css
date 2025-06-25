@@ -1,5 +1,5 @@
 body {
-  font-family: Arial, sans-serif;
+  font-family: "Century Gothic Family", sans-serif;
   background-color: #f0f0f0;
   font-size: 1.2em;
 }
@@ -7,21 +7,23 @@ body {
 /*linea de separacion*/
 hr {
   border: 0;
-  border-top: 1px solid #108545;
-  /* Línea delgada y gris */
-  height: 0;
-  /* Para que la línea sea horizontal */
-  margin: 20px 0;
-  /* Espacio superior e inferior */
+  border-top: 1px solid #006938; /* Línea delgada y gris */
+  height: 0; /* Para que la línea sea horizontal */
+  margin: 20px 0; /* Espacio superior e inferior */
 }
 
 .logo-header {
   text-align: center;
   margin: 0;
+  transition: transform 0.3s ease;
+}
+
+.logo-header:hover {
+  transform: scale(1.03);
 }
 
 .panel-opciones {
-  background: linear-gradient(to left, #108545, #0a5c2f);
+  background: linear-gradient(to left,#009e54, #00944f, #006938);
   color: #fff;
   padding: 2.5rem;
   border-radius: 10px;
@@ -56,6 +58,12 @@ cursor: context-menu;
   font-size: 1.2em;
   margin-bottom: 1rem;
 }
+
+.btn-arrow.down,
+.btn-arrow.up {
+ /* Cambia el color del texto si lo necesitas */
+}
+
 
 #animacionTipo {
   height: 40px;
@@ -96,7 +104,6 @@ cursor: context-menu;
 .logo-label {
   display: flex;
   flex-direction: column;
-
 }
 
 
@@ -125,7 +132,7 @@ cursor: context-menu;
 }
 
 .btn.confirmar {
-  background-color: #F6BE0D;
+  background-color: #F7BE00;
   box-shadow: 1px 1px 05px 0px rgb(0, 0, 0, 0.5);
   color: #fff;
   font-size: 1.2rem;
@@ -140,7 +147,7 @@ cursor: context-menu;
 }
 
 .btn.confirmar:hover {
-  background-color: #d1a30b;
+  background-color: #dba801;
 }
 
 #numGanadores,
@@ -240,7 +247,7 @@ cursor: context-menu;
 }
 
 input:checked+.slider {
-  background-color: #F6BE0D;
+  background-color: #F7BE00;
 }
 
 input:checked+.slider::before {
@@ -419,7 +426,7 @@ body.modal-abierto {
 .boton-confirmar {
   display: inline-block;
   padding: 10px 20px;
-  background-color: #0a5c2f;
+  background-color: #006938;
   border: none;
   width: 190px;
   color: white;
@@ -432,7 +439,7 @@ body.modal-abierto {
 .boton-cancelar {
   display: inline-block;
   padding: 10px 20px;
-  background-color: #0a5c2f;
+  background-color: #006938;
   border: none;
   width: 190px;
   color: white;
@@ -444,7 +451,7 @@ body.modal-abierto {
 
 .boton-confirmar:hover,
 .boton-cancelar:hover {
-  background-color: #108545;
+  background-color: #008f4c;
   cursor: pointer;
 }
 
@@ -499,7 +506,7 @@ body.modal-abierto {
 }
 
 .encabezado {
-  background: linear-gradient(45deg, #0a5c2f, #108545);
+  background: linear-gradient(45deg, #006938, #009851, #01b661);
   color: white;
   padding: 12px;
   display: flex;
