@@ -7,10 +7,12 @@ body {
 /*linea de separacion*/
 hr {
   border: 0;
-  border-top: 1px solid #006938; /* Línea delgada y gris */
-  height: 0; /* Para que la línea sea horizontal */
-  margin: 20px 0; /* Espacio superior e inferior */
+  height: 4px; /* altura visible */
+  background: linear-gradient(to right, #006938, #006938, #018447);
+  margin: 20px 0;
+  border-radius: 2px; /* opcional: para esquinas redondeadas */
 }
+
 
 .logo-header {
   text-align: center;
@@ -23,7 +25,7 @@ hr {
 }
 
 .panel-opciones {
-  background: linear-gradient(to left,#009e54, #00944f, #006938);
+  background: linear-gradient( to left,#006938, #006938, #018447);
   color: #fff;
   padding: 2.5rem;
   border-radius: 10px;
@@ -58,12 +60,6 @@ cursor: context-menu;
   font-size: 1.2em;
   margin-bottom: 1rem;
 }
-
-.btn-arrow.down,
-.btn-arrow.up {
- /* Cambia el color del texto si lo necesitas */
-}
-
 
 #animacionTipo {
   height: 40px;
@@ -371,7 +367,6 @@ input:checked+.slider::before {
   transform: scale(1.03);
 }
 
-
 /*ventana flotante*/
 /* Modal básico */
 body.modal-abierto {
@@ -506,7 +501,7 @@ body.modal-abierto {
 }
 
 .encabezado {
-  background: linear-gradient(45deg, #006938, #009851, #01b661);
+  background: linear-gradient( to left,#006938, #006938, #018447);
   color: white;
   padding: 12px;
   display: flex;

@@ -237,77 +237,54 @@
     // Código existente para mostrar preview...
   });
 
-  //funcion de premios
-  //boton cancelar
-  const modal = document.getElementById("IrVentanaFlotante");
-  const cancelarBtn = document.getElementById("btnCancelar");
+  //FUNCION DEFINIR PREMIO PARA EL GANADOR
+ const definirBtn = document.querySelector(".premios");
+const modal = document.getElementById("IrVentanaFlotante");
+const cancelarBtn = document.getElementById("btnCancelar");
+const confirmarBtn = document.getElementById("btnConfirmar");
+const inputsPremios = document.getElementById("inputsPremios");
+const premiosConfirmados = document.getElementById("premiosConfirmados");
 
-  cancelarBtn.addEventListener("click", () => {
-    modal.style.display = "none";
-    // Opcional: limpiar el input
-    document.getElementById("username").value = "";
-  });
+definirBtn.addEventListener("click", e => {
+  e.preventDefault();
+  modal.style.display = "flex";
+  document.body.classList.add("modal-abierto");
 
-  // Mostrar el modal al hacer clic en "Definir"
-  document.querySelector(".premios").addEventListener("click", (e) => {
-    e.preventDefault();
-    modal.style.display = "flex";
-  });
+  // Limpiar inputs previos
+  inputsPremios.innerHTML = "";
 
-  //no scrool en la ventana
-  const definirBtn = document.querySelector(".premios");
+  // Obtener cantidad de ganadores
+  const cantidad = parseInt(document.getElementById("numGanadores").value);
+  for (let i = 1; i <= cantidad; i++) {
+    const input = document.createElement("input");
+    input.type = "text";
+    input.placeholder = `Premio ${i}`;
+    input.className = "premio-input";
+    inputsPremios.appendChild(input);
+  }
+});
 
-  definirBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    modal.style.display = "flex";
-    document.body.classList.add("modal-abierto");
-  });
+cancelarBtn.addEventListener("click", () => {
+  modal.style.display = "none";
+  document.body.classList.remove("modal-abierto");
+});
 
-  cancelarBtn.addEventListener("click", () => {
-    modal.style.display = "none";
-    document.body.classList.remove("modal-abierto");
-    document.getElementById("username").value = "";
-  });
+confirmarBtn.addEventListener("click", e => {
+  e.preventDefault();
+  premiosConfirmados.innerHTML = "";
 
-
-  //añadir premios
-    const confirmarBtn = document.getElementById("btnConfirmar");
-    const inputPremio = document.getElementById("prmios");
-    const premiosConfirmados = document.getElementById("premiosConfirmados");
-
-    // Mostrar modal
-    definirBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      modal.style.display = "flex";
-      document.body.classList.add("modal-abierto");
-    });
-
-    // Ocultar modal
-    cancelarBtn.addEventListener("click", () => {
-      modal.style.display = "none";
-      document.body.classList.remove("modal-abierto");
-      inputPremio.value = "";
-    });
-
-    // Confirmar premio
-  confirmarBtn.addEventListener("click", () => {
-    const premioTexto = inputPremio.value.trim();
-
-    if (premioTexto !== "") {
+  const inputs = document.querySelectorAll(".premio-input");
+  inputs.forEach(input => {
+    const valor = input.value.trim();
+    if (valor) {
       const li = document.createElement("li");
-      li.textContent = premioTexto;
+      li.textContent = valor;
       premiosConfirmados.appendChild(li);
-
-      // Mostrar la lista si estaba oculta
-      premiosConfirmados.style.display = "block";
-
-      // Limpiar input y cerrar modal
-      inputPremio.value = "";
-      modal.style.display = "none";
-      document.body.classList.remove("modal-abierto");
     }
   });
 
+  if (inputs.length > 0) premiosConfirmados.style.display = "block";
 
-  //limite de ganadores y premios
-  
+  modal.style.display = "none";
+  document.body.classList.remove("modal-abierto");
+});
