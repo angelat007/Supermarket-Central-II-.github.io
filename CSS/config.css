@@ -7,12 +7,13 @@ body {
 /*linea de separacion*/
 hr {
   border: 0;
-  height: 4px; /* altura visible */
+  height: 4px;
+  /* altura visible */
   background: linear-gradient(to right, #006938, #006938, #018447);
   margin: 20px 0;
-  border-radius: 2px; /* opcional: para esquinas redondeadas */
+  border-radius: 2px;
+  /* opcional: para esquinas redondeadas */
 }
-
 
 .logo-header {
   text-align: center;
@@ -25,7 +26,7 @@ hr {
 }
 
 .panel-opciones {
-  background: linear-gradient( to left,#006938, #006938, #018447);
+  background: linear-gradient(to left, #006938, #006938, #018447);
   color: #fff;
   padding: 2.5rem;
   border-radius: 10px;
@@ -38,7 +39,7 @@ hr {
 .panel-opciones span,
 .panel-opciones small,
 .participantes-container {
-cursor: context-menu;
+  cursor: context-menu;
 }
 
 .panel-opciones h2 {
@@ -101,7 +102,6 @@ cursor: context-menu;
   display: flex;
   flex-direction: column;
 }
-
 
 .logo-label span {
   font-weight: bold;
@@ -367,10 +367,15 @@ input:checked+.slider::before {
   transform: scale(1.03);
 }
 
-/*ventana flotante*/
-/* Modal básico */
+/*ventana flotante - SOLUCION SIMPLE*/
 body.modal-abierto {
   overflow: hidden;
+}
+
+.ventana::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
 }
 
 .modal {
@@ -384,6 +389,9 @@ body.modal-abierto {
   justify-content: center;
   align-items: center;
   z-index: 9999;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow-y: auto;
 }
 
 .ventana {
@@ -392,10 +400,13 @@ body.modal-abierto {
   padding: 30px 40px;
   border-radius: 10px;
   text-align: center;
-  max-width: 400px;
+  max-width: 500px;
   width: 90%;
+  max-height: 80vh;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
   animation: fadeIn 0.3s ease-in-out;
+  overflow-y: auto;
+  margin: auto;
 }
 
 .ventana h1 {
@@ -411,43 +422,61 @@ body.modal-abierto {
 .ventana input {
   background-color: #f4f4f4;
   padding: 10px;
-  width: 350px;
+  width: 100%;
   border: none;
   border-radius: 8px;
   font-size: 15px;
   margin-bottom: 20px;
+  box-sizing: border-box;
 }
 
-.boton-confirmar {
-  display: inline-block;
-  padding: 10px 20px;
-  background-color: #006938;
-  border: none;
-  width: 190px;
-  color: white;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: bold;
-  transition: background-color 0.3s;
+/* Lista de premios dentro del modal */
+.ventana ul,
+.ventana ol {
+  max-height: 250px;
+  overflow-y: auto;
+  margin: 15px 0;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+  text-align: left;
 }
 
+.ventana li {
+  padding: 8px 0;
+  border-bottom: 1px solid #e0e0e0;
+  cursor: pointer;
+}
+
+.ventana li:hover {
+  background-color: #f0f0f0;
+  padding-left: 5px;
+  transition: all 0.2s;
+}
+
+.ventana li:last-child {
+  border-bottom: none;
+}
+
+.boton-confirmar,
 .boton-cancelar {
   display: inline-block;
   padding: 10px 20px;
   background-color: #006938;
   border: none;
-  width: 190px;
+  width: 45%;
+  margin: 5px;
   color: white;
   border-radius: 8px;
   text-decoration: none;
   font-weight: bold;
+  cursor: pointer;
   transition: background-color 0.3s;
 }
 
 .boton-confirmar:hover,
 .boton-cancelar:hover {
   background-color: #008f4c;
-  cursor: pointer;
 }
 
 /* Animación */
@@ -463,24 +492,62 @@ body.modal-abierto {
   }
 }
 
+/* Scrollbar personalizada */
+.ventana::-webkit-scrollbar,
+.ventana ul::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ventana::-webkit-scrollbar-track,
+.ventana ul::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.ventana::-webkit-scrollbar-thumb,
+.ventana ul::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.ventana::-webkit-scrollbar-thumb:hover,
+.ventana ul::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
 
 /*anadidos*/
+.premio-confirmado-lista::-webkit-scrollbar {
+  display: none;
+}
+
 .premio-confirmado-lista {
   display: none;
   margin-top: 10px;
-  padding-left: 10px;
+  padding: 10px;
   border-radius: 5px;
-  height: 30px;
   list-style-type: none;
-  text-decoration: none;
-  background-color: #ffffff;
-  color: rgb(157, 157, 157);
+  max-height: 200px;
+  overflow-y: auto;
 }
 
 .premio-confirmado-lista li {
-  padding: 5px 10px;
+  padding: 8px 12px;
+  margin-bottom: 5px;
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  color: #4f4f4f;
+  font-weight: normal;
+  transition: background-color 0.2s ease;
 }
 
+.premio-confirmado-lista li:hover {
+  background-color: #e9ecef;
+}
+
+.premio-confirmado-lista li:last-child {
+  margin-bottom: 0;
+}
 
 /*participantes*/
 .participantes {
@@ -501,7 +568,7 @@ body.modal-abierto {
 }
 
 .encabezado {
-  background: linear-gradient( to left,#006938, #006938, #018447);
+  background: linear-gradient(to left, #006938, #006938, #018447);
   color: white;
   padding: 12px;
   display: flex;
@@ -543,7 +610,6 @@ body.modal-abierto {
 }
 
 /*©*/
-
 footer {
   background-color: rgb(238, 238, 238);
 }
@@ -608,6 +674,19 @@ footer .conteiner {
   footer .conteiner {
     height: auto;
     padding: 20px;
+  }
+
+  /* Modal responsive para tablets */
+  .ventana {
+    max-width: 95%;
+    padding: 25px;
+    max-height: 85vh;
+  }
+
+  .boton-confirmar,
+  .boton-cancelar {
+    width: 40%;
+    padding: 12px 15px;
   }
 }
 
@@ -688,5 +767,38 @@ footer .conteiner {
   footer p {
     text-align: center;
     font-size: 14px;
+  }
+
+  /* Modal responsive para móviles */
+  .modal {
+    padding: 10px;
+  }
+
+  .ventana {
+    max-width: 95%;
+    padding: 20px;
+    max-height: 90vh;
+  }
+
+  .ventana h1 {
+    font-size: 22px;
+  }
+
+  .ventana input {
+    font-size: 16px;
+    /* Evita zoom en iOS */
+  }
+
+  .ventana ul,
+  .ventana ol {
+    max-height: 180px;
+  }
+
+  .boton-confirmar,
+  .boton-cancelar {
+    width: 45%;
+    padding: 12px 10px;
+    font-size: 14px;
+    margin: 3px;
   }
 }
