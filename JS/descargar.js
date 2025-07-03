@@ -1,5 +1,7 @@
+// Cargar datos del ganador desde localStorage
 const datos = JSON.parse(localStorage.getItem("ganador"));
 if (datos) {
+  // Mostrar el código y el nombre completo en el certificado
   document.getElementById("datosGanador").innerText = `${datos.codigo} ${datos.nombre}`;
 }
 
@@ -207,7 +209,7 @@ function mostrarPreview() {
   });
 }
 
-//funcion informacion
+// Función para cargar información del sorteo
 document.addEventListener("DOMContentLoaded", () => {
   const titulo = localStorage.getItem("tituloSorteo") || "Título no definido";
   document.querySelector(".titulo").textContent = titulo;
@@ -219,9 +221,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const codigo = ganadorData.codigo?.split("\t")[0] || "Código no disponible";
   const nombreCompleto = ganadorData.nombre || "Nombre no disponible";
 
+  // Actualizar elementos de la página
   document.querySelector(".Fecha").textContent = fechaSorteo;
   document.querySelector(".numParticipantes").textContent = participantes.length;
   document.querySelector(".nombreGanador").textContent = `${nombreCompleto} (Código: ${codigo})`;
+  
+  // CAMBIO PRINCIPAL: Mostrar código y nombre completo en el certificado
   document.getElementById("datosGanador").textContent = `${codigo} ${nombreCompleto}`;
 });
 
@@ -230,7 +235,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // cargarLogo(); // Descomenta si tienes esta función
 });
 
-//cambiar fondo de certificado
+// Cambiar fondo de certificado
 document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('fondoInput').addEventListener('change', function (e) {
       const archivo = e.target.files[0];
@@ -253,7 +258,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
-//cambiar idiomas
+// Cambiar idiomas
 const traducciones = {
   es: {
     titulo: "Super Plaza Venezuela Sorteo - Descarga",
@@ -372,6 +377,7 @@ function obtenerDatosURL() {
   const titulo = urlParams.get('titulo');
 
   if (ganador) {
+    // Mostrar el código y nombre completo en el certificado
     document.getElementById('datosGanador').textContent = ganador;
     document.querySelector('.nombreGanador').textContent = ganador;
   }

@@ -2,37 +2,35 @@ const lista = document.getElementById("listaGanadores");
 const ganadores = JSON.parse(localStorage.getItem("ganadores")) || [];
 
 if (ganadores.length === 0) {
-	lista.innerHTML = "<li>No hay ganadores aún.</li>";
+  lista.innerHTML = "<li>No hay ganadores aún.</li>";
 } else {
-	const ultimoGanador = ganadores[ganadores.length - 1];
-	const li = document.createElement("li");
-	li.textContent = ultimoGanador;
-	lista.appendChild(li);
+  const ultimoGanador = ganadores[ganadores.length - 1];
+  const li = document.createElement("li");
+  li.textContent = ultimoGanador;
+  lista.appendChild(li);
 }
 
-//funcion ir a descarga
-  function irADescarga() {
+// Función mejorada para ir a descarga
+function irADescarga() {
     const primerGanador = document.querySelector("#listaGanadores li");
     if (!primerGanador) {
-      alert("No hay ganadores en la lista.");
-      return;
+        alert("No hay ganadores en la lista.");
+        return;
     }
 
-    const texto = primerGanador.textContent.trim();
-    const [codigo, ...nombreArray] = texto.split(" ");
-    const nombre = nombreArray.join(" ");
+    const textoCompleto = primerGanador.innerText.trim();
+    const partes = textoCompleto.split("\n").filter(p => p.trim() !== "");
 
-    const datos = {
-      codigo: codigo,
-      nombre: nombre
-    };
+    const codigo = partes[0] || " ";
+    const nombre = partes.length >= 2 ? partes[1] : " ";
 
+    const datos = { codigo, nombre };
     localStorage.setItem("ganador", JSON.stringify(datos));
+
     window.location.href = "descargar.html";
-  }
+}
 
-
-//animacion confeti de fondo 
+// Animación confeti de fondo 
 const confettiCanvas = document.getElementById('confetti-canvas');
 const myConfetti = confetti.create(confettiCanvas, { resize: true, useWorker: true });
 

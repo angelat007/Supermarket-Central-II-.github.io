@@ -1,137 +1,138 @@
-<!DOCTYPE html>
-<html lang="es">
+  <!DOCTYPE html>
+  <html lang="es">
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="CSS/style.css" />
-  <link rel="styles icon" href="Media/Medio-logo.png" />
-  <title>Super Plaza Venezuela Sorteo</title>
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="CSS/style.css" />
+    <link rel="styles icon" href="Media/Medio-logo.png" />
+    <title>Super Plaza Venezuela Sorteo</title>
+  </head>
 
-<body>
-  <header class="navbar">
-    <a href="index.html">
-      <img class="logo" src="Media/Log-super-plaza-venezuela_2.webp" width="200px" alt="SUPER PLAZA VENEZUELA">
-    </a>
-    <div class="acciones">
-      <a class="btn ingresar" href="#containerHelp">Ayuda</a>
-      <a class="btn ingresar" href="#redes">Redes Sociales</a>
-      <a>
-        <div class="btn ingresar" id="language-selector">
-          <select id="idioma" onchange="cambiarIdioma()">
-            <option value="es">Español</option>
-            <option value="en">Inglés</option>
-            <op tion value="pt">Portugués</option>
-          </select>
-        </div>
+  <body>
+    <header class="navbar">
+      <a href="index.html">
+        <img class="logo" src="Media/Log-super-plaza-venezuela_2.webp" width="200px" alt="SUPER PLAZA VENEZUELA">
       </a>
-    </div>
-
-    </div>
-  </header>
-
-  <main class="contenedor">
-    <h1>Sorteo por <strong>Nombres al Azar</strong></h1>
-    <p>Escoge un ganador al azar de una <strong>lista de nombres</strong> con nuestra App</p>
-
-    <form class="formulario">
-      <label for="titulo">Título</label>
-      <input type="text" id="titulo" placeholder="Titulo del sorteo" />
-      <small class="error" id="errorTitulo"></small>
-
-      <label for="participantes">Participantes</label>
-      <input type="file" id="fileInput" style="display:none;">
-      <textarea id="participantes" rows="10"></textarea>
-      <small class="error" id="errorParticipantes"></small>
-
-      <input type="file" id="fileInput" accept=".txt, .csv" style="display:none;">
-      <button type="button" id="importarBtn" class="importar" onclick="importarArchivo()">Importar archivo</button>
-      <button type="button" id="limpiarBtn" class="limpiar" onclick="limpiarParticipantes()">Limpiar todo</button>
-    </form><br>
-
-    <button class="btn comenzar" id="comenzarBtn" onclick="comenzarSorteo()">Comenzar</button>
-  </main><br><br><br><br>
-
-  <hr class="hr2"><br><br><br><br>
-
-  <section id="containerHelp">
-    <div>
-      <h1>¿Cómo funciona la herramienta Sorteo por <strong>Nombres al Azar?</strong></h1><br>
-      <div class="text-p">
-        <p>Sorteo de Nombres al Azar es una herramienta online y gratuita que te permite <strong>seleccionar
-            ganadores aleatorios a partir de una lista de participantes</strong>, nombres, objetos, ciudades o
-          cualquier otro elemento que elijas.</p>
-
-        <p>Ingresa la lista de nombres/participantes y presiona el boton "Comenzar". Podrás <strong>aplicar
-            filtros y seleccionar la cantidad de ganadores</strong> que desees.
-          ¡Incluso puedes escoger múltiples ganadores en un solo sorteo!</p>
-
-        <p>Al finalizar, se generará una <strong>imagen o documento con un certificado</strong>
-          que muestra los resultados del sorteo.</p>
+      <div class="acciones">
+        <a class="btn ingresar" href="#containerHelp">Ayuda</a>
+        <a class="btn ingresar" href="#redes">Redes Sociales</a>
+        <button class="btn tema" id="darkModeToggle">🌙</button>
+        <a>
+          <div class="btn ingresar" id="language-selector">
+            <select id="idioma" onchange="cambiarIdioma()">
+              <option value="es">Español</option>
+              <option value="en">Inglés</option>
+              <op tion value="pt">Portugués</option>
+            </select>
+          </div>
+        </a>
       </div>
-  </section><br><br><br><br><br>
 
-  <hr class="hr2">
-
-  <section id="redes">
-    <h2>Redes Sociales</h2>
-    <div class="container">
-      <a class="insta" href="https://www.instagram.com/superplazavenezuela/" target="_blank"><img src="Media/Insta.webp"
-          width="120px" alt="Instagram"></a><br><br><br><br>
-      <a class="face" href="https://www.facebook.com/superplazavenezuela" target="_blank"><img src="Media/Facebook.webp"
-          width="170px" alt="Facebook"></a>
-    </div>
-  </section>
-
-  <!--pie de pagina-->
-  <div class="decorating-svg">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-      <path fill="#f4f4f4" fill-opacity="1"
-        d="M0,256L17.1,224C34.3,192,69,128,103,117.3C137.1,107,171,149,206,181.3C240,213,274,235,309,208C342.9,181,377,107,411,106.7C445.7,107,480,181,514,197.3C548.6,213,583,171,617,165.3C651.4,160,686,192,720,197.3C754.3,203,789,181,823,186.7C857.1,192,891,224,926,197.3C960,171,994,85,1029,48C1062.9,11,1097,21,1131,53.3C1165.7,85,1200,139,1234,138.7C1268.6,139,1303,85,1337,64C1371.4,43,1406,53,1423,58.7L1440,64L1440,320L1422.9,320C1405.7,320,1371,320,1337,320C1302.9,320,1269,320,1234,320C1200,320,1166,320,1131,320C1097.1,320,1063,320,1029,320C994.3,320,960,320,926,320C891.4,320,857,320,823,320C788.6,320,754,320,720,320C685.7,320,651,320,617,320C582.9,320,549,320,514,320C480,320,446,320,411,320C377.1,320,343,320,309,320C274.3,320,240,320,206,320C171.4,320,137,320,103,320C68.6,320,34,320,17,320L0,320Z">
-      </path>
-    </svg>
-  </div>
-  <footer class="footer">
-    <div class="footer-contenido">  
-      <div class="footer-seccion">
-        <h3>Super Plaza Venezuela</h3>
-        <p>
-          ¡Bendecidos Para Bendecir! <br>
-          Abiertos 24 horas para servirles siempre <br>
-          Tu supermercado de confianza <br>
-          Frescura, calidad y los mejores precios</p>
       </div>
-      <div class="footer-seccion">
-        <h4>Redes Sociales</h4>
-        <ul>
-          <li><a href="https://www.instagram.com/angelpj007/" target="_blank"><img src="Media/Insta.webp" width="20px">
-              Instagram</a></li>
-          <li id="numberPhone1">📞809-575-3854 <span class="copy-msg"
-              style="display: none; color: #0B6938; margin-left: 10px;"></span></li>
-          <li id="numberPhone2">📞829-745-2433 <span class="copy-msg"
-              style="display: none; color: #0B6938; margin-left: 10px;"></span></li>
-          <li><a href="https://maps.app.goo.gl/syGxfdKwZaqkD4sG6" target="_blank">📍Avenida Estrella Sadhala, Santiago,
-              Dominican Republic 51000</a></li>
-        </ul>
+    </header>
+
+    <main class="contenedor">
+      <h1>Sorteo por <strong>Nombres al Azar</strong></h1>
+      <p>Escoge un ganador al azar de una <strong>lista de nombres</strong> con nuestra App</p>
+
+      <form class="formulario">
+        <label for="titulo">Título</label>
+        <input type="text" id="titulo" placeholder="Titulo del sorteo" />
+        <small class="error" id="errorTitulo"></small>
+
+        <label for="participantes">Participantes</label>
+        <input type="file" id="fileInput" style="display:none;">
+        <textarea id="participantes" rows="10"></textarea>
+        <small class="error" id="errorParticipantes"></small>
+
+        <input type="file" id="fileInput" accept=".txt, .csv" style="display:none;">
+        <button type="button" id="importarBtn" class="importar" onclick="importarArchivo()">Importar archivo</button>
+        <button type="button" id="limpiarBtn" class="limpiar" onclick="limpiarParticipantes()">Limpiar todo</button>
+      </form><br>
+
+      <button class="btn comenzar" id="comenzarBtn" onclick="comenzarSorteo()">Comenzar</button>
+    </main><br><br><br><br>
+
+    <hr class="hr2"><br><br><br><br>
+
+    <section id="containerHelp">
+      <div>
+        <h1>¿Cómo funciona la herramienta Sorteo por <strong>Nombres al Azar?</strong></h1><br>
+        <div class="text-p">
+          <p>Sorteo de Nombres al Azar es una herramienta online y gratuita que te permite <strong>seleccionar
+              ganadores aleatorios a partir de una lista de participantes</strong>, nombres, objetos, ciudades o
+            cualquier otro elemento que elijas.</p>
+
+          <p>Ingresa la lista de nombres/participantes y presiona el boton "Comenzar". Podrás <strong>aplicar
+              filtros y seleccionar la cantidad de ganadores</strong> que desees.
+            ¡Incluso puedes escoger múltiples ganadores en un solo sorteo!</p>
+
+          <p>Al finalizar, se generará una <strong>imagen o documento con un certificado</strong>
+            que muestra los resultados del sorteo.</p>
+        </div>
+    </section><br><br><br><br><br>
+
+    <hr class="hr2">
+
+    <section id="redes">
+      <h2>Redes Sociales</h2>
+      <div class="container">
+        <a class="insta" href="https://www.instagram.com/superplazavenezuela/" target="_blank"><img src="Media/Insta.webp"
+            width="120px" alt="Instagram"></a><br><br><br><br>
+        <a class="face" href="https://www.facebook.com/superplazavenezuela" target="_blank"><img src="Media/Facebook.webp"
+            width="170px" alt="Facebook"></a>
       </div>
-      <div class="footer-seccion">
-        <h4>Horario</h4>
-        <ul>
-          <li>Lunes a Lunes: 24H</li>
-          <li><strong>Abiertos 24 horas para servirles siempre.</strong></li>
-        </ul>
+    </section>
+
+    <!--pie de pagina-->
+    <div class="decorating-svg">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+        <path fill="#f4f4f4" fill-opacity="1"
+          d="M0,256L17.1,224C34.3,192,69,128,103,117.3C137.1,107,171,149,206,181.3C240,213,274,235,309,208C342.9,181,377,107,411,106.7C445.7,107,480,181,514,197.3C548.6,213,583,171,617,165.3C651.4,160,686,192,720,197.3C754.3,203,789,181,823,186.7C857.1,192,891,224,926,197.3C960,171,994,85,1029,48C1062.9,11,1097,21,1131,53.3C1165.7,85,1200,139,1234,138.7C1268.6,139,1303,85,1337,64C1371.4,43,1406,53,1423,58.7L1440,64L1440,320L1422.9,320C1405.7,320,1371,320,1337,320C1302.9,320,1269,320,1234,320C1200,320,1166,320,1131,320C1097.1,320,1063,320,1029,320C994.3,320,960,320,926,320C891.4,320,857,320,823,320C788.6,320,754,320,720,320C685.7,320,651,320,617,320C582.9,320,549,320,514,320C480,320,446,320,411,320C377.1,320,343,320,309,320C274.3,320,240,320,206,320C171.4,320,137,320,103,320C68.6,320,34,320,17,320L0,320Z">
+        </path>
+      </svg>
+    </div>
+    <footer class="footer">
+      <div class="footer-contenido">  
+        <div class="footer-seccion">
+          <h3>Super Plaza Venezuela</h3>
+          <p>
+            ¡Bendecidos Para Bendecir! <br>
+            Abiertos 24 horas para servirles siempre <br>
+            Tu supermercado de confianza <br>
+            Frescura, calidad y los mejores precios</p>
+        </div>
+        <div class="footer-seccion">
+          <h4>Redes Sociales</h4>
+          <ul>
+            <li><a href="https://www.instagram.com/angelpj007/" target="_blank"><img src="Media/Insta.webp" width="20px">
+                Instagram</a></li>
+            <li id="numberPhone1">📞809-575-3854 <span class="copy-msg"
+                style="display: none; color: #0B6938; margin-left: 10px;"></span></li>
+            <li id="numberPhone2">📞829-745-2433 <span class="copy-msg"
+                style="display: none; color: #0B6938; margin-left: 10px;"></span></li>
+            <li><a href="https://maps.app.goo.gl/syGxfdKwZaqkD4sG6" target="_blank">📍Avenida Estrella Sadhala, Santiago,
+                Dominican Republic 51000</a></li>
+          </ul>
+        </div>
+        <div class="footer-seccion">
+          <h4>Horario</h4>
+          <ul>
+            <li>Lunes a Lunes: 24H</li>
+            <li><strong>Abiertos 24 horas para servirles siempre.</strong></li>
+          </ul>
+        </div>
       </div>
-    </div>
-    <div class="footer-copy">
-      <p>&copy; Super Plaza Venezuela. Todos los derechos reservados.</p>
-    </div>
-  </footer>
-  <script src="https://unpkg.com/mammoth/mammoth.browser.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+      <div class="footer-copy">
+        <p>&copy; Super Plaza Venezuela. Todos los derechos reservados.</p>
+      </div>
+    </footer>
+    <script src="https://unpkg.com/mammoth/mammoth.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
-  <script src="JS/index.js"></script>
+    <script src="JS/index.js"></script>
 
-</body>
+  </body>
 
-</html>
+  </html>

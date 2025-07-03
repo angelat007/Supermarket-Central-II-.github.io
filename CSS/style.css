@@ -258,7 +258,6 @@ textarea.error-border {
   display: none;
 }
 
-
 /*seccion de pie de pagina*/
 .footer {
   background-color: #f4f4f4;
@@ -315,6 +314,59 @@ textarea.error-border {
   padding-top: 10px;
   font-size: 14px;
   color: #ccc;
+}
+
+/*tema oscuro*/
+/* Tema oscuro */
+body.oscuro {
+  background: #121212;
+  color: #ffffff;
+}
+
+body.oscuro .navbar,
+body.oscuro .footer,
+body.oscuro .footer-copy {
+  background-color: #1e1e1e;
+  color: #f0f0f0;
+}
+
+body.oscuro .formulario input,
+body.oscuro .formulario textarea {
+  background-color: #2c2c2c;
+  color: #ffffff;
+  border-color: #444;
+}
+
+body.oscuro .btn,
+body.oscuro .btn.ingresar {
+  background-color: #333;
+  color: #fff;
+}
+
+body.oscuro .comenzar {
+  background-color: #0a5c2f;
+  color: #fff;
+}
+
+body.oscuro .comenzar:hover,
+body.oscuro .crear:hover {
+  background-color: #094b26;
+}
+
+body.oscuro a {
+  color: #90caf9;
+}
+
+body.oscuro .hr2 {
+  background: #444;
+}
+
+#darkModeToggle {
+  background-color: transparent;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  margin-left: 10px;
 }
 
 /*responsive*/

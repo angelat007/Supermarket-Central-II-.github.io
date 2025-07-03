@@ -278,3 +278,22 @@ document.addEventListener('DOMContentLoaded', () => {
     reader.readAsText(file);
   });
 });
+
+//tema oscuro
+document.addEventListener('DOMContentLoaded', () => {
+  const toggle = document.getElementById('darkModeToggle');
+  const body = document.body;
+
+  // Aplicar modo guardado previamente
+  if (localStorage.getItem('modo') === 'oscuro') {
+    body.classList.add('oscuro');
+    toggle.textContent = '☀️';
+  }
+
+  toggle.addEventListener('click', () => {
+    body.classList.toggle('oscuro');
+    const oscuroActivo = body.classList.contains('oscuro');
+    localStorage.setItem('modo', oscuroActivo ? 'oscuro' : 'claro');
+    toggle.textContent = oscuroActivo ? '☀️' : '🌙';
+  });
+});
