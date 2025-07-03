@@ -283,17 +283,28 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('DOMContentLoaded', () => {
   const toggle = document.getElementById('darkModeToggle');
   const body = document.body;
+  const logo = document.getElementById('logoPrincipal');
 
-  // Aplicar modo guardado previamente
-  if (localStorage.getItem('modo') === 'oscuro') {
-    body.classList.add('oscuro');
-    toggle.textContent = '☀️';
+  function aplicarModoOscuro(activar) {
+    if (activar) {
+      body.classList.add('oscuro');
+      logo.src = 'Media/Logo-blanco.png'; // logo oscuro
+      toggle.textContent = '☀️';
+    } else {
+      body.classList.remove('oscuro');
+      logo.src = 'Media/Log-super-plaza-venezuela_2.webp'; // logo claro
+      toggle.textContent = '🌙';
+    }
   }
 
+  // Cargar modo anterior
+  const modoGuardado = localStorage.getItem('modo');
+  aplicarModoOscuro(modoGuardado === 'oscuro');
+
+  // Cambiar al hacer clic
   toggle.addEventListener('click', () => {
-    body.classList.toggle('oscuro');
-    const oscuroActivo = body.classList.contains('oscuro');
-    localStorage.setItem('modo', oscuroActivo ? 'oscuro' : 'claro');
-    toggle.textContent = oscuroActivo ? '☀️' : '🌙';
+    const activarOscuro = !body.classList.contains('oscuro');
+    aplicarModoOscuro(activarOscuro);
+    localStorage.setItem('modo', activarOscuro ? 'oscuro' : 'claro');
   });
 });

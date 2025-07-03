@@ -1,5 +1,6 @@
 html {
   scroll-behavior: smooth;
+  scrollbar-width: none;
 }
 
 * {
@@ -9,6 +10,7 @@ html {
 }
 
 body {
+  padding-top: 90px; /* espacio para la navbar fija */
   font-family: "Century Gothic Family", sans-serif;
   background: linear-gradient(to bottom, #ffffff, #f8f8fc);
   color: #1f1f1f;
@@ -16,20 +18,28 @@ body {
 
 /*barra de navegacion*/
 .navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000; /* para que esté por encima */
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
   height: 80px;
   border-bottom: 1px solid #eee;
-  background-color: #fff;
+  background-color: #f8f8f8;
+  box-shadow: 1px 1px 05px 0px rgb(0, 0, 0, 0.5);
+  border: none;
 }
+
 
 /*idioma*/
 #language-selector {
   position: relative;
   display: inline-block;
-}
+} 
 
 #language-selector select:hover {
   color: #0B6938;
@@ -323,6 +333,10 @@ body.oscuro {
   color: #ffffff;
 }
 
+.containerHelp .text-p p {
+  color: #b4b4b4;
+}
+
 body.oscuro .navbar,
 body.oscuro .footer,
 body.oscuro .footer-copy {
@@ -337,14 +351,33 @@ body.oscuro .formulario textarea {
   border-color: #444;
 }
 
+body.oscuro #language-selector select {
+  background-color: #2c2c2c00;
+  color: #ffffff;
+}
+
+body.oscuro #language-selector select option {
+  background-color: #2c2c2c;
+  color: #ffffff;
+  border-radius: 5px;
+}
+
+body.oscuro #language-selector select:hover {
+  color: #F6BE0D;
+}
+
+
 body.oscuro .btn,
 body.oscuro .btn.ingresar {
-  background-color: #333;
   color: #fff;
 }
 
+body.oscuro .btn:hover,
+body.oscuro .btn.ingresar:hover {
+  color: #F6BE0D;
+}
+
 body.oscuro .comenzar {
-  background-color: #0a5c2f;
   color: #fff;
 }
 
@@ -366,7 +399,66 @@ body.oscuro .hr2 {
   border: none;
   font-size: 1.2rem;
   cursor: pointer;
-  margin-left: 10px;
+  color: #333;
+  display: flex;
+  align-items: center;
+  padding: 0.4rem 0.6rem;
+  border-radius: 5px;
+}
+
+#darkModeToggle:hover {
+  color: #0a5c2f;
+}
+
+/* Oscuro */
+body.oscuro #darkModeToggle {
+  color: #fff;
+}
+
+body.oscuro #darkModeToggle:hover {
+  color: #F6BE0D;
+}
+
+
+body.contenedor #comenzarBtn {
+  background-color: #F6BE0D;
+}
+
+body.contenedor #comenzarBtn:hover {
+  background-color: #e6a800;
+}
+body.contenedor #importarBtn:hover,
+body.contenedor #limpiarBtn:hover {
+  color: #F6BE0D;
+}
+
+body.footer-contenido h3,
+body.footer-contenido h4,
+body.footer-contenido a,
+body.footer-contenido ul li a {
+  color: white;
+}
+
+body.footer-contenido p {
+  color: #b4b4b4;
+}
+
+body.footer-copy p {
+  color: #b4b4b4;
+}
+
+body.footer-contenido ul li a:hover {
+  color: #F6BE0D;
+}
+
+body#numberPhone1:hover,
+body#numberPhone2:hover {
+  color: #F6BE0D;
+}
+
+body.footer-contenido strong:hover,
+body.footer-seccion ul li:hover {
+  color: #F6BE0D;
 }
 
 /*responsive*/

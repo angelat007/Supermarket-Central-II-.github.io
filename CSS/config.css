@@ -1,3 +1,7 @@
+html {
+  scrollbar-width: none;
+}
+
 body {
   font-family: "Century Gothic Family", sans-serif;
   background-color: #f0f0f0;
