@@ -288,7 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function aplicarModoOscuro(activar) {
     if (activar) {
       body.classList.add('oscuro');
-      logo.src = 'Media/Logo-blanco.png'; // logo oscuro
+      logo.src = 'Media/Logo-blanco.webp'; // logo oscuro
       toggle.textContent = '☀️';
     } else {
       body.classList.remove('oscuro');
