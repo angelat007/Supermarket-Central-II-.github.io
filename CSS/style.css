@@ -132,6 +132,7 @@ p {
 .formulario textarea {
   width: 100%;
   padding: 0.75rem;
+  scrollbar-width: none;
   border: 1px solid #ccc;
   border-radius: 6px;
   font-size: 1rem;
@@ -418,7 +419,6 @@ body.oscuro #darkModeToggle {
 body.oscuro #darkModeToggle:hover {
   color: #F6BE0D;
 }
-
 
 body.contenedor #comenzarBtn {
   background-color: #F6BE0D;
