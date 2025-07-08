@@ -24,7 +24,6 @@ window.addEventListener("DOMContentLoaded", () => {
 function girarSorteo() {
 	if (ruletaYaGiró) return;
 
-	// Ocultar el botón Girar inmediatamente
 	document.getElementById("Girar").style.display = "none";
 
 	const totalItems = lista.children.length;
@@ -42,20 +41,18 @@ function girarSorteo() {
 
 	setTimeout(() => {
 		const ganador = lista.children[ganadorIndex];
-
 		ganador.style.transition = "all 0.5s ease";
 		ganador.style.backgroundColor = "green";
 		ganador.style.color = "white";
 		ganador.style.fontWeight = "bold";
-		// Mostrar overlay y guardar ganador
+
+		// Mostrar y guardar nombre + premio
 		mostrarGanador(ganador.textContent);
 
-		// Mostrar botón de Ver Ganadores
 		document.getElementById("verGanadores").style.display = "inline-block";
 
-	}, 4000); // después de que termine la animación
+	}, 4000);
 }
-
 
 function mostrarGanador(nombre) {
 	const existing = document.getElementById("ganadorOverlay");
@@ -65,19 +62,28 @@ function mostrarGanador(nombre) {
 	overlay.id = "ganadorOverlay";
 	overlay.className = "ganador-overlay";
 
+	// Obtener premios
+	const premios = JSON.parse(localStorage.getItem("premios")) || [];
+	let premioAsignado = premios.shift() || "Sin premio";
+
+	// Guardar nuevo array de premios (actualizado sin el primero)
+	localStorage.setItem("premios", JSON.stringify(premios));
+
+	// Mostrar en overlay
+	overlay.innerHTML = `
+		<h2>🎉 Ganador:</h2>
+		<p><strong>${nombre}</strong></p>
+		<h3>🎁 Premio:</h3>
+		<p><strong>${premioAsignado}</strong></p>
+	`;
 	document.body.appendChild(overlay);
 
 	// Guardar en localStorage
 	let ganadores = JSON.parse(localStorage.getItem("ganadores")) || [];
-	ganadores.push(nombre);
+	ganadores.push({ nombre, premio: premioAsignado });
 	localStorage.setItem("ganadores", JSON.stringify(ganadores));
-
-	// Mostrar botón de Ver Ganadores
-	document.getElementById("Girar").style.display = "none";
-	document.getElementById("verGanadores").style.display = "inline-block";
 }
 
 function verGanadores() {
 	window.location.href = '../ganadores/ganadores.html';
 }
-
