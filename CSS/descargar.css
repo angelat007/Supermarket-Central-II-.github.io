@@ -165,15 +165,33 @@ nav a:hover {
 }
 
 .ribbon {
+  display: flex;
+  flex-direction: column; /* Asegura orden vertical */
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-align: center;
   background: white;
   color: black;
-  font-weight: bold;
-  font-size: 1.1em;
   padding: 15px;
-  margin: 20px 0;
+  margin: 20px auto;
   border-radius: 8px;
+  max-width: 250px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+}
+
+.ribbon .codigo {
+  font-size: 1em;
+  font-weight: 600;
+  word-break: break-word;
+  color: #000;
+}
+
+.ribbon .nombre {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #000;
 }
 
 .footer {

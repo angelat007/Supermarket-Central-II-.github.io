@@ -2,7 +2,18 @@
 const datos = JSON.parse(localStorage.getItem("ganador"));
 if (datos) {
   // Mostrar el código y el nombre completo en el certificado
-  document.getElementById("datosGanador").innerText = `${datos.codigo} ${datos.nombre}`;
+const datos = JSON.parse(localStorage.getItem("ganador")) || {};
+const contenedor = document.getElementById("datosGanador");
+
+if (datos.codigo && datos.nombre) {
+  contenedor.innerHTML = `
+    <div class="codigo">${datos.codigo}</div>
+    <div class="nombre">${datos.nombre}</div>
+  `;
+} else {
+  contenedor.textContent = "No hay datos del ganador.";
+}
+
 }
 
 function descargarPNG() {
@@ -298,25 +309,6 @@ const traducciones = {
     alertaDescargaPNG: "Error downloading image. Please try again.",
     alertaDescargaPDF: "Error downloading PDF. Please try again."
   },
-  pt: {
-    titulo: "Super Plaza Venezuela Sorteio - Download",
-    ayuda: "Ajuda",
-    redes: "Redes Sociais",
-    ganador: "Vencedor",
-    descargarPNG: "Baixar PNG",
-    descargarPDF: "Baixar PDF",
-    cambiarFondo: "Mudar fundo",
-    detallesSorteo: "Detalhes do Sorteio",
-    fechaSorteo: "📅 Data do sorteio:",
-    participantes: "👥 Participantes:",
-    ganadorLabel: "🏆 Vencedor:",
-    fechaDefault: "--/--/----",
-    participantesDefault: "0",
-    ganadorDefault: "---",
-    alertaDescarga: "Erro no download. Tente novamente.",
-    alertaDescargaPNG: "Erro ao baixar imagem. Tente novamente.",
-    alertaDescargaPDF: "Erro ao baixar PDF. Tente novamente."
-  }
 };
 
 function cambiarIdioma() {
