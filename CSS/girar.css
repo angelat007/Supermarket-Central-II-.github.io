@@ -1,6 +1,7 @@
 html {
-  overflow-x: hidden; /* Solo oculta el scroll horizontal */
-}	
+	overflow-x: hidden;
+	/* Solo oculta el scroll horizontal */
+}
 
 body {
 	font-family: "Century Gothic Family", sans-serif;
@@ -68,7 +69,7 @@ body {
 
 .GirarSorteo {
 	background-color: #F7BE00;
-	box-shadow: 1px 1px 05px 0px rgb(0, 0, 0, 0.5);
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 	font-weight: bold;
 	color: white;
 	border: none;
@@ -81,6 +82,45 @@ body {
 .GirarSorteo:hover {
 	cursor: pointer;
 	background-color: #dfab00;
+}
+
+/*ganadores*/
+.ganadores-container .winner {
+	text-align: center;
+	color: #006938;
+	margin-bottom: 15px;
+}
+
+.ganadores-container .prize {
+	text-align: center;
+	color: #F7BE00;
+	margin-bottom: 15px;
+}
+
+/*se centra cuando no esta el premio definido*/
+#ganadoresFlexWrapper {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  align-items: flex-start;
+  margin-top: 20px;
+  flex-wrap: wrap;
+  text-align: center;
+}
+
+#containerWinner {
+  max-width: 300px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#lista-ganadores {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
 }
 
 

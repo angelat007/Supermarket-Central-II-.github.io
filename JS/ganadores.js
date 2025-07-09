@@ -1,12 +1,16 @@
 const lista = document.getElementById("listaGanadores");
-const ganadores = JSON.parse(localStorage.getItem("ganadores")) || [];
+const ultimo = JSON.parse(localStorage.getItem("ultimoGanador"));
 
-if (ganadores.length === 0) {
-  lista.innerHTML = "<li>No hay ganadores aún.</li>";
+if (!ultimo || !ultimo.nombre || !ultimo.premio) {
+  lista.innerHTML = "<li>No hay ganador del sorteo actual.</li>";
 } else {
-  const ultimoGanador = ganadores[ganadores.length - 1];
   const li = document.createElement("li");
-  li.textContent = ultimoGanador;
+  li.innerHTML = `
+    <div class="ganador-contenedor">
+    <div class="nombre-codigo">${ultimo.nombre}</div>
+    ${ultimo.premio && ultimo.premio !== "Sin premio" ? `<div class="premio">${ultimo.premio}</div>` : ""}
+    </div>
+  `;
   lista.appendChild(li);
 }
 
