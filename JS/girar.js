@@ -142,9 +142,9 @@ function mostrarGanador(nombre) {
 	const listaGanadores = document.getElementById("lista-ganadores");
 	const listaPremios = document.getElementById("lista-premios");
 
-	// LIMPIAR las listas antes de agregar el nuevo ganador
-	listaGanadores.innerHTML = "";
-	listaPremios.innerHTML = "";
+	// Ya NO limpiamos las listas, así se agregan en orden
+	// listaGanadores.innerHTML = "";
+	// listaPremios.innerHTML = "";
 
 	// Agregar el ganador a la lista
 	const liGanador = document.createElement("li");

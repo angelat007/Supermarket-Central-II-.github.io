@@ -268,6 +268,7 @@ button:hover {
 .info-item {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   font-size: 1.1em;
   padding: 10px 15px;
   background: #f9f9f9;
@@ -275,13 +276,19 @@ button:hover {
   border-left: 5px solid #12aa57;
 }
 
+
+
 .label {
   font-weight: 600;
   color: #0B6938;
+  min-width: 130px; /* Ajusta según necesidad */
 }
+
 
 .value {
   color: #333;
+  flex: 1;
+  text-align: right;
 }
 
 /* Lista sin bullets */

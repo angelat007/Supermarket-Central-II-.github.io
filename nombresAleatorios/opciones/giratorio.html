@@ -11,7 +11,7 @@
 <body>
   <div class="containerImg">
     <a href="../../config.html">
-      <img src="../../Media/Log-super-plaza-venezuela_2.webp" width="200"/>
+      <img src="../../Media/Log-super-plaza-venezuela_2.webp" width="200" />
     </a></a>
   </div>
 
@@ -19,26 +19,28 @@
     <ul id="ruletaLista" class="lista-participantes"></ul>
     <div class="highlight-overlay"></div>
   </div>
-  
-<div class="boton-contenedor">
-  <button id="Girar" class="GirarSorteo" onclick="girarSorteo()">Girar!</button>
-  <button id="proximoBtn" class="GirarSorteo" style="display: none;" onclick="proximoParticipante()">Próximo participante</button>
-  <button id="verGanadores" class="GirarSorteo" style="display: none;" onclick="verGanadores()">Ver ganadores</button>
-</div>
+
+  <div class="boton-contenedor">
+    <button id="Girar" class="GirarSorteo" onclick="girarSorteo()">Girar!</button>
+    <button id="proximoBtn" class="GirarSorteo" style="display: none;" onclick="proximoParticipante()">Próximo
+      participante</button>
+    <button id="verGanadores" class="GirarSorteo" style="display: none;" onclick="verGanadores()">Ver ganadores</button>
+  </div>
 
 
   <div class="ganadores-container" id="ganadoresContainer" style="display: none;">
-    <div class="ganadoresFlexWrapper" style="display: flex; gap: 20px; justify-content: center; align-items: flex-start; margin-top: 20px;">
-      <div id="containerWinner" style="flex: 1; max-width: 300px;">
+    <div class="ganadoresFlexWrapper" id="ganadoresFlexWrapper">
+      <div id="containerWinner" class="contenedor-columna">
         <h2 class="winner">Ganadores</h2>
-        <ul id="lista-ganadores" style="padding: 0; margin: 0;"></ul>
+        <ul id="lista-ganadores" class="lista-columnas"></ul>
       </div>
-      <div id="containerPremio" style="flex: 1; max-width: 300px;">
+      <div id="containerPremio" class="contenedor-columna">
         <h2 class="prize">Premios</h2>
-        <ul id="lista-premios" style="padding: 0; margin: 0;"></ul>
+        <ul id="lista-premios" class="lista-columnas"></ul>
       </div>
     </div>
   </div>
+
   <script src="../../JS/girar.js"></script>
 </body>
 

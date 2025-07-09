@@ -1,40 +1,44 @@
 const lista = document.getElementById("listaGanadores");
-const ultimo = JSON.parse(localStorage.getItem("ultimoGanador"));
+const ganadores = JSON.parse(localStorage.getItem("ganadores")) || [];
 
-if (!ultimo || !ultimo.nombre || !ultimo.premio) {
-  lista.innerHTML = "<li>No hay ganador del sorteo actual.</li>";
+if (ganadores.length === 0) {
+  lista.innerHTML = "<li>No hay ganadores registrados.</li>";
 } else {
-  const li = document.createElement("li");
-  li.innerHTML = `
-    <div class="ganador-contenedor">
-    <div class="nombre-codigo">${ultimo.nombre}</div>
-    ${ultimo.premio && ultimo.premio !== "Sin premio" ? `<div class="premio">${ultimo.premio}</div>` : ""}
-    </div>
-  `;
-  lista.appendChild(li);
+  ganadores.forEach((g, i) => {
+    const li = document.createElement("li");
+    li.innerHTML = `
+      <div class="ganador-contenedor">
+        <div class="nombre-codigo">${i + 1}. ${g.nombre}</div>
+        ${g.premio && g.premio !== "Sin premio" ? `<div class="premio">${g.premio}</div>` : ""}
+      </div>
+    `;
+    lista.appendChild(li);
+  });
 }
 
-// Función mejorada para ir a descarga
+// Botón guardar descarga con el último ganador
 function irADescarga() {
-    const primerGanador = document.querySelector("#listaGanadores li");
-    if (!primerGanador) {
-        alert("No hay ganadores en la lista.");
-        return;
-    }
+  const ultimoGanador = ganadores[ganadores.length - 1];
+  if (!ultimoGanador) {
+    alert("No hay ganadores en la lista.");
+    return;
+  }
 
-    const textoCompleto = primerGanador.innerText.trim();
-    const partes = textoCompleto.split("\n").filter(p => p.trim() !== "");
+  const partesNombre = ultimoGanador.nombre.trim().split(" ");
+  const codigo = partesNombre[0] || "Código no disponible";
+  const nombre = partesNombre.slice(1).join(" ") || "Nombre no disponible";
 
-    const codigo = partes[0] || " ";
-    const nombre = partes.length >= 2 ? partes[1] : " ";
+  const datos = {
+    codigo: codigo,
+    nombre: nombre
+  };
 
-    const datos = { codigo, nombre };
-    localStorage.setItem("ganador", JSON.stringify(datos));
-
-    window.location.href = "descargar.html";
+  localStorage.setItem("ganador", JSON.stringify(datos));
+  localStorage.setItem("ultimoGanador", JSON.stringify(ultimoGanador));
+  window.location.href = "descargar.html";
 }
 
-// Animación confeti de fondo 
+// Confeti de fondo
 const confettiCanvas = document.getElementById('confetti-canvas');
 const myConfetti = confetti.create(confettiCanvas, { resize: true, useWorker: true });
 

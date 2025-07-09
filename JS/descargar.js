@@ -1,19 +1,89 @@
-// Cargar datos del ganador desde localStorage
-const datos = JSON.parse(localStorage.getItem("ganador"));
-if (datos) {
-  // Mostrar el código y el nombre completo en el certificado
-const datos = JSON.parse(localStorage.getItem("ganador")) || {};
-const contenedor = document.getElementById("datosGanador");
+// Función para mostrar datos del ganador en el certificado
+function mostrarDatosGanador() {
+  const ganadorData = JSON.parse(localStorage.getItem("ganador") || "{}");
+  const ultimoGanador = JSON.parse(localStorage.getItem("ultimoGanador") || "{}");
+  const contenedor = document.getElementById("datosGanador");
 
-if (datos.codigo && datos.nombre) {
-  contenedor.innerHTML = `
-    <div class="codigo">${datos.codigo}</div>
-    <div class="nombre">${datos.nombre}</div>
-  `;
-} else {
-  contenedor.textContent = "No hay datos del ganador.";
+  if (ganadorData.codigo && ganadorData.nombre) {
+    const codigo = ganadorData.codigo;
+    const nombre = ganadorData.nombre;
+    const premio = ultimoGanador.premio || "";
+
+    // Crear el HTML con las clases del CSS existente
+    let contenidoHTML = `
+      <div class="codigo">${codigo}</div>
+      <div class="nombre">${nombre}</div>
+    `;
+
+    // Solo agregar el premio si existe y no es "Sin premio"
+    if (premio && premio !== "Sin premio" && premio.trim() !== "") {
+      contenidoHTML += `<div class="premio">${premio}</div>`;
+    }
+
+    contenedor.innerHTML = contenidoHTML;
+  } else {
+    contenedor.textContent = "No hay datos del ganador.";
+  }
 }
 
+// Función para cargar información del sorteo
+function cargarInformacionSorteo() {
+  const titulo = localStorage.getItem("tituloSorteo") || "Título no definido";
+  document.querySelector(".titulo").textContent = titulo;
+
+  const fechaSorteo = localStorage.getItem("fechaSorteo") || new Date().toLocaleDateString();
+  const participantes = JSON.parse(localStorage.getItem("participantes") || "[]");
+  const ganadorData = JSON.parse(localStorage.getItem("ganador") || "{}");
+  const ultimoGanador = JSON.parse(localStorage.getItem("ultimoGanador") || "{}");
+
+  const codigo = ganadorData.codigo || "Código no disponible";
+  const nombreCompleto = ganadorData.nombre || "Nombre no disponible";
+  const premio = ultimoGanador.premio || "---";
+
+  // Actualizar elementos de la página
+  document.querySelector(".Fecha").textContent = fechaSorteo;
+  document.querySelector(".numParticipantes").textContent = participantes.length;
+  document.querySelector(".nombreGanador").textContent = nombreCompleto;
+  document.querySelector(".premio").textContent = premio;
+}
+
+
+// Función para obtener datos del URL (si vienen de otra página)
+function obtenerDatosURL() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const ganador = urlParams.get('ganador');
+  const fecha = urlParams.get('fecha');
+  const participantes = urlParams.get('participantes');
+  const titulo = urlParams.get('titulo');
+  const premio = urlParams.get('premio');
+
+  if (ganador) {
+    // Dividir el ganador en código y nombre
+    const partes = ganador.split(' ');
+    const codigo = partes[0] || ganador;
+    const nombre = partes.slice(1).join(' ') || 'Nombre no disponible';
+    
+    // Guardar en localStorage
+    localStorage.setItem("ganador", JSON.stringify({codigo, nombre}));
+    
+    if (premio) {
+      localStorage.setItem("ultimoGanador", JSON.stringify({premio}));
+    }
+    
+    document.querySelector('.nombreGanador').textContent = `${nombre} (Código: ${codigo})`;
+  }
+  
+  if (fecha) {
+    document.querySelector('.Fecha').textContent = fecha;
+  }
+  
+  if (participantes) {
+    document.querySelector('.numParticipantes').textContent = participantes;
+  }
+  
+  if (titulo) {
+    document.querySelector('.titulo').textContent = titulo;
+  }
 }
 
 function descargarPNG() {
@@ -104,150 +174,8 @@ function descargarPDF() {
   });
 }
 
-// Función alternativa que crea una copia temporal sin bordes redondeados
-function descargarPNGAlternativo() {
-  const elementoOriginal = document.getElementById("certificado");
-  
-  // Crear una copia temporal del elemento
-  const elementoCopia = elementoOriginal.cloneNode(true);
-  elementoCopia.style.borderRadius = '0px';
-  elementoCopia.style.position = 'absolute';
-  elementoCopia.style.left = '-9999px';
-  elementoCopia.style.top = '0px';
-  elementoCopia.id = 'certificado-temp';
-  
-  // Agregar la copia al documento temporalmente
-  document.body.appendChild(elementoCopia);
-  
-  html2canvas(elementoCopia, {
-    scale: 3,
-    useCORS: true,
-    allowTaint: false,
-    backgroundColor: null,
-    width: elementoCopia.offsetWidth,
-    height: elementoCopia.offsetHeight
-  }).then(canvas => {
-    // Remover la copia temporal
-    document.body.removeChild(elementoCopia);
-    
-    const link = document.createElement('a');
-    link.download = 'certificado_sin_bordes.png';
-    link.href = canvas.toDataURL('image/png', 1.0);
-    link.click();
-  }).catch(error => {
-    // Remover la copia temporal en caso de error
-    if (document.getElementById('certificado-temp')) {
-      document.body.removeChild(elementoCopia);
-    }
-    console.error('Error al generar PNG:', error);
-    alert('Error al descargar la imagen. Inténtalo de nuevo.');
-  });
-}
-
-// Función adicional para descargar en formato SVG (si es posible)
-function descargarSVG() {
-  const elemento = document.getElementById("certificado");
-  
-  // Crear un SVG del elemento
-  const serializer = new XMLSerializer();
-  const svgData = serializer.serializeToString(elemento);
-  
-  const blob = new Blob([svgData], { type: 'image/svg+xml' });
-  const url = URL.createObjectURL(blob);
-  
-  const link = document.createElement('a');
-  link.download = 'certificado.svg';
-  link.href = url;
-  link.click();
-  
-  URL.revokeObjectURL(url);
-}
-
-// Función para mostrar un preview antes de descargar
-function mostrarPreview() {
-  const elemento = document.getElementById("certificado");
-  
-  html2canvas(elemento, {
-    scale: 2,
-    useCORS: true,
-    allowTaint: false,
-    backgroundColor: null
-  }).then(canvas => {
-    // Crear ventana modal con el preview
-    const modal = document.createElement('div');
-    modal.style.cssText = `
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.8);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 10000;
-    `;
-    
-    const img = document.createElement('img');
-    img.src = canvas.toDataURL();
-    img.style.cssText = `
-      max-width: 90%;
-      max-height: 90%;
-      border-radius: 8px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-    `;
-    
-    const closeBtn = document.createElement('button');
-    closeBtn.textContent = '✕';
-    closeBtn.style.cssText = `
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: white;
-      border: none;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      cursor: pointer;
-      font-size: 18px;
-    `;
-    
-    closeBtn.onclick = () => document.body.removeChild(modal);
-    
-    modal.appendChild(img);
-    modal.appendChild(closeBtn);
-    document.body.appendChild(modal);
-  });
-}
-
-// Función para cargar información del sorteo
-document.addEventListener("DOMContentLoaded", () => {
-  const titulo = localStorage.getItem("tituloSorteo") || "Título no definido";
-  document.querySelector(".titulo").textContent = titulo;
-
-  const fechaSorteo = localStorage.getItem("fechaSorteo") || new Date().toLocaleDateString();
-  const participantes = JSON.parse(localStorage.getItem("participantes") || "[]");
-  const ganadorData = JSON.parse(localStorage.getItem("ganador") || "{}");
-
-  const codigo = ganadorData.codigo?.split("\t")[0] || "Código no disponible";
-  const nombreCompleto = ganadorData.nombre || "Nombre no disponible";
-
-  // Actualizar elementos de la página
-  document.querySelector(".Fecha").textContent = fechaSorteo;
-  document.querySelector(".numParticipantes").textContent = participantes.length;
-  document.querySelector(".nombreGanador").textContent = `${nombreCompleto} (Código: ${codigo})`;
-  
-  // CAMBIO PRINCIPAL: Mostrar código y nombre completo en el certificado
-  document.getElementById("datosGanador").textContent = `${codigo} ${nombreCompleto}`;
-});
-
-// Llamar la función cuando se carga la página de descarga
-document.addEventListener('DOMContentLoaded', function() {
-    // cargarLogo(); // Descomenta si tienes esta función
-});
-
 // Cambiar fondo de certificado
-document.addEventListener('DOMContentLoaded', function() {
+function configurarCambioFondo() {
   document.getElementById('fondoInput').addEventListener('change', function (e) {
       const archivo = e.target.files[0];
       if (!archivo) return;
@@ -267,7 +195,7 @@ document.addEventListener('DOMContentLoaded', function() {
       };
       reader.readAsDataURL(archivo);
   });
-});
+}
 
 // Cambiar idiomas
 const traducciones = {
@@ -352,40 +280,19 @@ function cambiarIdioma() {
 }
 
 // Cargar idioma guardado al iniciar la página
-document.addEventListener('DOMContentLoaded', function() {
+function cargarIdiomaGuardado() {
   const idiomaGuardado = localStorage.getItem('idiomaSeleccionado');
   if (idiomaGuardado) {
     document.getElementById('idioma').value = idiomaGuardado;
     cambiarIdioma();
   }
-});
-
-// Función para obtener datos del URL (si vienen de otra página)
-function obtenerDatosURL() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const ganador = urlParams.get('ganador');
-  const fecha = urlParams.get('fecha');
-  const participantes = urlParams.get('participantes');
-  const titulo = urlParams.get('titulo');
-
-  if (ganador) {
-    // Mostrar el código y nombre completo en el certificado
-    document.getElementById('datosGanador').textContent = ganador;
-    document.querySelector('.nombreGanador').textContent = ganador;
-  }
-  
-  if (fecha) {
-    document.querySelector('.Fecha').textContent = fecha;
-  }
-  
-  if (participantes) {
-    document.querySelector('.numParticipantes').textContent = participantes;
-  }
-  
-  if (titulo) {
-    document.querySelector('.titulo').textContent = titulo;
-  }
 }
 
-// Ejecutar al cargar la página
-document.addEventListener('DOMContentLoaded', obtenerDatosURL);
+// Ejecutar todas las funciones cuando se carga la página
+document.addEventListener('DOMContentLoaded', function() {
+  obtenerDatosURL();
+  cargarInformacionSorteo();
+  mostrarDatosGanador(); // Esta es la función principal que muestra los datos
+  configurarCambioFondo();
+  cargarIdiomaGuardado();
+});
