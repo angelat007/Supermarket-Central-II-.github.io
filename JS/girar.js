@@ -13,6 +13,9 @@ if (!sesionActual) {
 	localStorage.setItem("sesionActual", sesionActual);
 }
 
+// Antes de iniciar nueva sesión (solo si no te interesa mantener histórico)
+localStorage.removeItem("ganadores");
+
 window.addEventListener("DOMContentLoaded", () => {
 	// Obtener el número de ganadores desde localStorage
 	const opciones = JSON.parse(localStorage.getItem("opciones")) || {};
