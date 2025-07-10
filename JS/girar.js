@@ -6,12 +6,20 @@ let ruletaYaGiró = false;
 let totalGanadores = 1; // Valor por defecto
 let contadorGanadores = 0;
 
+// Generar o obtener ID de sesión actual
+let sesionActual = localStorage.getItem("sesionActual");
+if (!sesionActual) {
+	sesionActual = "sesion_" + Date.now();
+	localStorage.setItem("sesionActual", sesionActual);
+}
+
 window.addEventListener("DOMContentLoaded", () => {
 	// Obtener el número de ganadores desde localStorage
 	const opciones = JSON.parse(localStorage.getItem("opciones")) || {};
 	totalGanadores = parseInt(opciones.ganadores) || 1;
 	
 	console.log("Total de ganadores configurado:", totalGanadores);
+	console.log("ID de sesión actual:", sesionActual);
 	
 	const participantes = JSON.parse(localStorage.getItem("participantes")) || [];
 	lista = document.getElementById("ruletaLista");
@@ -202,17 +210,23 @@ function mostrarGanador(nombre) {
 	// Mostrar el contenedor de ganadores
 	ganadoresContainer.style.display = "block";
 
-	// Guardar ganador en localStorage
+	// Guardar ganador en localStorage CON ID DE SESIÓN
 	let ganadores = JSON.parse(localStorage.getItem("ganadores")) || [];
-	ganadores.push({ nombre, premio: premioAsignado });
+	ganadores.push({ 
+		nombre, 
+		premio: premioAsignado, 
+		sesion: sesionActual  // ← AGREGAMOS EL ID DE SESIÓN
+	});
 	localStorage.setItem("ganadores", JSON.stringify(ganadores));
+	
 	// Guardar también el último ganador individual
 	localStorage.setItem("ultimoGanador", JSON.stringify({
 		nombre: nombre,
-		premio: premioAsignado
+		premio: premioAsignado,
+		sesion: sesionActual
 	}));
 
-	console.log("Ganador guardado:", { nombre, premio: premioAsignado });
+	console.log("Ganador guardado:", { nombre, premio: premioAsignado, sesion: sesionActual });
 	console.log("Premios restantes:", premios);
 }
 
@@ -238,4 +252,11 @@ if (!localStorage.getItem("premios") || JSON.parse(localStorage.getItem("premios
 
 function verGanadores() {
 	window.location.href = '../ganadores/ganadores.html';
+}
+
+// Función para limpiar la sesión (opcional, para empezar una nueva sesión)
+function nuevaSesion() {
+	sesionActual = "sesion_" + Date.now();
+	localStorage.setItem("sesionActual", sesionActual);
+	console.log("Nueva sesión iniciada:", sesionActual);
 }

@@ -1,26 +1,39 @@
 const lista = document.getElementById("listaGanadores");
 const ganadores = JSON.parse(localStorage.getItem("ganadores")) || [];
 
+// Obtener el ID de la sesión actual (puedes usar timestamp o un ID único)
+const sesionActual = localStorage.getItem("sesionActual") || "sesion_" + Date.now();
+
 if (ganadores.length === 0) {
   lista.innerHTML = "<li>No hay ganadores registrados.</li>";
 } else {
-  ganadores.forEach((g, i) => {
-    const li = document.createElement("li");
-    li.innerHTML = `
-      <div class="ganador-contenedor">
-        <div class="nombre-codigo">${i + 1}. ${g.nombre}</div>
-        ${g.premio && g.premio !== "Sin premio" ? `<div class="premio">${g.premio}</div>` : ""}
-      </div>
-    `;
-    lista.appendChild(li);
-  });
+  // Filtrar solo los ganadores de la sesión actual
+  const ganadoresSesionActual = ganadores.filter(g => g.sesion === sesionActual);
+  
+  if (ganadoresSesionActual.length === 0) {
+    lista.innerHTML = "<li>No hay ganadores en esta sesión.</li>";
+  } else {
+    ganadoresSesionActual.forEach((g, i) => {
+      const li = document.createElement("li");
+      li.innerHTML = `
+        <div class="ganador-contenedor">
+          <div class="nombre-codigo">${g.nombre}</div>
+          ${g.premio && g.premio !== "Sin premio" ? `<div class="premio">${g.premio}</div>` : ""}
+        </div>
+      `;
+      lista.appendChild(li);
+    });
+  }
 }
 
-// Botón guardar descarga con el último ganador
+// Botón guardar descarga con el último ganador de la sesión actual
 function irADescarga() {
-  const ultimoGanador = ganadores[ganadores.length - 1];
+  const sesionActual = localStorage.getItem("sesionActual") || "sesion_" + Date.now();
+  const ganadoresSesionActual = ganadores.filter(g => g.sesion === sesionActual);
+  
+  const ultimoGanador = ganadoresSesionActual[ganadoresSesionActual.length - 1];
   if (!ultimoGanador) {
-    alert("No hay ganadores en la lista.");
+    alert("No hay ganadores en esta sesión.");
     return;
   }
 
