@@ -20,10 +20,10 @@ window.addEventListener("DOMContentLoaded", () => {
 	// Obtener el número de ganadores desde localStorage
 	const opciones = JSON.parse(localStorage.getItem("opciones")) || {};
 	totalGanadores = parseInt(opciones.ganadores) || 1;
-	
+
 	console.log("Total de ganadores configurado:", totalGanadores);
 	console.log("ID de sesión actual:", sesionActual);
-	
+
 	const participantes = JSON.parse(localStorage.getItem("participantes")) || [];
 	lista = document.getElementById("ruletaLista");
 
@@ -71,10 +71,7 @@ function girarSorteo() {
 		ganador.style.color = "white";
 		ganador.style.fontWeight = "bold";
 
-		// Eliminar ganador de participantes en localStorage
-		let participantesOriginales = JSON.parse(localStorage.getItem("participantes")) || [];
-		participantesOriginales = participantesOriginales.filter(p => p !== nombreGanador);
-		localStorage.setItem("participantes", JSON.stringify(participantesOriginales));
+		console.log(`Ganador seleccionado (sin eliminar del listado original): ${nombreGanador}`);
 
 		mostrarGanador(ganador.textContent);
 
@@ -84,10 +81,10 @@ function girarSorteo() {
 		// Verificar premios restantes después de mostrar el ganador
 		const premiosRestantes = JSON.parse(localStorage.getItem("premios")) || [];
 		const participantesRestantes = JSON.parse(localStorage.getItem("participantes")) || [];
-		
+
 		console.log(`Premios restantes: ${premiosRestantes.length}`);
 		console.log(`Participantes restantes: ${participantesRestantes.length}`);
-		
+
 		// Lógica: si quedan premios Y participantes, mostrar "Próximo participante"
 		// Si no quedan premios O no quedan participantes, mostrar "Ver ganadores"
 		if (premiosRestantes.length > 0 && participantesRestantes.length > 0) {
@@ -215,13 +212,13 @@ function mostrarGanador(nombre) {
 
 	// Guardar ganador en localStorage CON ID DE SESIÓN
 	let ganadores = JSON.parse(localStorage.getItem("ganadores")) || [];
-	ganadores.push({ 
-		nombre, 
-		premio: premioAsignado, 
+	ganadores.push({
+		nombre,
+		premio: premioAsignado,
 		sesion: sesionActual  // ← AGREGAMOS EL ID DE SESIÓN
 	});
 	localStorage.setItem("ganadores", JSON.stringify(ganadores));
-	
+
 	// Guardar también el último ganador individual
 	localStorage.setItem("ultimoGanador", JSON.stringify({
 		nombre: nombre,

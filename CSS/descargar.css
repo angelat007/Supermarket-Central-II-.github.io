@@ -276,14 +276,11 @@ button:hover {
   border-left: 5px solid #12aa57;
 }
 
-
-
 .label {
   font-weight: 600;
   color: #0B6938;
   min-width: 130px; /* Ajusta según necesidad */
 }
-
 
 .value {
   color: #333;

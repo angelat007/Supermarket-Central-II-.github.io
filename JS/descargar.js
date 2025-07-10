@@ -59,28 +59,27 @@ function obtenerDatosURL() {
 
   if (ganador) {
     // Dividir el ganador en código y nombre
-    const partes = ganador.split(' ');
-    const codigo = partes[0] || ganador;
-    const nombre = partes.slice(1).join(' ') || 'Nombre no disponible';
-    
+    const [codigo, ...nombrePartes] = ganador.split('|'); // ejemplo: T123456|Juan Pérez
+    const nombre = nombrePartes.join(' ') || 'Nombre no disponible';
+
     // Guardar en localStorage
-    localStorage.setItem("ganador", JSON.stringify({codigo, nombre}));
-    
+    localStorage.setItem("ganador", JSON.stringify({ codigo, nombre }));
+
     if (premio) {
-      localStorage.setItem("ultimoGanador", JSON.stringify({premio}));
+      localStorage.setItem("ultimoGanador", JSON.stringify({ premio }));
     }
-    
+
     document.querySelector('.nombreGanador').textContent = `${nombre} (Código: ${codigo})`;
   }
-  
+
   if (fecha) {
     document.querySelector('.Fecha').textContent = fecha;
   }
-  
+
   if (participantes) {
     document.querySelector('.numParticipantes').textContent = participantes;
   }
-  
+
   if (titulo) {
     document.querySelector('.titulo').textContent = titulo;
   }
@@ -88,10 +87,10 @@ function obtenerDatosURL() {
 
 function descargarPNG() {
   const elemento = document.getElementById("certificado");
-  
+
   // Agregar clase para remover bordes
   elemento.classList.add('sin-bordes');
-  
+
   html2canvas(elemento, {
     scale: 3,
     useCORS: true,
@@ -106,7 +105,7 @@ function descargarPNG() {
   }).then(canvas => {
     // Remover clase temporal
     elemento.classList.remove('sin-bordes');
-    
+
     const link = document.createElement('a');
     link.download = 'certificado.png';
     link.href = canvas.toDataURL('image/png', 1.0);
@@ -121,10 +120,10 @@ function descargarPNG() {
 
 function descargarPDF() {
   const elemento = document.getElementById("certificado");
-  
+
   // Agregar clase para remover bordes
   elemento.classList.add('sin-bordes');
-  
+
   html2canvas(elemento, {
     scale: 4,
     useCORS: true,
@@ -139,16 +138,16 @@ function descargarPDF() {
   }).then(canvas => {
     // Remover clase temporal
     elemento.classList.remove('sin-bordes');
-    
+
     const imgData = canvas.toDataURL('image/png', 1.0);
     const { jsPDF } = window.jspdf;
-    
+
     const imgWidth = canvas.width;
     const imgHeight = canvas.height;
     const ratio = imgWidth / imgHeight;
-    
+
     let pdfWidth, pdfHeight;
-    
+
     if (ratio > 1) {
       pdfWidth = 297;
       pdfHeight = pdfWidth / ratio;
@@ -156,16 +155,16 @@ function descargarPDF() {
       pdfHeight = 210;
       pdfWidth = pdfHeight * ratio;
     }
-    
+
     const pdf = new jsPDF({
       orientation: ratio > 1 ? 'landscape' : 'portrait',
       unit: 'mm',
       format: [pdfWidth, pdfHeight]
     });
-    
+
     pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight, '', 'FAST');
     pdf.save('certificado.pdf');
-    
+
   }).catch(error => {
     // Remover clase temporal en caso de error
     elemento.classList.remove('sin-bordes');
@@ -177,23 +176,23 @@ function descargarPDF() {
 // Cambiar fondo de certificado
 function configurarCambioFondo() {
   document.getElementById('fondoInput').addEventListener('change', function (e) {
-      const archivo = e.target.files[0];
-      if (!archivo) return;
+    const archivo = e.target.files[0];
+    if (!archivo) return;
 
-      const reader = new FileReader();
-      reader.onload = function (event) {
-          const dataURL = event.target.result;
-          const certificado = document.getElementById("certificado");
+    const reader = new FileReader();
+    reader.onload = function (event) {
+      const dataURL = event.target.result;
+      const certificado = document.getElementById("certificado");
 
-          certificado.style.backgroundImage = `
+      certificado.style.backgroundImage = `
               linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
               url('${dataURL}')
           `;
-          certificado.style.backgroundSize = "cover";
-          certificado.style.backgroundPosition = "center";
-          certificado.style.backgroundRepeat = "no-repeat";
-      };
-      reader.readAsDataURL(archivo);
+      certificado.style.backgroundSize = "cover";
+      certificado.style.backgroundPosition = "center";
+      certificado.style.backgroundRepeat = "no-repeat";
+    };
+    reader.readAsDataURL(archivo);
   });
 }
 
@@ -289,7 +288,7 @@ function cargarIdiomaGuardado() {
 }
 
 // Ejecutar todas las funciones cuando se carga la página
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   obtenerDatosURL();
   cargarInformacionSorteo();
   mostrarDatosGanador(); // Esta es la función principal que muestra los datos

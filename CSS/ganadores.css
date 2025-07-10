@@ -128,6 +128,7 @@ li:hover {
 	border: 2px solid #28a745;
 	position: relative;
 	overflow: hidden;
+	cursor: pointer;
 }
 
 .ganador-contenedor::before {
