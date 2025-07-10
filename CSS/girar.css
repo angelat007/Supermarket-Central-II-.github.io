@@ -77,6 +77,9 @@ body {
 	font-size: 1.2em;
 	border-radius: 8px;
 	transition: background-color 0.3s ease;
+	margin-top: 40px;
+	/* Espacio extra arriba del botón */
+	margin-bottom: 30px;
 }
 
 .GirarSorteo:hover {
@@ -86,104 +89,113 @@ body {
 
 /* Contenedor general de ganadores */
 .ganadores-container {
-  background-color: #f8f9fa;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  margin: 40px auto;
-  padding: 30px 20px;
-  border-radius: 10px;
-  max-width: 800px;
+	background-color: #f8f9fa;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+	text-align: center;
+	margin: 40px auto;
+	padding: 30px 20px;
+	border-radius: 10px;
+	max-width: 800px;
 }
 
 /* Contenedor flexible que organiza columnas */
 #ganadoresFlexWrapper {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 40px;
-  flex-wrap: wrap;
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	gap: 40px;
+	flex-wrap: wrap;
 }
 
 /* Columnas de ganadores y premios */
 .contenedor-columna {
-  flex: 1;
-  min-width: 250px;
-  max-width: 350px;
+	flex: 1;
+	min-width: 250px;
+	max-width: 350px;
 }
 
 /* Títulos */
-.winner, .prize {
-  font-size: 1.4em;
-  margin-bottom: 20px;
+.winner,
+.prize {
+	font-size: 1.4em;
+	margin-bottom: 20px;
 }
 
 /* Lista de ganadores y premios */
 .lista-columnas {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 0;
-  margin: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 0;
+	margin: 0;
 }
 
 /* Estilos individuales */
 .lista-columnas li {
-  width: 100%;
-  padding: 12px 10px;
-  margin-bottom: 10px;
-  border-radius: 8px;
-  list-style: none;
-  text-align: center;
-  font-weight: bold;
+	width: 100%;
+	padding: 12px 10px;
+	margin-bottom: 10px;
+	border-radius: 8px;
+	list-style: none;
+	text-align: center;
+	font-weight: bold;
 }
 
 #lista-ganadores li {
-  background-color: #006938;
-  color: white;
+	background-color: #006938;
+	color: white;
 }
 
 #lista-premios li {
-  background-color: #F7BE00;
-  color: white;
+	background-color: #F7BE00;
+	color: white;
 }
 
 /* Responsive para móviles */
 @media screen and (max-width: 700px) {
-  #ganadoresFlexWrapper {
-    flex-direction: column;
-    align-items: center;
-  }
+	#ganadoresFlexWrapper {
+		flex-direction: column;
+		align-items: center;
+	}
 
-  .contenedor-columna {
-    max-width: 100%;
-  }
+	.contenedor-columna {
+		max-width: 100%;
+	}
 }
 
 
 /*se centra cuando no esta el premio definido*/
 #ganadoresFlexWrapper {
-  display: flex;
-  gap: 20px;
-  justify-content: center;
-  align-items: flex-start;
-  margin-top: 20px;
-  flex-wrap: wrap;
-  text-align: center;
+	display: flex;
+	gap: 20px;
+	justify-content: center;
+	align-items: flex-start;
+	margin-top: 20px;
+	flex-wrap: wrap;
+	text-align: center;
 }
 
 #containerWinner {
-  max-width: 300px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+	max-width: 300px;
+	margin: 0 auto;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
 #lista-ganadores {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 100%;
+}
+
+#volverConfig {
+	margin-top: 40px;
+	/* Espacio extra arriba del botón */
+	margin-bottom: 30px;
+	padding: 12px 68px;
+	;
 }
 
 

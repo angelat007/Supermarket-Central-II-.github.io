@@ -71,7 +71,18 @@ function girarSorteo() {
 		ganador.style.color = "white";
 		ganador.style.fontWeight = "bold";
 
-		console.log(`Ganador seleccionado (sin eliminar del listado original): ${nombreGanador}`);
+		console.log(`Ganador seleccionado: ${nombreGanador}`);
+
+		// 🔥 Eliminar ganador del array de participantes en localStorage
+		let participantes = JSON.parse(localStorage.getItem("participantes")) || [];
+		const index = participantes.indexOf(nombreGanador);
+		if (index !== -1) {
+			participantes.splice(index, 1); // eliminar al ganador
+			localStorage.setItem("participantes", JSON.stringify(participantes));
+			console.log(`Participante "${nombreGanador}" eliminado de la lista`);
+		}
+
+		mostrarGanador(nombreGanador);
 
 		mostrarGanador(ganador.textContent);
 
@@ -93,6 +104,7 @@ function girarSorteo() {
 		} else {
 			console.log("Mostrando botón 'Ver ganadores' - No quedan premios o participantes");
 			document.getElementById("verGanadores").style.display = "inline-block";
+			document.getElementById("volverConfig").style.display = "inline-block";
 		}
 	}, 4000);
 }
@@ -259,4 +271,9 @@ function nuevaSesion() {
 	sesionActual = "sesion_" + Date.now();
 	localStorage.setItem("sesionActual", sesionActual);
 	console.log("Nueva sesión iniciada:", sesionActual);
+}
+
+//funcion volver a config.html
+function volverConfig() {
+	window.location.href = '../../config.html'
 }
