@@ -2,20 +2,39 @@
 function mostrarDatosGanador() {
   const ganadorData = JSON.parse(localStorage.getItem("ganador") || "{}");
   const ultimoGanador = JSON.parse(localStorage.getItem("ultimoGanador") || "{}");
+  const ganadoresMultiple = JSON.parse(localStorage.getItem("ganadoresMultiple") || "[]");
   const contenedor = document.getElementById("datosGanador");
 
+  // Si hay múltiples ganadores, mostrar todos
+  if (ganadoresMultiple.length > 0) {
+    mostrarGanadoresMultiples(ganadoresMultiple);
+    return;
+
+  // Mostrar un solo ganador (funcionalidad original)
   if (ganadorData.codigo && ganadorData.nombre) {
     const codigo = ganadorData.codigo;
     const nombre = ganadorData.nombre;
     const premio = ultimoGanador.premio || "";
 
-    // Crear el HTML con las clases del CSS existente
-    let contenidoHTML = `
-      <div class="codigo">${codigo}</div>
-      <div class="nombre">${nombre}</div>
-    `;
+    let mitad = Math.ceil(ganadores.length / 2);
+    let columna1 = ganadores.slice(0, mitad);
+    let columna2 = ganadores.slice(mitad);
 
-    // Solo agregar el premio si existe y no es "Sin premio"
+    let contenidoHTML = '<div class="ganadores-grid">';
+    contenidoHTML += '<div class="columna">';
+    columna1.forEach(ganador => {
+      contenidoHTML += generarItemHTML(ganador);
+    });
+    contenidoHTML += '</div>';
+
+    contenidoHTML += '<div class="columna">';
+    columna2.forEach(ganador => {
+      contenidoHTML += generarItemHTML(ganador);
+    });
+    contenidoHTML += '</div>';
+    contenidoHTML += '</div>';
+
+
     if (premio && premio !== "Sin premio" && premio.trim() !== "") {
       contenidoHTML += `<div class="premio">${premio}</div>`;
     }
@@ -24,6 +43,71 @@ function mostrarDatosGanador() {
   } else {
     contenedor.textContent = "No hay datos del ganador.";
   }
+}
+
+// Nueva función para mostrar múltiples ganadores
+function mostrarGanadoresMultiples(ganadores) { 
+  const certificado = document.getElementById("certificado");
+  const titulo = document.querySelector(".titulo");
+  const tituloGanador = document.querySelector(".certificado h1");
+  const datosGanador = document.getElementById("datosGanador");
+
+  // Cambiar el título
+  if (titulo) titulo.textContent = localStorage.getItem("tituloSorteo") || "Sorteo";
+  if (tituloGanador) tituloGanador.textContent = "Ganadores";
+
+  // Dividir ganadores en dos columnas
+  const mitad = Math.ceil(ganadores.length / 2);
+  const columna1 = ganadores.slice(0, mitad);
+  const columna2 = ganadores.slice(mitad);
+
+  let contenidoHTML = `<div class="ganadores-grid">
+    <div class="columna">`;
+
+  columna1.forEach(ganador => {
+    const codigo = ganador.codigo || ``;
+    const nombre = ganador.nombre || "Nombre no disponible";
+    const premio = ganador.premio || "";
+
+    contenidoHTML += `
+      <div class="ganador-item">
+        <div class="codigo-ganador">${codigo}</div>
+        <div class="nombre-ganador">${nombre}</div>
+        ${premio && premio !== "Sin premio" && premio.trim() !== "" ? 
+          `<div class="premio-ganador">${premio}</div>` : ''}
+      </div>`;
+  });
+
+  contenidoHTML += `</div><div class="columna">`;
+
+  columna2.forEach(ganador => {
+    const codigo = ganador.codigo || ``;
+    const nombre = ganador.nombre || "Nombre no disponible";
+    const premio = ganador.premio || "";
+
+    contenidoHTML += `
+      <div class="ganador-item">
+        <div class="codigo-ganador">${codigo}</div>
+        <div class="nombre-ganador">${nombre}</div>
+        ${premio && premio !== "Sin premio" && premio.trim() !== "" ? 
+          `<div class="premio-ganador">${premio}</div>` : ''}
+      </div>`;
+  });
+
+  contenidoHTML += `</div></div>`;
+
+  datosGanador.innerHTML = contenidoHTML;
+
+  certificado.classList.add('certificado-multiple');
+}
+
+
+  contenidoHTML += '</div>';
+
+  datosGanador.innerHTML = contenidoHTML;
+
+  // Añadir estilos específicos para múltiples ganadores
+  certificado.classList.add('certificado-multiple');
 }
 
 // Función para cargar información del sorteo
@@ -35,18 +119,27 @@ function cargarInformacionSorteo() {
   const participantes = JSON.parse(localStorage.getItem("participantes") || "[]");
   const ganadorData = JSON.parse(localStorage.getItem("ganador") || "{}");
   const ultimoGanador = JSON.parse(localStorage.getItem("ultimoGanador") || "{}");
+  const ganadoresMultiple = JSON.parse(localStorage.getItem("ganadoresMultiple") || "[]");
 
+  // Si hay múltiples ganadores, usar esa información
+  if (ganadoresMultiple.length > 0) {
+    document.querySelector(".Fecha").textContent = fechaSorteo;
+    document.querySelector(".numParticipantes").textContent = participantes.length;
+    document.querySelector(".nombreGanador").textContent = `${ganadoresMultiple.length} ganadores`;
+    document.querySelector(".premio").textContent = "Múltiples premios";
+    return;
+  }
+
+  // Funcionalidad original para un solo ganador
   const codigo = ganadorData.codigo || "Código no disponible";
   const nombreCompleto = ganadorData.nombre || "Nombre no disponible";
   const premio = ultimoGanador.premio || "---";
 
-  // Actualizar elementos de la página
   document.querySelector(".Fecha").textContent = fechaSorteo;
   document.querySelector(".numParticipantes").textContent = participantes.length;
   document.querySelector(".nombreGanador").textContent = nombreCompleto;
   document.querySelector(".premio").textContent = premio;
 }
-
 
 // Función para obtener datos del URL (si vienen de otra página)
 function obtenerDatosURL() {
@@ -58,11 +151,9 @@ function obtenerDatosURL() {
   const premio = urlParams.get('premio');
 
   if (ganador) {
-    // Dividir el ganador en código y nombre
-    const [codigo, ...nombrePartes] = ganador.split('|'); // ejemplo: T123456|Juan Pérez
+    const [codigo, ...nombrePartes] = ganador.split('|');
     const nombre = nombrePartes.join(' ') || 'Nombre no disponible';
 
-    // Guardar en localStorage
     localStorage.setItem("ganador", JSON.stringify({ codigo, nombre }));
 
     if (premio) {
@@ -87,31 +178,41 @@ function obtenerDatosURL() {
 
 function descargarPNG() {
   const elemento = document.getElementById("certificado");
+  const esMultiple = elemento.classList.contains('certificado-multiple');
 
   // Agregar clase para remover bordes
   elemento.classList.add('sin-bordes');
 
-  html2canvas(elemento, {
+  // Ajustar dimensiones según el tipo de certificado
+  const config = esMultiple ? {
+    scale: 2,
+    width: 480,
+    height: 800
+  } : {
     scale: 3,
+    width: 320,
+    height: 570
+  };
+
+  html2canvas(elemento, {
+    scale: config.scale,
     useCORS: true,
     allowTaint: false,
     backgroundColor: null,
-    width: 320,  // Dimensión fija
-    height: 570, // Dimensión fija
+    width: config.width,
+    height: config.height,
     scrollX: 0,
     scrollY: 0,
-    windowWidth: 320,
-    windowHeight: 570
+    windowWidth: config.width,
+    windowHeight: config.height
   }).then(canvas => {
-    // Remover clase temporal
     elemento.classList.remove('sin-bordes');
 
     const link = document.createElement('a');
-    link.download = 'certificado.png';
+    link.download = esMultiple ? 'certificado-ganadores.png' : 'certificado.png';
     link.href = canvas.toDataURL('image/png', 1.0);
     link.click();
   }).catch(error => {
-    // Remover clase temporal en caso de error
     elemento.classList.remove('sin-bordes');
     console.error('Error al generar PNG:', error);
     alert('Error al descargar la imagen. Inténtalo de nuevo.');
@@ -120,23 +221,32 @@ function descargarPNG() {
 
 function descargarPDF() {
   const elemento = document.getElementById("certificado");
+  const esMultiple = elemento.classList.contains('certificado-multiple');
 
-  // Agregar clase para remover bordes
   elemento.classList.add('sin-bordes');
 
-  html2canvas(elemento, {
+  const config = esMultiple ? {
+    scale: 3,
+    width: 480,
+    height: 800
+  } : {
     scale: 4,
+    width: 320,
+    height: 570
+  };
+
+  html2canvas(elemento, {
+    scale: config.scale,
     useCORS: true,
     allowTaint: false,
     backgroundColor: null,
-    width: 320,  // Dimensión fija
-    height: 570, // Dimensión fija
+    width: config.width,
+    height: config.height,
     scrollX: 0,
     scrollY: 0,
-    windowWidth: 320,
-    windowHeight: 570
+    windowWidth: config.width,
+    windowHeight: config.height
   }).then(canvas => {
-    // Remover clase temporal
     elemento.classList.remove('sin-bordes');
 
     const imgData = canvas.toDataURL('image/png', 1.0);
@@ -163,10 +273,10 @@ function descargarPDF() {
     });
 
     pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight, '', 'FAST');
-    pdf.save('certificado.pdf');
+    const filename = esMultiple ? 'certificado-ganadores.pdf' : 'certificado.pdf';
+    pdf.save(filename);
 
   }).catch(error => {
-    // Remover clase temporal en caso de error
     elemento.classList.remove('sin-bordes');
     console.error('Error al generar PDF:', error);
     alert('Error al descargar el PDF. Inténtalo de nuevo.');
@@ -203,6 +313,7 @@ const traducciones = {
     ayuda: "Ayuda",
     redes: "Redes Sociales",
     ganador: "Ganador",
+    ganadores: "Ganadores",
     descargarPNG: "Descargar PNG",
     descargarPDF: "Descargar PDF",
     cambiarFondo: "Cambiar fondo",
@@ -222,6 +333,7 @@ const traducciones = {
     ayuda: "Help",
     redes: "Social Media",
     ganador: "Winner",
+    ganadores: "Winners",
     descargarPNG: "Download PNG",
     descargarPDF: "Download PDF",
     cambiarFondo: "Change background",
@@ -249,7 +361,10 @@ function cambiarIdioma() {
   if (botonesIngresar[1]) botonesIngresar[1].textContent = t.redes;
 
   const tituloGanador = document.querySelector(".certificado h1");
-  if (tituloGanador) tituloGanador.textContent = t.ganador;
+  if (tituloGanador) {
+    const ganadoresMultiple = JSON.parse(localStorage.getItem("ganadoresMultiple") || "[]");
+    tituloGanador.textContent = ganadoresMultiple.length > 0 ? t.ganadores : t.ganador;
+  }
 
   const botones = document.querySelectorAll(".botones button");
   if (botones[0]) botones[0].textContent = t.descargarPNG;
@@ -275,6 +390,7 @@ function cambiarIdioma() {
     valores[2].textContent = t.ganadorDefault;
   }
 
+  // Guardar idioma seleccionado
   localStorage.setItem('idiomaSeleccionado', idioma);
 }
 
@@ -287,11 +403,21 @@ function cargarIdiomaGuardado() {
   }
 }
 
+// Función para limpiar datos de ganadores múltiples al salir
+function limpiarDatosMultiples() {
+  localStorage.removeItem("ganadoresMultiple");
+}
+
 // Ejecutar todas las funciones cuando se carga la página
 document.addEventListener('DOMContentLoaded', function () {
   obtenerDatosURL();
   cargarInformacionSorteo();
-  mostrarDatosGanador(); // Esta es la función principal que muestra los datos
+  mostrarDatosGanador();
   configurarCambioFondo();
   cargarIdiomaGuardado();
+});
+
+// Limpiar datos cuando se cierre la ventana
+window.addEventListener('beforeunload', function () {
+  limpiarDatosMultiples();
 });

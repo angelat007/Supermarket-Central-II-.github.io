@@ -89,12 +89,12 @@ nav a:hover {
 /*contenedor principal del certificado*/
 .contentCertificado {
   display: inline-block;
+  position: relative;
   background: linear-gradient(135deg, #ffffff 0%, #a5a5a5 150%);
-  padding: 15px;
   border-radius: 20px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  position: relative;
   margin: 20px;
+  padding: 15px;
 }
 
 /* Efecto de brillo en el borde */
@@ -130,19 +130,19 @@ nav a:hover {
 }
 
 .certificado {
-  width: 320px;
-  height: 570px;
+  cursor: default;
   position: relative;
-  color: white;
-  padding: 30px 20px;
-  text-align: center;
   overflow: hidden;
-  background:
-    linear-gradient(rgba(0, 0, 0, 0.3)),
-    url(../Media/fondo-verde-descargar.jpg);
+  scrollbar-width: none;
+  width: 350px;
+  height: 570px;
+  padding: 30px 20px;
+  color: white;
+  text-align: center;
+  border-radius: 10px; /* Borde redondeado solo para el certificado interno */
+  background: linear-gradient(20deg, #00253f, #005b8c, #0096a9, #00afbf, #00eaff);
   background-size: cover;
   background-position: center;
-  border-radius: 10px; /* Borde redondeado solo para el certificado interno */
 }
 
 /* Texto más legible con sombra */
@@ -165,37 +165,26 @@ nav a:hover {
 }
 
 .ribbon {
-  display: flex;
   flex-direction: column; /* Asegura orden vertical */
   align-items: center;
   justify-content: center;
-  gap: 8px;
   text-align: center;
-  background: white;
-  color: black;
-  padding: 15px;
-  margin: 20px auto;
-  border-radius: 8px;
-  max-width: 250px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+  color: #ffffff;
+  gap: 8px;
 }
 
 .ribbon .codigo {
   font-size: 1em;
-  font-weight: 600;
   word-break: break-word;
-  color: #000;
+
 }
 
 .ribbon .nombre {
-  font-size: 1.2em;
+  font-size: 1em;
   font-weight: bold;
-  color: #000;
 }
 
 .footer {
-  position: absolute;
   bottom: 20px;
   left: 20px;
   right: 20px;
@@ -321,6 +310,82 @@ ol li {
   list-style: none;
   list-style-type: none;
 }
+
+/*orden en los ganadores*/
+/* Estilo general para múltiples ganadores */
+.certificado-multiple {
+  height: auto;
+  max-height: 650px;
+  overflow-y: auto;
+  padding-bottom: 30px; 
+}
+
+/* Grid de ganadores */
+.ganadores-grid {
+  display: flex;
+  justify-content: center; /* centra las 2 columnas */
+  align-items: flex-start;
+  gap: 60px; /* espacio entre columnas */
+  position: relative;
+  padding: 20px;
+}
+
+/* línea vertical entre columnas */
+.ganadores-grid::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  background-color: #ffffff25;
+  transform: translateX(-50%);
+}
+
+/* columnas individuales */
+.columna {
+  display: flex;
+  flex-direction: column;
+  width: 180px;
+}
+
+.ganador-item {
+  display: inline-block;
+  width: 100%;
+  padding: 10px;
+  break-inside: avoid;
+  font-size: 0.9em;
+  text-align: center;
+}
+
+/* Cada tarjeta de ganador */
+.ganador-item {
+  text-align: center;
+  font-weight: bold;
+  padding: 10px;
+  width: 145px;
+}
+
+.codigo-ganador {
+  font-size: 14px;
+  word-break: break-word;
+}
+
+.nombre-ganador {
+  font-size: 14px;
+  word-break: break-word;
+}
+
+.premio-ganador {
+  font-weight: bold;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 5px;
+  font-size: 0.85em;
+  margin-top: 5px;
+}
+
+
 
 /* Responsive */
 @media (max-width: 768px) {

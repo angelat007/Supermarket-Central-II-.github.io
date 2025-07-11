@@ -23,49 +23,66 @@ if (ganadores.length === 0) {
       `;
       lista.appendChild(li);
     });
-
-    // Agregar event listeners para hacer clickeable cada contenedor
-    document.querySelectorAll('.clickable-ganador').forEach(contenedor => {
-      contenedor.addEventListener('click', function () {
-        const index = parseInt(this.getAttribute('data-ganador-index'));
-        const ganadorSeleccionado = ganadoresSesionActual[index];
-        irADescargaConGanador(ganadorSeleccionado);
-      });
-    });
   }
 }
 
-// Función para ir a descarga con un ganador específico
-function irADescargaConGanador(ganadorSeleccionado) {
-  if (!ganadorSeleccionado) {
-    alert("Error: No se pudo encontrar el ganador seleccionado.");
-    return;
-  }
-
-  const datos = {
-    codigo: ganadorSeleccionado.codigo || " ",
-    nombre: ganadorSeleccionado.nombre || " ",
-  };
-
-
-  localStorage.setItem("ganador", JSON.stringify(datos));
-  localStorage.setItem("ultimoGanador", JSON.stringify(ganadorSeleccionado));
-  window.location.href = "descargar.html";
-}
-
-// Función original para el botón guardar (mantener por compatibilidad)
-function irADescarga() {
+// Función para ir a descarga con múltiples ganadores
+function irADescargaMultiple() {
   const sesionActual = localStorage.getItem("sesionActual") || "sesion_" + Date.now();
-  const ganadoresSesionActual = ganadores.filter(g => g.sesion === sesionActual);
+  const ganadores = JSON.parse(localStorage.getItem("ganadores")) || [];
+  const ganadoresSesion = ganadores.filter(g => g.sesion === sesionActual);
 
-  const ultimoGanador = ganadoresSesionActual[ganadoresSesionActual.length - 1];
-  if (!ultimoGanador) {
+  if (ganadoresSesion.length === 0) {
     alert("No hay ganadores en esta sesión.");
     return;
   }
 
-  irADescargaConGanador(ultimoGanador);
+  // Limpiar datos previos de un solo ganador
+  localStorage.removeItem("ganador");
+  localStorage.removeItem("ultimoGanador");
+
+  // Guardar los ganadores múltiples
+  localStorage.setItem("ganadoresMultiple", JSON.stringify(ganadoresSesion));
+  
+  // Redirigir a la página de descarga
+  window.open("descargar.html", "_blank");
 }
+
+// Función para ir a descarga con un ganador específico (funcionalidad original)
+function irADescargaIndividual(index) {
+  const sesionActual = localStorage.getItem("sesionActual") || "sesion_" + Date.now();
+  const ganadores = JSON.parse(localStorage.getItem("ganadores")) || [];
+  const ganadoresSesion = ganadores.filter(g => g.sesion === sesionActual);
+
+  if (ganadoresSesion[index]) {
+    const ganador = ganadoresSesion[index];
+    
+    // Limpiar datos de múltiples ganadores
+    localStorage.removeItem("ganadoresMultiple");
+    
+    // Guardar el ganador individual
+    localStorage.setItem("ganador", JSON.stringify({
+      codigo: ganador.codigo,
+      nombre: ganador.nombre
+    }));
+    
+    localStorage.setItem("ultimoGanador", JSON.stringify({
+      premio: ganador.premio || "Sin premio"
+    }));
+    
+    // Redirigir a la página de descarga
+    window.open("descargar.html", "_blank");
+  }
+}
+
+// Event listener para clicks en ganadores individuales
+document.addEventListener('click', function(e) {
+  const ganadorElement = e.target.closest('.clickable-ganador');
+  if (ganadorElement) {
+    const index = parseInt(ganadorElement.dataset.ganadorIndex);
+    irADescargaIndividual(index);
+  }
+});
 
 // Confeti de fondo
 const confettiCanvas = document.getElementById('confetti-canvas');

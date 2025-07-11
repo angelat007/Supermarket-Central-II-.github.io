@@ -82,8 +82,6 @@ function girarSorteo() {
 			console.log(`Participante "${nombreGanador}" eliminado de la lista`);
 		}
 
-		mostrarGanador(nombreGanador);
-
 		mostrarGanador(ganador.textContent);
 
 		contadorGanadores++;
