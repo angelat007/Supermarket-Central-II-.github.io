@@ -98,7 +98,7 @@ function guardarOpciones() {
   } else if (animacionSeleccionada === 'fortuna') {
     window.location.href = 'nombresAleatorios/viewRuleta.html';
   } else if (animacionSeleccionada === 'cuenta') {
-    window.location.href = 'nombresAleatorios/cuentaRegresiva.html';
+    window.location.href = 'nombresAleatorios/coldown.html';
   } else {
     mensajeError.textContent = 'Error: Debes seleccionar una animación válida.';
   }
