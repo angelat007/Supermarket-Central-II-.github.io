@@ -60,7 +60,7 @@ hr {
 }
 
 #tituloSorteo {
-  width: 96%;
+  width: 787.5px;
   height: 40px;
   font-size: 1.2em;
   margin-bottom: 1rem;
@@ -602,7 +602,7 @@ body.modal-abierto {
   transition: transform 0.5s ease;
 }
 
-.shuffle-btn:hover {
+.shuffle-btn:active {
   transform: rotate(350deg);
 }
 

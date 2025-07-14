@@ -44,3 +44,4 @@ function comenzarRuleta() {
   // Redirigir a cuenta regresiva
   window.location.href = "opciones/countdown.html";
 }
+

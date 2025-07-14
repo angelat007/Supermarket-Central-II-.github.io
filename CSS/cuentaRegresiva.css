@@ -1,0 +1,364 @@
+:root {
+  --primary: #0a5c2f;
+  /* color elegido en config.html            */
+  --bg: #f9f9f9;
+  --even: #e3f2fd;
+  --odd: #bbdefb;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0
+}
+
+body {
+  min-height: 100vh;
+  background: var(--bg);
+  font-family: "Segoe UI", sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logo-header {
+  margin: 24px 0;
+  text-align: center
+}
+
+#tituloSorteo {
+  font-size: 1.4rem;
+  color: #333
+}
+
+.countdown {
+  display: none;
+  font-size: 18vw;
+  /* Escala con el ancho de pantalla */
+  font-weight: 900;
+  color: var(--primary);
+  animation: pop 1s ease-in-out infinite;
+  line-height: 1;
+  text-align: center;
+}
+
+.modal .ventana li {
+  margin: 18px 0;
+  padding: 10px 20px;
+  background: none;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.modal .ventana li .codigo {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.modal .ventana li .nombre {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #111;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.modal .ventana li .premio {
+  font-size: 1.1rem;
+  color: #0a5c2f;
+  display: block;
+}
+
+
+@keyframes pop {
+  0% {
+    transform: scale(.5);
+    opacity: .2
+  }
+
+  50% {
+    transform: scale(1);
+    opacity: 1
+  }
+
+  100% {
+    transform: scale(.5);
+    opacity: .2
+  }
+}
+
+.participantes {
+  width: 90%;
+  max-width: 450px
+}
+
+.encabezado {
+  display: flex;
+  justify-content: space-between;
+  margin: 12px 0
+}
+
+#listaParticipantesfinal {
+  list-style: none;
+  max-height: 280px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.fila {
+  padding: 6px 12px;
+  border-radius: 6px;
+  margin: 4px 0
+}
+
+.par {
+  background: var(--even)
+}
+
+.impar {
+  background: var(--odd)
+}
+
+.btn {
+  margin: 16px auto 0;
+  display: block;
+  padding: 10px 26px;
+  border: none;
+  border-radius: 8px;
+  background: var(--primary);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ganadores {
+  margin-top: 24px;
+  text-align: center
+}
+
+.ganadores ul {
+  list-style: none;
+  margin-top: 8px
+}
+
+.hidden {
+  display: none
+}
+
+:root {
+  --primary: #0a5c2f;
+  /* color elegido en config.html            */
+  --bg: #f9f9f9;
+  --even: #e3f2fd;
+  --odd: #bbdefb;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0
+}
+
+body {
+  min-height: 100vh;
+  background: var(--bg);
+  font-family: "Segoe UI", sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logo-header {
+  margin: 24px 0;
+  text-align: center
+}
+
+#tituloSorteo {
+  font-size: 1.4rem;
+  color: #333
+}
+
+.countdown {
+  display: none;
+  /* se hace visible al empezar */
+  font-size: 9rem;
+  font-weight: 800;
+  color: var(--primary);
+  animation: pop 1s ease-in-out infinite;
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(.5);
+    opacity: .2
+  }
+
+  50% {
+    transform: scale(1);
+    opacity: 1
+  }
+
+  100% {
+    transform: scale(.5);
+    opacity: .2
+  }
+}
+
+.participantes {
+  width: 90%;
+  max-width: 450px
+}
+
+.encabezado {
+  display: flex;
+  justify-content: space-between;
+  margin: 12px 0
+}
+
+#listaParticipantesfinal {
+  list-style: none;
+  max-height: 280px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.fila {
+  padding: 6px 12px;
+  border-radius: 6px;
+  margin: 4px 0
+}
+
+.par {
+  background: var(--even)
+}
+
+.impar {
+  background: var(--odd)
+}
+
+.btnIniciar {
+  margin: 16px auto 0;
+  display: block;
+  padding: 20px 50px;
+  border: none;
+  border-radius: 8px;
+  background: var(--primary);
+  color: #fff;
+  font-size: 2rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.contenedor-iniciar {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+#btnVerGanadores {
+  margin: 16px auto 0;
+  display: block;
+  padding: 20px 30px;
+  border: none;
+  border-radius: 8px;
+  background: var(--primary);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#btnVolver {
+  padding: 10px 63px;
+  font-size: 1rem;
+}
+
+.ganadores {
+  margin-top: 24px;
+  text-align: center
+}
+
+.ganadores ul {
+  list-style: none;
+  margin-top: 8px
+}
+
+.hidden {
+  display: none
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.modal .ventana {
+  background: white;
+  padding: 20px 30px;
+  border-radius: 12px;
+  text-align: center;
+  max-width: 90%;
+  max-height: 90vh;
+  /* ← Límite vertical del modal */
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.5s ease-out;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal .ventana ul {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 15px;
+  scrollbar-width: none;
+  overflow-y: auto; /* scroll vertical */
+  flex-grow: 1;
+  max-height: 60vh; /* Altura máxima de la lista */
+  padding-right: 8px;
+  cursor: default;
+}
+
+.modal .ventana h2 {
+  margin-bottom: 15px;
+}
+
+.modal .ventana li {
+  padding: 6px 12px;
+  margin: 6px 0;
+  background: #e3f2fd;
+  border-radius: 6px;
+}
+
+.modal.hidden {
+  display: none;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

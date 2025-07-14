@@ -1,16 +1,47 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
-  <link rel="stylesheet" href="../../CSS/countDown.css">
-  <link rel="style icon" href="../../Media/Medio-logo.webp">
-  <title>Super Plaza Veneuela - Cuenta Regresiva</title>
+  <link rel="stylesheet" href="../../CSS/cuentaRegresiva.css">
+  <link rel="icon" type="image/webp" href="../../Media/Medio-logo.webp">
+  <title>Super Plaza Venezuela – Cuenta Regresiva</title>
 </head>
+
 <body>
+  <header class="logo-header">
+    <img id="logo" class="logo" src="../../Media/Log-super-plaza-venezuela_2.webp" alt="Logo" width="220">
+    <h1 id="tituloSorteo"></h1>
+  </header>
 
-  <div class="segundos"></div>
+  <!-- número gigante de la cuenta atrás -->
+  <div id="countdown" class="countdown"></div>
 
-  <div   class="listaGanadores"></div>
-  <script src="../../JS/countDown.js"></script>
+  <!-- listado participantes -->
+  <section style="display: none;" class="participantes">
+    <div class="encabezado">
+      <strong>Participantes</strong>
+      <span id="totalParticipantes">Total: 0</span>
+    </div>
+    <ul id="listaParticipantesfinal"></ul>
+  </section>
+  <div class="contenedor-iniciar">
+    <button id="btnIniciar" class="btn iniciar">Comenzar</button>
+  </div>
+
+  <!-- Ventana flotante de ganadores -->
+  <div id="modalGanadores" class="modal hidden">
+    <div class="ventana">
+      <h2>¡Ganador(es)!</h2>
+      <ul id="listaGanadores"></ul>
+      <button id="btnVerGanadores" class="btn">Ver Ganadores</button>
+      <button id="btnVolver" class="btn">Volver</button>
+    </div>
+  </div>
+
+  <!-- confetti opcional (2 kB) -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+  <script src="../../JS/cuenaRegresiva.js"></script>
 </body>
+
 </html>
