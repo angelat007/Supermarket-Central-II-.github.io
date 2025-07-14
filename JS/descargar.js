@@ -10,96 +10,96 @@ function mostrarDatosGanador() {
     mostrarGanadoresMultiples(ganadoresMultiple);
     return;
 
-  // Mostrar un solo ganador (funcionalidad original)
-  if (ganadorData.codigo && ganadorData.nombre) {
-    const codigo = ganadorData.codigo;
-    const nombre = ganadorData.nombre;
-    const premio = ultimoGanador.premio || "";
+    // Mostrar un solo ganador (funcionalidad original)
+    if (ganadorData.codigo && ganadorData.nombre) {
+      const codigo = ganadorData.codigo;
+      const nombre = ganadorData.nombre;
+      const premio = ultimoGanador.premio || "";
 
-    let mitad = Math.ceil(ganadores.length / 2);
-    let columna1 = ganadores.slice(0, mitad);
-    let columna2 = ganadores.slice(mitad);
+      let mitad = Math.ceil(ganadores.length / 2);
+      let columna1 = ganadores.slice(0, mitad);
+      let columna2 = ganadores.slice(mitad);
 
-    let contenidoHTML = '<div class="ganadores-grid">';
-    contenidoHTML += '<div class="columna">';
-    columna1.forEach(ganador => {
-      contenidoHTML += generarItemHTML(ganador);
-    });
-    contenidoHTML += '</div>';
+      let contenidoHTML = '<div class="ganadores-grid">';
+      contenidoHTML += '<div class="columna">';
+      columna1.forEach(ganador => {
+        contenidoHTML += generarItemHTML(ganador);
+      });
+      contenidoHTML += '</div>';
 
-    contenidoHTML += '<div class="columna">';
-    columna2.forEach(ganador => {
-      contenidoHTML += generarItemHTML(ganador);
-    });
-    contenidoHTML += '</div>';
-    contenidoHTML += '</div>';
+      contenidoHTML += '<div class="columna">';
+      columna2.forEach(ganador => {
+        contenidoHTML += generarItemHTML(ganador);
+      });
+      contenidoHTML += '</div>';
+      contenidoHTML += '</div>';
 
 
-    if (premio && premio !== "Sin premio" && premio.trim() !== "") {
-      contenidoHTML += `<div class="premio">${premio}</div>`;
+      if (premio && premio !== "Sin premio" && premio.trim() !== "") {
+        contenidoHTML += `<div class="premio">${premio}</div>`;
+      }
+
+      contenedor.innerHTML = contenidoHTML;
+    } else {
+      contenedor.textContent = "No hay datos del ganador.";
     }
-
-    contenedor.innerHTML = contenidoHTML;
-  } else {
-    contenedor.textContent = "No hay datos del ganador.";
   }
-}
 
-// Nueva función para mostrar múltiples ganadores
-function mostrarGanadoresMultiples(ganadores) { 
-  const certificado = document.getElementById("certificado");
-  const titulo = document.querySelector(".titulo");
-  const tituloGanador = document.querySelector(".certificado h1");
-  const datosGanador = document.getElementById("datosGanador");
+  // Nueva función para mostrar múltiples ganadores
+  function mostrarGanadoresMultiples(ganadores) {
+    const certificado = document.getElementById("certificado");
+    const titulo = document.querySelector(".titulo");
+    const tituloGanador = document.querySelector(".certificado h1");
+    const datosGanador = document.getElementById("datosGanador");
 
-  // Cambiar el título
-  if (titulo) titulo.textContent = localStorage.getItem("tituloSorteo") || "Sorteo";
-  if (tituloGanador) tituloGanador.textContent = "Ganadores";
+    // Cambiar el título
+    if (titulo) titulo.textContent = localStorage.getItem("tituloSorteo") || "Sorteo";
+    if (tituloGanador) tituloGanador.textContent = "Ganadores";
 
-  // Dividir ganadores en dos columnas
-  const mitad = Math.ceil(ganadores.length / 2);
-  const columna1 = ganadores.slice(0, mitad);
-  const columna2 = ganadores.slice(mitad);
+    // Dividir ganadores en dos columnas
+    const mitad = Math.ceil(ganadores.length / 2);
+    const columna1 = ganadores.slice(0, mitad);
+    const columna2 = ganadores.slice(mitad);
 
-  let contenidoHTML = `<div class="ganadores-grid">
+    let contenidoHTML = `<div class="ganadores-grid">
     <div class="columna">`;
 
-  columna1.forEach(ganador => {
-    const codigo = ganador.codigo || ``;
-    const nombre = ganador.nombre || "Nombre no disponible";
-    const premio = ganador.premio || "";
+    columna1.forEach(ganador => {
+      const codigo = ganador.codigo || ``;
+      const nombre = ganador.nombre || "Nombre no disponible";
+      const premio = ganador.premio || "";
 
-    contenidoHTML += `
+      contenidoHTML += `
       <div class="ganador-item">
         <div class="codigo-ganador">${codigo}</div>
         <div class="nombre-ganador">${nombre}</div>
-        ${premio && premio !== "Sin premio" && premio.trim() !== "" ? 
+        ${premio && premio !== "Sin premio" && premio.trim() !== "" ?
           `<div class="premio-ganador">${premio}</div>` : ''}
       </div>`;
-  });
+    });
 
-  contenidoHTML += `</div><div class="columna">`;
+    contenidoHTML += `</div><div class="columna">`;
 
-  columna2.forEach(ganador => {
-    const codigo = ganador.codigo || ``;
-    const nombre = ganador.nombre || "Nombre no disponible";
-    const premio = ganador.premio || "";
+    columna2.forEach(ganador => {
+      const codigo = ganador.codigo || ``;
+      const nombre = ganador.nombre || "Nombre no disponible";
+      const premio = ganador.premio || "";
 
-    contenidoHTML += `
+      contenidoHTML += `
       <div class="ganador-item">
         <div class="codigo-ganador">${codigo}</div>
         <div class="nombre-ganador">${nombre}</div>
-        ${premio && premio !== "Sin premio" && premio.trim() !== "" ? 
+        ${premio && premio !== "Sin premio" && premio.trim() !== "" ?
           `<div class="premio-ganador">${premio}</div>` : ''}
       </div>`;
-  });
+    });
 
-  contenidoHTML += `</div></div>`;
+    contenidoHTML += `</div></div>`;
 
-  datosGanador.innerHTML = contenidoHTML;
+    datosGanador.innerHTML = contenidoHTML;
 
-  certificado.classList.add('certificado-multiple');
-}
+    certificado.classList.add('certificado-multiple');
+  }
 
 
   contenidoHTML += '</div>';
@@ -176,112 +176,115 @@ function obtenerDatosURL() {
   }
 }
 
+//Descargar certificado en PNG
 function descargarPNG() {
   const elemento = document.getElementById("certificado");
   const esMultiple = elemento.classList.contains('certificado-multiple');
 
-  // Agregar clase para remover bordes
-  elemento.classList.add('sin-bordes');
-
-  // Ajustar dimensiones según el tipo de certificado
-  const config = esMultiple ? {
-    scale: 2,
-    width: 480,
-    height: 800
-  } : {
-    scale: 3,
-    width: 320,
-    height: 570
+  // Guardar estilos previos
+  const originalStyle = {
+    maxHeight: elemento.style.maxHeight,
+    overflowY: elemento.style.overflowY
   };
 
-  html2canvas(elemento, {
-    scale: config.scale,
-    useCORS: true,
-    allowTaint: false,
-    backgroundColor: null,
-    width: config.width,
-    height: config.height,
-    scrollX: 0,
-    scrollY: 0,
-    windowWidth: config.width,
-    windowHeight: config.height
-  }).then(canvas => {
-    elemento.classList.remove('sin-bordes');
+  // Expandir para capturar todo
+  if (esMultiple) {
+    elemento.style.maxHeight = "none";
+    elemento.style.overflowY = "visible";
+  }
 
-    const link = document.createElement('a');
-    link.download = esMultiple ? 'certificado-ganadores.png' : 'certificado.png';
-    link.href = canvas.toDataURL('image/png', 1.0);
-    link.click();
-  }).catch(error => {
-    elemento.classList.remove('sin-bordes');
-    console.error('Error al generar PNG:', error);
-    alert('Error al descargar la imagen. Inténtalo de nuevo.');
-  });
+  // Quitar bordes si es necesario
+  elemento.classList.add("sin-bordes");
+
+  setTimeout(() => {
+    html2canvas(elemento, {
+      scale: 3,
+      useCORS: true,
+      backgroundColor: "#ffffff",
+      scrollX: 0,
+      scrollY: 0,
+      windowWidth: elemento.scrollWidth,
+      windowHeight: elemento.scrollHeight
+    }).then(canvas => {
+      // Restaurar estilos
+      if (esMultiple) {
+        elemento.style.maxHeight = originalStyle.maxHeight;
+        elemento.style.overflowY = originalStyle.overflowY;
+      }
+      elemento.classList.remove("sin-bordes");
+
+      const botones = document.querySelector(".botones");
+      botones.style.display = "none";
+      botones.style.display = "flex";
+
+      const link = document.createElement("a");
+      link.download = esMultiple ? "certificado-ganadores.png" : "certificado.png";
+      link.href = canvas.toDataURL("image/png", 1.0);
+      link.click();
+    }).catch(error => {
+      elemento.classList.remove("sin-bordes");
+      console.error("Error al generar PNG:", error);
+      alert("Error al descargar la imagen. Inténtalo de nuevo.");
+    });
+  }, 100);
 }
 
+
+//descargar Certificado en PDF
 function descargarPDF() {
   const elemento = document.getElementById("certificado");
   const esMultiple = elemento.classList.contains('certificado-multiple');
 
-  elemento.classList.add('sin-bordes');
-
-  const config = esMultiple ? {
-    scale: 3,
-    width: 480,
-    height: 800
-  } : {
-    scale: 4,
-    width: 320,
-    height: 570
+  // Guardar estilos previos
+  const originalStyle = {
+    maxHeight: elemento.style.maxHeight,
+    overflowY: elemento.style.overflowY
   };
 
-  html2canvas(elemento, {
-    scale: config.scale,
-    useCORS: true,
-    allowTaint: false,
-    backgroundColor: null,
-    width: config.width,
-    height: config.height,
-    scrollX: 0,
-    scrollY: 0,
-    windowWidth: config.width,
-    windowHeight: config.height
-  }).then(canvas => {
-    elemento.classList.remove('sin-bordes');
+  // Expandir para capturar todo
+  if (esMultiple) {
+    elemento.style.maxHeight = "none";
+    elemento.style.overflowY = "visible";
+  }
 
-    const imgData = canvas.toDataURL('image/png', 1.0);
-    const { jsPDF } = window.jspdf;
+  elemento.classList.add("sin-bordes");
 
-    const imgWidth = canvas.width;
-    const imgHeight = canvas.height;
-    const ratio = imgWidth / imgHeight;
+  setTimeout(() => {
+    html2canvas(elemento, {
+      scale: 3,
+      useCORS: true,
+      backgroundColor: "#ffffff",
+      scrollX: 0,
+      scrollY: 0,
+      windowWidth: elemento.scrollWidth,
+      windowHeight: elemento.scrollHeight
+    }).then(canvas => {
+      if (esMultiple) {
+        elemento.style.maxHeight = originalStyle.maxHeight;
+        elemento.style.overflowY = originalStyle.overflowY;
+      }
+      elemento.classList.remove("sin-bordes");
 
-    let pdfWidth, pdfHeight;
+      const imgData = canvas.toDataURL("image/png", 1.0);
+      const { jsPDF } = window.jspdf;
 
-    if (ratio > 1) {
-      pdfWidth = 297;
-      pdfHeight = pdfWidth / ratio;
-    } else {
-      pdfHeight = 210;
-      pdfWidth = pdfHeight * ratio;
-    }
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'px',
+        format: [canvas.width, canvas.height]
+      });
 
-    const pdf = new jsPDF({
-      orientation: ratio > 1 ? 'landscape' : 'portrait',
-      unit: 'mm',
-      format: [pdfWidth, pdfHeight]
+      pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+      const filename = esMultiple ? "certificado-ganadores.pdf" : "certificado.pdf";
+      pdf.save(filename);
+    }).catch(error => {
+      elemento.classList.remove("sin-bordes");
+      console.error("Error al generar PDF:", error);
+      alert("Error al descargar el PDF. Inténtalo de nuevo.");
     });
-
-    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight, '', 'FAST');
-    const filename = esMultiple ? 'certificado-ganadores.pdf' : 'certificado.pdf';
-    pdf.save(filename);
-
-  }).catch(error => {
-    elemento.classList.remove('sin-bordes');
-    console.error('Error al generar PDF:', error);
-    alert('Error al descargar el PDF. Inténtalo de nuevo.');
-  });
+  }, 100);
 }
+
 
 // Cambiar fondo de certificado
 function configurarCambioFondo() {

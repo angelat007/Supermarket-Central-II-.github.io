@@ -314,10 +314,14 @@ ol li {
 /*orden en los ganadores*/
 /* Estilo general para múltiples ganadores */
 .certificado-multiple {
-  height: auto;
-  max-height: 650px;
-  overflow-y: auto;
-  padding-bottom: 30px; 
+  height: auto !important;
+  max-height: none !important;
+  overflow-y: visible !important;
+  padding-bottom: 30px;
+}
+
+.sin-bordes::before {
+  display: none !important;
 }
 
 /* Grid de ganadores */
