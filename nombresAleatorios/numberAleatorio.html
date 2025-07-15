@@ -12,7 +12,10 @@
 <body>
 
     <div class="logo">
-        <a href="../index.html"><img src="../Media/Log-super-plaza-venezuela_2.webp" width="200" alt=""></a>
+        <a href="../index.html" class="tooltip-logo">
+            <img src="../Media/Log-super-plaza-venezuela_2.webp" width="200" alt="Logo" />
+            <span class="tooltip-text">Ir a la página principal</span>
+        </a>
     </div>
 
     <section id="sorteo-numeros">
@@ -25,35 +28,39 @@
                 <div class="number-input-container">
                     <label>Número mínimo</label>
                     <div class="number-input-wrapper">
-                        <input type="number" id="minNumero"/>
+                        <input type="number" id="minNumero" />
                         <div class="number-controls">
                             <button class="increment-btn" data-target="minNumero">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="m18 15-6-6-6 6"/>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="m18 15-6-6-6 6" />
                                 </svg>
                             </button>
                             <button class="decrement-btn" data-target="minNumero">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="m6 9 6 6 6-6"/>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="m6 9 6 6 6-6" />
                                 </svg>
                             </button>
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="number-input-container">
                     <label>Número máximo</label>
                     <div class="number-input-wrapper">
                         <input type="number" id="maxNumero">
                         <div class="number-controls">
                             <button class="increment-btn" data-target="maxNumero">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="m18 15-6-6-6 6"/>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="m18 15-6-6-6 6" />
                                 </svg>
                             </button>
                             <button class="decrement-btn" data-target="maxNumero">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="m6 9 6 6 6-6"/>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="m6 9 6 6 6-6" />
                                 </svg>
                             </button>
                         </div>
@@ -78,13 +85,15 @@
                     <input type="number" id="cantidadNumeros" value="1" min="1" />
                     <div class="number-controls">
                         <button class="increment-btn" data-target="cantidadNumeros">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="m18 15-6-6-6 6"/>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="m18 15-6-6-6 6" />
                             </svg>
                         </button>
                         <button class="decrement-btn" data-target="cantidadNumeros">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="m6 9 6 6 6-6"/>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="m6 9 6 6 6-6" />
                             </svg>
                         </button>
                     </div>
@@ -92,7 +101,7 @@
             </div>
 
             <label class="checkbox-label">
-                <input type="checkbox" id="unicos" checked /> 
+                <input type="checkbox" id="unicos" checked />
                 Números únicos (sin repetir)
             </label>
         </div>

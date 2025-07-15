@@ -71,6 +71,46 @@ body {
   font-weight: bold;
 }
 
+/*texto redirigente*/
+ .tooltip-logo {
+     position: relative;
+     display: inline-block;
+ }
+
+ .tooltip-text {
+     position: absolute;
+     top: 50%;
+     right: -300px;
+     /* Posición hacia la derecha */
+     transform: translate(-100%, -50%);
+     color: rgb(38, 38, 38);
+     padding: 6px 10px;
+     border-radius: 6px;
+     font-size: 14px;
+     white-space: nowrap;
+     opacity: 0;
+     visibility: hidden;
+     transition: opacity 0.3s ease, visibility 0.3s ease;
+     z-index: 1000;
+ }
+
+ .tooltip-logo:hover .tooltip-text {
+     opacity: 1;
+     visibility: visible;
+ }
+
+ @keyframes aparecer {
+     from {
+         transform: translateX(-50%) translateY(20px);
+         opacity: 0;
+     }
+
+     to {
+         transform: translateX(-50%) translateY(0);
+         opacity: 1;
+     }
+ }
+
 /* Contenedor con scroll */
 .scroll-container {
   max-height: 400px;
