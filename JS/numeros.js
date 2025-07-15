@@ -8,7 +8,7 @@ function setupNumberControls() {
             const currentValue = parseInt(input.value) || 1;
             
             // Establecer límites específicos para cada campo
-            let maxValue = 1000;
+            let maxValue = Number.MAX_SAFE_INTEGER;
             if (targetId === 'minNumero') {
                 const maxNumero = parseInt(document.getElementById('maxNumero').value) || 100;
                 maxValue = maxNumero - 1;
@@ -28,7 +28,7 @@ function setupNumberControls() {
             const currentValue = parseInt(input.value) || 1;
             
             // Establecer límites específicos para cada campo
-            let minValue = 1;
+            let minValue = Number.MIN_SAFE_INTEGER;
             if (targetId === 'maxNumero') {
                 const minNumero = parseInt(document.getElementById('minNumero').value) || 1;
                 minValue = minNumero + 1;
@@ -111,17 +111,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('minNumero').addEventListener('input', (e) => {
         const value = parseInt(e.target.value);
         const maxValue = parseInt(document.getElementById('maxNumero').value);
-        if (value >= maxValue) {
-            e.target.value = maxValue - 1;
-        }
     });
 
     document.getElementById('maxNumero').addEventListener('input', (e) => {
         const value = parseInt(e.target.value);
         const minValue = parseInt(document.getElementById('minNumero').value);
-        if (value <= minValue) {
-            e.target.value = minValue + 1;
-        }
     });
 
     document.getElementById('cantidadNumeros').addEventListener('input', (e) => {
