@@ -71,6 +71,16 @@ hr {
   font-size: 1.2em;
 }
 
+#animacionTipo option {
+  background-color: #006938;
+  color: white;
+  padding: 12px;
+}
+
+#animacionTipo option {
+  background-color: #018447;
+}
+
 .panel-opciones label {
   display: block;
   margin-top: 1rem;

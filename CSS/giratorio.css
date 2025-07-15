@@ -1,5 +1,5 @@
 html {
-  overflow-x: hidden; /* Solo oculta el scroll horizontal */
+  overflow: hidden; /* Solo oculta el scroll horizontal */
 }
 
 body {
@@ -60,6 +60,28 @@ body {
   max-width: 800px;
   margin: 1em auto;
   overflow: hidden;
+}
+
+/* Contenedor con scroll */
+.scroll-container {
+  max-height: 400px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+}
+
+/* Scrollbar personalizada */
+.scroll-container::-webkit-scrollbar {
+  width: 4px;
+} 
+
+.scroll-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
 }
 
 .encabezado {

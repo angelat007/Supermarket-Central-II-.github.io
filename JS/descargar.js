@@ -39,34 +39,61 @@ function mostrarGanadoresMultiples(ganadores) {
   const tituloGanador = document.querySelector(".certificado h1");
   const datosGanador = document.getElementById("datosGanador");
 
-  // Cambiar el título
   if (titulo) titulo.textContent = localStorage.getItem("tituloSorteo") || "Sorteo";
   if (tituloGanador) tituloGanador.textContent = "Ganadores";
 
-  // Crear ribbons para cada ganador con separación
-  let contenidoHTML = '<div class="ganadores-ribbon-container">';
-  
-  ganadores.forEach((ganador, index) => {
-    const codigo = ganador.codigo || '';
-    const nombre = ganador.nombre || "Nombre no disponible";
-    const premio = ganador.premio || "";
+  let contenidoHTML = '';
+
+  if (ganadores.length <= 3) {
+    // 🔵 Modo centrado (1 a 3 ganadores)
+    contenidoHTML += `<div class="ganadores-centrado">`;
+    ganadores.forEach(g => {
+      contenidoHTML += `
+        <div class="ganador-item">
+          <div class="codigo-ganador">${g.codigo || ''}</div>
+          <div class="nombre-ganador">${g.nombre || 'Nombre no disponible'}</div>
+          ${g.premio ? `<div class="premio-ganador">${g.premio}</div>` : ''}
+        </div>
+      `;
+    });
+    contenidoHTML += `</div>`;
+  } else {
+    // 🟢 Modo 2 columnas (4 o más ganadores)
+    const mitad = Math.ceil(ganadores.length / 2);
+    const col1 = ganadores.slice(0, mitad);
+    const col2 = ganadores.slice(mitad);
+
+    contenidoHTML += `<div class="ganadores-grid">`;
 
     contenidoHTML += `
-      <div class="ganador-ribbon ${index % 2 === 0 ? 'ribbon-left' : 'ribbon-right'}">
-        <div class="ribbon-codigo">${codigo}</div>
-        <div class="ribbon-nombre">${nombre}</div>
-        ${premio && premio !== "Sin premio" && premio.trim() !== "" ? 
-          `<div class="ribbon-premio">${premio}</div>` : ''}
+      <div class="columna">
+        ${col1.map(g => `
+          <div class="ganador-item">
+            <div class="codigo-ganador">${g.codigo || ''}</div>
+            <div class="nombre-ganador">${g.nombre || 'Nombre no disponible'}</div>
+            ${g.premio ? `<div class="premio-ganador">${g.premio}</div>` : ''}
+          </div>
+        `).join('')}
+      </div>
+      <div class="columna">
+        ${col2.map(g => `
+          <div class="ganador-item">
+            <div class="codigo-ganador">${g.codigo || ''}</div>
+            <div class="nombre-ganador">${g.nombre || 'Nombre no disponible'}</div>
+            ${g.premio ? `<div class="premio-ganador">${g.premio}</div>` : ''}
+          </div>
+        `).join('')}
       </div>
     `;
-  });
 
-  contenidoHTML += '</div>';
+    contenidoHTML += `</div>`;
+  }
+
   datosGanador.innerHTML = contenidoHTML;
-
-  // Añadir estilos específicos para múltiples ganadores
-  certificado.classList.add('certificado-multiple');
+  certificado.classList.add("certificado");
 }
+
+
 
 // Función para cargar información del sorteo
 function cargarInformacionSorteo() {
@@ -137,7 +164,7 @@ function obtenerDatosURL() {
 //Descargar certificado en PNG
 function descargarPNG() {
   const elemento = document.getElementById("certificado");
-  const esMultiple = elemento.classList.contains('certificado-multiple');
+  const esMultiple = elemento.classList.contains('certificado');
 
   // Guardar estilos previos
   const originalStyle = {
@@ -156,7 +183,7 @@ function descargarPNG() {
 
   setTimeout(() => {
     html2canvas(elemento, {
-      scale: 3,
+      scale: 5, // más calidad
       useCORS: true,
       backgroundColor: "#ffffff",
       scrollX: 0,

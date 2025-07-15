@@ -362,6 +362,15 @@ ol li {
   text-align: center;
 }
 
+/*ganadores centrados min 3*/
+.ganadores-centrado {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  padding: 20px;
+}
+
 /* Cada tarjeta de ganador */
 .ganador-item {
   text-align: center;
@@ -389,6 +398,25 @@ ol li {
   margin-top: 5px;
 }
 
+/*que se descargen bien*/
+.certificado-multiple {
+  padding-bottom: 40px;
+  height: auto !important;
+  max-height: none !important;
+  overflow-y: visible !important;
+}
+
+#certificado {
+  max-height: 100%;
+  overflow-y: auto;
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+.certificado {
+  transition: all 0.3s ease-in-out;
+}
 
 
 /* Responsive */

@@ -18,8 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
       li.style.fontFamily = '"Segoe UI", sans-serif';
       li.style.whiteSpace = 'pre';
       
-      // Colorear automáticamente (alternando por posición)
-      li.style.backgroundColor = index % 2 === 0 ? '#e3f2fd' : '#bbdefb'; // colores azul claro
+      // Sin color de fondo automático
       li.style.padding = '6px 12px';
       li.style.borderRadius = '6px';
       li.style.margin = '4px 0';
@@ -44,4 +43,3 @@ function comenzarRuleta() {
   // Redirigir a cuenta regresiva
   window.location.href = "opciones/countdown.html";
 }
-

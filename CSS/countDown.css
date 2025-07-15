@@ -1,3 +1,7 @@
+html {
+  overflow: hidden;
+}
+
 body {
   font-family: "Century Gothic Family", sans-serif;
   background-color: #f0f0f0;
@@ -67,6 +71,28 @@ body {
   font-weight: bold;
 }
 
+/* Contenedor con scroll */
+.scroll-container {
+  max-height: 400px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+}
+
+/* Scrollbar personalizada */
+.scroll-container::-webkit-scrollbar {
+  width: 4px;
+} 
+
+.scroll-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
 .listaParticipantesfinal {
   list-style: none;
   margin: 0;
@@ -75,6 +101,7 @@ body {
 
 ul#listaParticipantesfinal {
   list-style: none;
+  background: transparent; /* Sin color de fondo */
 }
 
 ul {
@@ -105,6 +132,7 @@ ul {
 #listaParticipantesfinal li {
   padding: 10px 15px;
   border-bottom: 1px solid #eee;
+  background: transparent; /* Sin color de fondo por defecto */
 }
 
 /*responsive*/
@@ -124,6 +152,10 @@ ul {
     flex-direction: column;
     gap: 10px;
     text-align: center;
+  }
+
+  .scroll-container {
+    max-height: 350px;
   }
 
   ul {
@@ -164,6 +196,10 @@ ul {
     padding: 10px;
   }
 
+  .scroll-container {
+    max-height: 300px;
+  }
+
   .shuffle-btn {
     font-size: 24px;
     margin-left: 0;
@@ -173,6 +209,19 @@ ul {
   #listaParticipantesfinal li {
     font-size: 0.95rem;
     padding: 8px 10px;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+  }
+
+  #listaParticipantesfinal li .codigo {
+    font-size: 0.8em;
+    width: 40%;
+  }
+
+  #listaParticipantesfinal li .nombre {
+    font-size: 0.9em;
+    width: 55%;
   }
 
   ul {
