@@ -99,6 +99,8 @@ function guardarOpciones() {
     window.location.href = 'nombresAleatorios/viewRuleta.html';
   } else if (animacionSeleccionada === 'cuenta') {
     window.location.href = 'nombresAleatorios/coldown.html';
+  //} else if (animacionSeleccionada === 'numeros') {
+    //window.location.href = 'nombresAleatorios/numberAleatorio.html';
   } else {
     mensajeError.textContent = 'Error: Debes seleccionar una animación válida.';
   }
