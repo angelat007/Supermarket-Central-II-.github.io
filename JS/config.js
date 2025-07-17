@@ -87,10 +87,20 @@ function guardarOpciones() {
     return;
   }
 
+  if (!titulo.trim()) {
+  mensajeError.textContent = 'Error: Debes ingresar un título para el sorteo.';
+  return;
+}
+
+if (premiosArray.length !== cantidad) {
+  alert(`Debes definir exactamente ${cantidad} premios.`);
+  return;
+}
+
   // Guardar participantes en localStorage también
-  localStorage.setItem('participantes', JSON.stringify(nombres));
-  sessionStorage.setItem('participantesFinal', JSON.stringify(nombres));
-  sessionStorage.setItem('opcionesSorteo', JSON.stringify(opciones));
+localStorage.setItem('participantes', JSON.stringify(nombres));
+localStorage.setItem('opcionesSorteo', JSON.stringify(opciones));
+
 
   // Redirige a la animación seleccionada
   if (animacionSeleccionada === 'ruleta') {
@@ -135,16 +145,39 @@ document.getElementById('logoInput').addEventListener('change', function () {
   }
 });
 
-// Aplica el logo guardado cuando se carga la página
-window.addEventListener('DOMContentLoaded', () => {
-  const savedLogo = localStorage.getItem('logoSrc');
-  if (savedLogo) {
-    const logoElement = document.querySelector('.logo');
-    if (logoElement) {
-      logoElement.src = savedLogo;
-    }
+//recuperar participantes
+function cargarParticipantes() {
+  const lista = document.getElementById('listaParticipantes');
+  const total = document.getElementById('totalParticipantes');
+
+  const participantesJSON = localStorage.getItem('participantes');
+  if (!participantesJSON) {
+    lista.innerHTML = '<li>No se cargaron participantes.</li>';
+    total.textContent = '';
+    return;
   }
-});
+
+  const participantes = JSON.parse(participantesJSON);
+
+  if (!participantes.length) {
+    lista.innerHTML = '<li>No se cargaron participantes.</li>';
+    total.textContent = '';
+    return;
+  }
+
+  lista.innerHTML = '';
+  participantes.forEach(nombre => {
+    const li = document.createElement('li');
+    li.textContent = nombre;
+    lista.appendChild(li);
+  });
+
+  total.textContent = `Total: ${participantes.length}`;
+}
+
+
+window.addEventListener('DOMContentLoaded', cargarParticipantes);
+
 
 // Muestra "SI" o "NO" al activar o desactivar un switch
 function toggleText(checkbox) {
@@ -169,36 +202,9 @@ function changeValue(id, delta) {
   }
 }
 
-// Carga los participantes guardados y los muestra en la lista
-document.addEventListener('DOMContentLoaded', () => {
-  const tituloGuardado = sessionStorage.getItem('tituloSorteo');
-  const participantesTexto = sessionStorage.getItem('participantesTexto') || '';
-
-  const tituloInput = document.getElementById('tituloSorteo');
-  const listaParticipantes = document.getElementById('listaParticipantes');
-  const totalParticipantes = document.getElementById('totalParticipantes');
-
-  if (tituloGuardado) tituloInput.value = tituloGuardado;
-
-  if (listaParticipantes && participantesTexto) {
-    listaParticipantes.innerHTML = '';
-    const filas = participantesTexto.split('\n').filter(linea => linea.trim() !== '');
-
-    filas.forEach(linea => {
-      const li = document.createElement('li');
-      li.textContent = linea;
-      li.style.fontFamily = '"Segoe UI", sans-serif';
-      li.style.whiteSpace = 'pre';
-      listaParticipantes.appendChild(li);
-    });
-
-    totalParticipantes.textContent = `Total: ${filas.length}`;
-  }
-});
-
 // Mezcla aleatoriamente la lista de participantes
 document.getElementById('shuffleBtn').addEventListener('click', () => {
-  const participantesTexto = sessionStorage.getItem('participantesTexto') || '';
+  const participantesTexto = localStorage.getItem('participantesTexto') || '';
   const filas = participantesTexto.split('\n').filter(linea => linea.trim() !== '');
   const participantesMezclados = mezclarArray([...filas]);
 

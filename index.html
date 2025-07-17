@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="styles icon" href="Media/Medio-logo.webp"/>
+  <link rel="styles icon" href="Media/Medio-logo.webp" />
   <link rel="stylesheet" href="CSS/style.css" />
   <title>Super Plaza Venezuela Sorteo</title>
 </head>
@@ -26,7 +26,7 @@
           <option value="pt">Portugués</option>
         </select>
       </div>
-      <button class="btn tema" id="darkModeToggle">🌙</button>  
+      <button class="btn tema" id="darkModeToggle">🌙</button>
     </div>
 
   </header>
@@ -39,11 +39,11 @@
       <label for="titulo">Título</label>
       <input type="text" id="titulo" placeholder="Titulo del sorteo" />
       <small class="error" id="errorTitulo"></small>
-
+      
       <label for="participantes">Participantes</label>
-      <input type="file" id="fileInput" style="display:none;">
       <textarea id="participantes" rows="10"></textarea>
       <small class="error" id="errorParticipantes"></small>
+      <small style="display: none;" id="mensajeCantidad"></small>
 
       <input type="file" id="fileInput" accept=".txt, .csv" style="display:none;">
       <button type="button" id="importarBtn" class="importar" onclick="importarArchivo()">Importar archivo</button>
@@ -51,6 +51,7 @@
     </form><br>
 
     <button class="btn comenzar" id="comenzarBtn" onclick="comenzarSorteo()">Comenzar</button>
+
   </main><br><br><br><br>
 
   <hr class="hr2"><br><br><br><br>
@@ -98,13 +99,15 @@
       <div class="footer-seccion">
         <h4>Redes Sociales</h4>
         <ul>
-          <li><a href="https://www.instagram.com/angelpj007/" target="_blank"><img src="Media/Insta.webp" width="20px">
+          <li class="ins"><a href="https://www.instagram.com/angelpj007/" target="_blank"><img src="Media/Insta.webp"
+                width="20px">
               Instagram</a></li>
           <li id="numberPhone1">📞809-575-3854 <span class="copy-msg"
               style="display: none; color: #0B6938; margin-left: 10px;"></span></li>
           <li id="numberPhone2">📞829-745-2433 <span class="copy-msg"
               style="display: none; color: #0B6938; margin-left: 10px;"></span></li>
-          <li><a href="https://maps.app.goo.gl/syGxfdKwZaqkD4sG6" target="_blank">📍Avenida Estrella Sadhala, Santiago,
+          <li class="ins"><a href="https://maps.app.goo.gl/syGxfdKwZaqkD4sG6" target="_blank">📍Avenida Estrella
+              Sadhala, Santiago,
               Dominican Republic 51000</a></li>
         </ul>
       </div>

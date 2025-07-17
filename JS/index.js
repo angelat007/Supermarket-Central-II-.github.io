@@ -1,68 +1,189 @@
 // Función para limpiar el área de texto de participantes
 function limpiarParticipantes() {
   document.getElementById("participantes").value = "";
+  document.getElementById("mensajeCantidad").style.display = "none";
+  document.getElementById("mensajeCantidad").textContent = "";
+  // Limpiar también el almacenamiento
+  sessionStorage.removeItem('participantesTexto');
+  sessionStorage.removeItem('participantes');
 }
 
-// Evento que se ejecuta cuando la página carga completamente
-document.addEventListener('DOMContentLoaded', () => {
-  const comenzarBtn = document.getElementById('comenzarBtn');
-  const tituloInput = document.getElementById('titulo');
-  const participantesInput = document.getElementById('participantes');
-  const errorTitulo = document.getElementById('errorTitulo');
-  const errorParticipantes = document.getElementById('errorParticipantes');
+// Función comenzarSorteo movida fuera del DOMContentLoaded para que sea accesible globalmente
+function comenzarSorteo() {
+  const participantesTextarea = document.getElementById('participantes');
+  const participantesTexto = participantesTextarea.value.trim();
 
-  // Al hacer clic en el botón "Comenzar"
-  comenzarBtn.addEventListener('click', function (e) {
-    let hasError = false;
+  if (!participantesTexto) {
+    alert('Por favor ingresa al menos un participante.');
+    return;
+  }
 
-    // Limpiar errores anteriores en pantalla
-    errorTitulo.textContent = '';
-    errorParticipantes.textContent = '';
-    errorTitulo.classList.remove('show');
-    errorParticipantes.classList.remove('show');
-    tituloInput.classList.remove('error-border');
-    participantesInput.classList.remove('error-border');
+  // Guardar participantes en sessionStorage en formato array
+  const participantesArray = participantesTexto.split('\n')
+    .map(p => p.trim())
+    .filter(p => p !== '');
 
-    // Obtener el valor del título y los participantes ingresados
-    const titulo = tituloInput.value.trim();
-    const participantesTexto = participantesInput.value.trim();
+  if (participantesArray.length === 0) {
+    alert('No hay participantes válidos.');
+    return;
+  }
 
-    // Dividir los participantes por línea
-    const participantes = participantesTexto
-      .split('\n')
-      .map(p => p.trim())
-      .filter(p => p !== '');
+  try {
+    // Limpiar storage anterior para hacer espacio
+    sessionStorage.removeItem('participantesTexto');
+    sessionStorage.removeItem('participantes');
+    sessionStorage.removeItem('tituloSorteo');
 
-    // Validar que se haya ingresado un título
-    if (titulo === '') {
-      errorTitulo.textContent = 'Debes ingresar un título para el sorteo.';
-      errorTitulo.classList.add('show');
-      tituloInput.classList.add('error-border');
-      hasError = true;
-    }
+    // Guardar participantes en formato array
+    sessionStorage.setItem('participantes', JSON.stringify(participantesArray));
 
-    // Validar que al menos haya dos participantes
-    if (participantes.length < 2) {
-      errorParticipantes.textContent = 'Debes ingresar al menos 2 participantes (uno por línea).';
-      errorParticipantes.classList.add('show');
-      participantesInput.classList.add('error-border');
-      hasError = true;
-    }
-
-    // Si hay errores, no se hace la redirección
-    if (hasError) {
-      e.preventDefault();
-    }
-
-    // Si todo está correcto, guardar datos en sessionStorage y avanzar a config.html
-    if (!hasError) {
+    // Guardar título si existe
+    const titulo = document.getElementById('titulo').value.trim();
+    if (titulo) {
       sessionStorage.setItem('tituloSorteo', titulo);
-      sessionStorage.setItem('participantes', JSON.stringify(participantes));
-      sessionStorage.setItem('participantesTexto', participantesTexto);
-      window.location.href = 'config.html';
     }
+
+    // Si la lista es muy grande, usar memoria en lugar de sessionStorage
+    if (participantesArray.length > 1000) {
+      sessionStorage.setItem('participantesGrandes', 'true');
+      // Guardar en variable global para archivos grandes
+      window.participantesEnMemoria = participantesArray;
+    } else {
+      sessionStorage.setItem('participantesTexto', participantesTexto);
+    }
+
+  } catch (error) {
+    // Si falla por espacio, usar solo memoria
+    console.warn('SessionStorage lleno, usando memoria:', error);
+    sessionStorage.setItem('participantesGrandes', 'true');
+    window.participantesEnMemoria = participantesArray;
+
+    // Guardar solo lo esencial
+    window.participantesGlobal = participantesArray; // guardado global en RAM
+  }
+
+  // Redirige a config.html
+  window.location.href = 'config.html';
+}
+
+// Función para actualizar y mostrar la cantidad de participantes
+function actualizarCantidad(texto) {
+  function mostrarListaParticipantes(texto) {
+    const listaDiv = document.getElementById('listaParticipantes');
+    const lineas = texto.split('\n').filter(linea => linea.trim() !== '');
+
+    if (lineas.length === 0) {
+      listaDiv.innerHTML = '<em>No hay participantes para mostrar</em>';
+      return;
+    }
+
+    // Crear una lista HTML
+    const listaHTML = lineas.map((nombre, i) => `<div>${i + 1}. ${nombre}</div>`).join('');
+    listaDiv.innerHTML = listaHTML;
+  }
+
+  textarea.addEventListener('input', () => {
+    const texto = textarea.value.trim();
+    actualizarCantidad(texto);
+    mostrarListaParticipantes(texto); // 👈 Agregado aquí
+    guardarParticipantes(texto);
   });
+
+
+  const lineas = texto.split('\n').filter(linea => linea.trim() !== '');
+  const mensajeCantidad = document.getElementById('mensajeCantidad');
+
+  if (lineas.length > 0) {
+    mensajeCantidad.textContent = `Participantes ingresados: ${lineas.length.toLocaleString()}`;
+    mensajeCantidad.style.display = 'block';
+  } else {
+    mensajeCantidad.style.display = 'none';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const textarea = document.getElementById('participantes');
+  const errorParticipantes = document.getElementById('errorParticipantes');
+  const mensajeCantidad = document.getElementById('mensajeCantidad');
+  const fileInput = document.getElementById('fileInput');
+  const comenzarBtn = document.getElementById('comenzarBtn');
+
+  let participantesEnMemoria = null;
+
+  // Cargar participantes guardados previamente
+  const participantesGuardado = sessionStorage.getItem('participantesTexto');
+  if (participantesGuardado) {
+    textarea.value = participantesGuardado;
+    actualizarCantidad(participantesGuardado);
+  }
+
+  // Evento al escribir
+  textarea.addEventListener('input', () => {
+    const texto = textarea.value.trim();
+    actualizarCantidad(texto);
+    guardarParticipantes(texto);
+  });
+
+  // Importar archivo
+  window.importarArchivo = function () {
+    fileInput.click();
+  };
+
+  fileInput.addEventListener('change', function () {
+    const archivo = this.files[0];
+    if (!archivo) return;
+
+    const lector = new FileReader();
+    lector.onload = function (e) {
+      const contenido = e.target.result;
+      textarea.value = contenido;
+      actualizarCantidad(contenido); // Mostrar cantidad después de importar
+      guardarParticipantes(contenido);
+    };
+    lector.readAsText(archivo);
+  });
+
+  // Limpiar participantes - función global redefinida aquí también
+  window.limpiarParticipantes = function () {
+    textarea.value = '';
+    mensajeCantidad.style.display = 'none';
+    mensajeCantidad.textContent = '';
+    sessionStorage.removeItem('participantesTexto');
+    sessionStorage.removeItem('participantes');
+  };
+
+  // Funciones auxiliares
+  function guardarParticipantes(texto) {
+    const lineas = texto.split('\n').filter(l => l.trim() !== '');
+
+    if (lineas.length <= 1000) {
+      try {
+        sessionStorage.setItem('participantesTexto', texto);
+      } catch (error) {
+        console.warn('Error guardando en sessionStorage:', error);
+        // Si falla por espacio, limpiar otros datos no esenciales
+        sessionStorage.removeItem('idioma');
+        sessionStorage.removeItem('modo');
+        try {
+          sessionStorage.setItem('participantesTexto', texto);
+        } catch (e) {
+          // Si aún falla, no guardar automáticamente
+          console.warn('SessionStorage lleno, no se guardará automáticamente');
+        }
+      }
+    }
+  }
 });
+
+// Función para obtener participantes (desde memoria o storage)
+function obtenerParticipantes() {
+  if (sessionStorage.getItem('participantesGrandes') === 'true') {
+    return participantesEnMemoria;
+  } else {
+    const participantesGuardados = sessionStorage.getItem('participantes');
+    return participantesGuardados ? JSON.parse(participantesGuardados) : [];
+  }
+}
 
 // Función para abrir el selector de archivos
 function importarArchivo() {
@@ -80,6 +201,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const file = this.files[0];
     if (!file) return;
 
+    // Verificar el tamaño del archivo
+    if (file.size > 20 * 1024 * 1024) { // 20MB corregido
+      alert('El archivo es demasiado grande. Por favor, usa un archivo menor a 20MB.');
+      return;
+    }
+
     const reader = new FileReader();
 
     reader.onload = function (e) {
@@ -90,34 +217,26 @@ document.addEventListener('DOMContentLoaded', () => {
         .split(/\r?\n/)
         .filter(linea => linea.trim() !== '');
 
-      // Detectar el separador más común entre: , ; tabulación o espacios dobles
-      let separadorDetectado = '\t';
-      const muestras = lineasBrutas.slice(0, 3);
-      const separadores = [',', ';', '\t', /\s{2,}/];
-      const conteos = separadores.map(sep =>
-        muestras.reduce((acc, linea) =>
-          acc + (typeof sep === 'string' ? linea.split(sep).length : linea.split(sep).length), 0)
-      );
-      const maxIndex = conteos.indexOf(Math.max(...conteos));
-      const separador = separadores[maxIndex];
+      // Limitar a 500,000 líneas para evitar problemas de memoria
+      if (lineasBrutas.length > 500000) {
+        alert('El archivo tiene demasiadas líneas. Máximo permitido: 500,000 líneas.');
+        return;
+      }
 
-      // Dividir cada línea con el separador detectado y unificar con tabulaciones
-      const lineasFinales = lineasBrutas.map(linea => {
-        let columnas = typeof separador === 'string' ? linea.split(separador) : linea.split(separador);
-        return columnas.map(col => col.trim()).join('\t');
-      });
+      // Mostrar progreso para archivos grandes
+      if (lineasBrutas.length > 50000) {
+        const progressDiv = document.createElement('div');
+        progressDiv.innerHTML = 'Procesando archivo grande... Por favor espera.';
+        progressDiv.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;padding:20px;border:1px solid #ccc;z-index:9999;';
+        document.body.appendChild(progressDiv);
 
-      participantesTextarea.value = lineasFinales.join('\n');
-
-      // Validar que haya al menos 2 líneas (participantes)
-      if (lineasFinales.length < 2) {
-        errorParticipantes.textContent = 'El archivo debe contener al menos 2 participantes.';
-        errorParticipantes.classList.add('show');
-        participantesTextarea.classList.add('error-border');
+        // Procesar en chunks para no bloquear la UI
+        setTimeout(() => {
+          procesarArchivoGrande(lineasBrutas, participantesTextarea, errorParticipantes);
+          document.body.removeChild(progressDiv);
+        }, 100);
       } else {
-        errorParticipantes.textContent = '';
-        errorParticipantes.classList.remove('show');
-        participantesTextarea.classList.remove('error-border');
+        procesarArchivoNormal(lineasBrutas, participantesTextarea, errorParticipantes);
       }
     };
 
@@ -129,43 +248,110 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+// Función para procesar archivos normales
+function procesarArchivoNormal(lineasBrutas, participantesTextarea, errorParticipantes) {
+  // Detectar el separador más común entre: , ; tabulación o espacios dobles
+  let separadorDetectado = '\t';
+  const muestras = lineasBrutas.slice(0, 3);
+  const separadores = [',', ';', '\t', /\s{2,}/];
+  const conteos = separadores.map(sep =>
+    muestras.reduce((acc, linea) =>
+      acc + (typeof sep === 'string' ? linea.split(sep).length : linea.split(sep).length), 0)
+  );
+  const maxIndex = conteos.indexOf(Math.max(...conteos));
+  const separador = separadores[maxIndex];
+
+  // Dividir cada línea con el separador detectado y unificar con tabulaciones
+  const lineasFinales = lineasBrutas.map(linea => {
+    let columnas = typeof separador === 'string' ? linea.split(separador) : linea.split(separador);
+    return columnas.map(col => col.trim()).join('\t');
+  });
+
+  participantesTextarea.value = lineasFinales.join('\n');
+
+  // Actualizar cantidad después de procesar
+  actualizarCantidad(lineasFinales.join('\n'));
+
+  validarParticipantes(lineasFinales, errorParticipantes, participantesTextarea);
+}
+
+// Función para procesar archivos grandes
+function procesarArchivoGrande(lineasBrutas, participantesTextarea, errorParticipantes) {
+  // Para archivos grandes, mostrar solo las primeras 1000 líneas en el textarea
+  const muestraLineas = lineasBrutas.slice(0, 1000);
+
+  // Mostrar muestra en el textarea
+  participantesTextarea.value = muestraLineas.join('\n') +
+    (lineasBrutas.length > 1000 ? '\n... y ' + (lineasBrutas.length - 1000) + ' líneas más' : '');
+
+  // Guardar todas las líneas en memoria
+  participantesEnMemoria = lineasBrutas;
+
+  // Actualizar cantidad con el total real
+  const mensajeCantidad = document.getElementById('mensajeCantidad');
+  mensajeCantidad.textContent = `Participantes cargados: ${lineasBrutas.length.toLocaleString()}`;
+  mensajeCantidad.style.display = 'block';
+
+  // Mostrar información adicional del archivo
+  const info = document.createElement('div');
+  info.innerHTML = `<strong>Archivo procesado:</strong> ${lineasBrutas.length.toLocaleString()} participantes total`;
+  info.style.cssText = 'color: #0B6938; margin-top: 10px; font-weight: bold; text-align: center;';
+
+  // Verificar si ya existe un mensaje similar para evitar duplicados
+  const existingInfo = participantesTextarea.parentNode.querySelector('.archivo-info');
+  if (existingInfo) {
+    existingInfo.remove();
+  }
+
+  info.classList.add('archivo-info');
+  participantesTextarea.parentNode.appendChild(info);
+
+  validarParticipantes(lineasBrutas, errorParticipantes, participantesTextarea);
+}
+
+// Función para validar participantes
+function validarParticipantes(lineasFinales, errorParticipantes, participantesTextarea) {
+  if (lineasFinales.length < 2) {
+    errorParticipantes.textContent = 'El archivo debe contener al menos 2 participantes.';
+    errorParticipantes.classList.add('show');
+    participantesTextarea.classList.add('error-border');
+  } else {
+    errorParticipantes.textContent = '';
+    errorParticipantes.classList.remove('show');
+    participantesTextarea.classList.remove('error-border');
+  }
+}
+
 // Función para mostrar el mensaje de "copiado" al usuario
 function showCopyMessage(element, message) {
   const msgSpan = element.querySelector(".copy-msg");
   msgSpan.textContent = message;
   msgSpan.style.display = "inline";
 
-  // Oculta el mensaje después de 2 segundos
   setTimeout(() => {
     msgSpan.style.display = "none";
   }, 2000);
 }
 
-// Evento para copiar el primer número de teléfono al portapapeles
-document.getElementById("numberPhone1").addEventListener("click", () => {
-  navigator.clipboard.writeText("809-575-3854");
-  showCopyMessage(document.getElementById("numberPhone1"), "¡Número copiado!");
-});
+// Eventos para copiar números de teléfono
+document.addEventListener('DOMContentLoaded', () => {
+  const phone1 = document.getElementById("numberPhone1");
+  const phone2 = document.getElementById("numberPhone2");
 
-// Evento para copiar el segundo número de teléfono
-document.getElementById("numberPhone2").addEventListener("click", () => {
-  navigator.clipboard.writeText("829-745-2433");
-  showCopyMessage(document.getElementById("numberPhone2"), "¡Número copiado!");
-});
+  if (phone1) {
+    phone1.addEventListener("click", () => {
+      navigator.clipboard.writeText("809-575-3854");
+      showCopyMessage(phone1, "¡Número copiado!");
+    });
+  }
 
-/**** *
-const traducciones = {
-  es: {
-    // ... contenido en español
-  },
-  en: {
-    // ... contenido en inglés
-  },
-  pt: {
-    // ... contenido en portugués
-  }/
-};
-/ ****/
+  if (phone2) {
+    phone2.addEventListener("click", () => {
+      navigator.clipboard.writeText("829-745-2433");
+      showCopyMessage(phone2, "¡Número copiado!");
+    });
+  }
+});
 
 // Diccionario de traducciones por idioma
 const traducciones = {
@@ -245,7 +431,11 @@ function cambiarIdioma() {
   document.querySelectorAll("#containerHelp p")[2].innerHTML = t.parrafo3;
 
   // Guardar selección en sessionStorage
-  sessionStorage.setItem("idioma", idioma);
+  try {
+    sessionStorage.setItem("idioma", idioma);
+  } catch (e) {
+    // Si falla, no pasa nada
+  }
 }
 
 // Al cargar la página, restaurar el idioma elegido anteriormente
@@ -253,67 +443,53 @@ document.addEventListener("DOMContentLoaded", () => {
   const idiomaGuardado = sessionStorage.getItem("idioma");
   if (idiomaGuardado) {
     document.getElementById("idioma").value = idiomaGuardado;
-    cambiarIdioma(); // aplicar
+    cambiarIdioma();
   }
 });
-
 
 // Evento para cargar datos previos guardados al escribir o importar
 document.addEventListener('DOMContentLoaded', () => {
   const tituloInput = document.getElementById('titulo');
   const participantesInput = document.getElementById('participantes');
-  const fileInput = document.getElementById('fileInput');
 
-  // Recuperar título y participantes desde sessionStorage
+  // Recuperar título desde sessionStorage
   const tituloGuardado = sessionStorage.getItem('tituloSorteo');
-  const participantesGuardado = sessionStorage.getItem('participantesTexto');
-
   if (tituloGuardado) tituloInput.value = tituloGuardado;
-  if (participantesGuardado) participantesInput.value = participantesGuardado;
 
-  // Guardar automáticamente lo que se escribe en los campos
+  // Solo recuperar participantes si no es un archivo grande
+  if (sessionStorage.getItem('participantesGrandes') !== 'true') {
+    const participantesGuardado = sessionStorage.getItem('participantesTexto');
+    if (participantesGuardado) {
+      participantesInput.value = participantesGuardado;
+      actualizarCantidad(participantesGuardado); // Mostrar cantidad al cargar
+    }
+  }
+
+  // Guardar automáticamente el título
   tituloInput.addEventListener('input', () => {
-    sessionStorage.setItem('tituloSorteo', tituloInput.value.trim());
+    try {
+      sessionStorage.setItem('tituloSorteo', tituloInput.value.trim());
+    } catch (e) {
+      // Si falla, no pasa nada
+    }
   });
 
+  // Para archivos pequeños, guardar automáticamente
   participantesInput.addEventListener('input', () => {
-    sessionStorage.setItem('participantesTexto', participantesInput.value.trim());
-  });
+    const texto = participantesInput.value.trim();
+    const lineas = texto.split('\n').filter(l => l.trim() !== '');
 
-  // Guardar contenido del archivo al importar
-  fileInput.addEventListener('change', function () {
-    const file = this.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-
-    reader.onload = function (e) {
-      const contenido = e.target.result;
-      const lineasBrutas = contenido.split(/\r?\n/).filter(linea => linea.trim() !== '');
-
-      const muestras = lineasBrutas.slice(0, 3);
-      const separadores = [',', ';', '\t', /\s{2,}/];
-      const conteos = separadores.map(sep =>
-        muestras.reduce((acc, linea) =>
-          acc + (typeof sep === 'string' ? linea.split(sep).length : linea.split(sep).length), 0)
-      );
-      const maxIndex = conteos.indexOf(Math.max(...conteos));
-      const separador = separadores[maxIndex];
-
-      const lineasFinales = lineasBrutas.map(linea => {
-        let columnas = typeof separador === 'string' ? linea.split(separador) : linea.split(separador);
-        return columnas.map(col => col.trim()).join('\t');
-      });
-
-      const participantesTexto = lineasFinales.join('\n');
-      participantesInput.value = participantesTexto;
-      sessionStorage.setItem('participantesTexto', participantesTexto);
-    };
-
-    reader.readAsText(file);
+    if (lineas.length <= 10000) {
+      try {
+        sessionStorage.setItem('participantesTexto', texto);
+      } catch (e) {
+        // Si falla por espacio, limpiar otros datos
+        sessionStorage.removeItem('participantesTexto');
+        sessionStorage.removeItem('participantes');
+      }
+    }
   });
 });
-
 
 // Activar/desactivar modo oscuro
 document.addEventListener('DOMContentLoaded', () => {
@@ -321,15 +497,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const body = document.body;
   const logo = document.getElementById('logoPrincipal');
 
+  if (!toggle || !logo) return;
+
   // Función para aplicar el modo oscuro o claro
   function aplicarModoOscuro(activar) {
     if (activar) {
       body.classList.add('oscuro');
-      logo.src = 'Media/Logo-blanco.webp'; // Logo blanco para fondo oscuro
+      logo.src = 'Media/Logo-blanco.webp';
       toggle.textContent = '☀️';
     } else {
       body.classList.remove('oscuro');
-      logo.src = 'Media/Log-super-plaza-venezuela_2.webp'; // Logo original
+      logo.src = 'Media/Log-super-plaza-venezuela_2.webp';
       toggle.textContent = '🌙';
     }
   }
@@ -345,3 +523,22 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem('modo', activarOscuro ? 'oscuro' : 'claro');
   });
 });
+
+// Función para procesar archivos grandes
+function procesarArchivoGrande(lineasBrutas, participantesTextarea, errorParticipantes) {
+  // Para archivos grandes, mostrar solo las primeras 1000 líneas en el textarea
+  const muestraLineas = lineasBrutas.slice(0, 1000);
+
+  // Guardar todas las líneas en memoria
+  participantesEnMemoria = lineasBrutas;
+
+  // Actualizar cantidad con el total real
+  const mensajeCantidad = document.getElementById('mensajeCantidad');
+  mensajeCantidad.textContent = `Participantes cargados: ${lineasBrutas.length.toLocaleString()}`;
+  mensajeCantidad.style.display = 'block';
+
+  // *** CÓDIGO ELIMINADO: Ya no se muestra el mensaje "Archivo procesado" ***
+  // El mensaje amarillo de "Archivo procesado: X participantes total" ha sido removido
+
+  validarParticipantes(lineasBrutas, errorParticipantes, participantesTextarea);
+}

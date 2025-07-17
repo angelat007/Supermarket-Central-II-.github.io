@@ -11,12 +11,12 @@
 
 <body>
   <header class="logo-header">
-  <div class="containerImg">
-    <a href="index.html" class="tooltip-logo">
-      <img src="Media/Log-super-plaza-venezuela_2.webp" width="200" alt="Logo" />
-      <span class="tooltip-text">Ir a la página principal</span>
-    </a>
-  </div>
+    <div class="containerImg">
+      <a href="index.html" class="tooltip-logo">
+        <img src="Media/Log-super-plaza-venezuela_2.webp" width="200" alt="Logo" class="logo" />
+        <span class="tooltip-text">Ir a la página principal</span>
+      </a>
+    </div>
 
   </header>
   <section class="panel-opciones" id="panel">
@@ -32,8 +32,8 @@
       <div class="number-control">
         <input type="number" id="numGanadores" value="1" min="1">
         <div class="arrow-buttons">
-          <button type="button" class="btn-arrow up" onclick="changeValue('numGanadores', 1)">▲</button>
-          <button type="button" class="btn-arrow down" onclick="changeValue('numGanadores', -1)">▼</button>
+          <button type="button" class="btn-arrow up" onclick="changeValue('numGanadores', 1)" title="Incrementar">▲</button>
+          <button type="button" class="btn-arrow down" onclick="changeValue('numGanadores', -1)" title="Desaumentar">▼</button>
         </div>
       </div>
     </div>
@@ -43,8 +43,8 @@
       <div class="number-control">
         <input type="number" id="numSuplentes" value="0" min="0">
         <div class="arrow-buttons">
-          <button type="button" class="btn-arrow up" onclick="changeValue('numSuplentes', 1)">▲</button>
-          <button type="button" class="btn-arrow down" onclick="changeValue('numSuplentes', -1)">▼</button>
+          <button type="button" class="btn-arrow up" onclick="changeValue('numGanadores', 1)" title="Incrementar">▲</button>
+          <button type="button" class="btn-arrow down" onclick="changeValue('numSuplentes', -1)" title="Desaumentar">▼</button>
         </div>
       </div>
     </div>
@@ -60,7 +60,7 @@
       <ul id="premiosConfirmados" class="premio-confirmado-lista"></ul>
 
       <!-- Ventana flotante -->
-      <form id="IrVentanaFlotante" class="modal">
+      <div id="IrVentanaFlotante" class="modal" role="dialog">
         <div class="ventana">
           <h1>Premios</h1>
           <p>Agrega los premios de tu sorteo, uno por cada ganador</p>
@@ -68,9 +68,9 @@
           <button class="boton-confirmar" id="btnConfirmar">Confirmar</button>
           <button type="button" class="boton-cancelar" id="btnCancelar">Cancelar</button>
         </div>
-      </form>
+      </div>
 
-      <!---->
+      <!--Filtrar Duplicados-->
 
       <div class="toggle-container">
         <span>Filtrar Duplicados</span>
@@ -90,17 +90,6 @@
         <option value="cuenta">Cuenta Regresiva</option>
         <option value="fortuna">Ruleta de la Fortuna (MANTENIMIENTO)</option>
       </select>
-
-      <div class="toggle-container">
-        <span>Activar Sonido</span>
-        <div class="switch-wrapper">
-          <label class="switch">
-            <input type="checkbox" id="filtrarDuplicados" onchange="toggleText(this)">
-            <span class="slider"></span>
-          </label>
-          <span class="toggle-text">NO</span>
-        </div>
-      </div>
 
       <div class="input-group">
         <label for="duracionAnimacion">Duración en seg.</label>
@@ -141,7 +130,9 @@
         <button id="shuffleBtn" class="shuffle-btn" title="Mezclar participantes"><img
             src="https://cdn-icons-png.flaticon.com/512/724/724863.png" width="30px" alt="🔄"></button>
       </div>
-      <ul id="listaParticipantes" class="lista-participantes"></ul>
+      <p id="totalParticipantes"></p>
+      <ul id="listaParticipantes"></ul>
+
     </div>
   </section>
 
