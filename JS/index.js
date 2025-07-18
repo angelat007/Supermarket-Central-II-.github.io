@@ -14,78 +14,24 @@ function comenzarSorteo() {
   const participantesTexto = participantesTextarea.value.trim();
 
   if (!participantesTexto) {
-    alert('Por favor ingresa al menos un participante.');
+    console.log('Por favor ingresa al menos un participante.');
     return;
   }
 
-  // Guardar participantes en sessionStorage en formato array
-  const participantesArray = participantesTexto.split('\n')
-    .map(p => p.trim())
-    .filter(p => p !== '');
+  const titulo = document.getElementById('titulo').value.trim();
+  if (titulo) sessionStorage.setItem('tituloSorteo', titulo);
 
-  if (participantesArray.length === 0) {
-    alert('No hay participantes válidos.');
-    return;
-  }
+  // Crear un Blob con los participantes
+  const blob = new Blob([participantesTexto], { type: 'text/plain' });
+  const blobUrl = URL.createObjectURL(blob);
 
-  try {
-    // Limpiar storage anterior para hacer espacio
-    sessionStorage.removeItem('participantesTexto');
-    sessionStorage.removeItem('participantes');
-    sessionStorage.removeItem('tituloSorteo');
-
-    // Guardar participantes en formato array
-    sessionStorage.setItem('participantes', JSON.stringify(participantesArray));
-
-    // Guardar título si existe
-    const titulo = document.getElementById('titulo').value.trim();
-    if (titulo) {
-      sessionStorage.setItem('tituloSorteo', titulo);
-    }
-
-    // Si la lista es muy grande, usar memoria en lugar de sessionStorage
-    sessionStorage.setItem('participantesTexto', participantesTexto);
-    sessionStorage.setItem('participantes', JSON.stringify(participantesArray));
-
-
-  } catch (error) {
-    // Si falla por espacio, usar solo memoria
-    console.warn('SessionStorage lleno, usando memoria:', error);
-    sessionStorage.setItem('participantesGrandes', 'true');
-    window.participantesEnMemoria = participantesArray;
-
-    // Guardar solo lo esencial
-    window.participantesGlobal = participantesArray; // guardado global en RAM
-  }
-
-  // Redirige a config.html
-  window.location.href = 'config.html';
+  // Redirigir a config.html con la URL del blob como parámetro
+  window.location.href = `config.html?dataUrl=${encodeURIComponent(blobUrl)}`;
 }
+
 
 // Función para actualizar y mostrar la cantidad de participantes
 function actualizarCantidad(texto) {
-  function mostrarListaParticipantes(texto) {
-    const listaDiv = document.getElementById('listaParticipantes');
-    const lineas = texto.split('\n').filter(linea => linea.trim() !== '');
-
-    if (lineas.length === 0) {
-      listaDiv.innerHTML = '<em>No hay participantes para mostrar</em>';
-      return;
-    }
-
-    // Crear una lista HTML
-    const listaHTML = lineas.map((nombre, i) => `<div>${i + 1}. ${nombre}</div>`).join('');
-    listaDiv.innerHTML = listaHTML;
-  }
-
-  textarea.addEventListener('input', () => {
-    const texto = textarea.value.trim();
-    actualizarCantidad(texto);
-    mostrarListaParticipantes(texto); // 👈 Agregado aquí
-    guardarParticipantes(texto);
-  });
-
-
   const lineas = texto.split('\n').filter(linea => linea.trim() !== '');
   const mensajeCantidad = document.getElementById('mensajeCantidad');
 
@@ -95,6 +41,29 @@ function actualizarCantidad(texto) {
   } else {
     mensajeCantidad.style.display = 'none';
   }
+}
+
+// Función para mostrar lista de participantes (corregida)
+function mostrarListaParticipantes(texto) {
+  const listaDiv = document.getElementById('listaParticipantes');
+  if (!listaDiv) return; // Si no existe el elemento, no hacer nada
+
+  const lineas = texto.split('\n').filter(linea => linea.trim() !== '');
+
+  if (lineas.length === 0) {
+    listaDiv.innerHTML = '<em>No hay participantes para mostrar</em>';
+    return;
+  }
+
+  // Mostrar solo los primeros 100 para rendimiento
+  const participantesParaMostrar = lineas.slice(0, 100);
+  let listaHTML = participantesParaMostrar.map((nombre, i) => `<div>${i + 1}. ${nombre}</div>`).join('');
+  
+  if (lineas.length > 100) {
+    listaHTML += `<div><em>... y ${(lineas.length - 100).toLocaleString()} participantes más</em></div>`;
+  }
+  
+  listaDiv.innerHTML = listaHTML;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -117,6 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
   textarea.addEventListener('input', () => {
     const texto = textarea.value.trim();
     actualizarCantidad(texto);
+    mostrarListaParticipantes(texto);
     guardarParticipantes(texto);
   });
 
@@ -129,79 +99,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const archivo = this.files[0];
     if (!archivo) return;
 
+    // Verificar el tamaño del archivo
+    if (archivo.size > 100 * 1024 * 1024) { // 100MB
+      alert('El archivo es demasiado grande. Por favor, usa un archivo menor a 100MB.');
+      return;
+    }
+
     const lector = new FileReader();
     lector.onload = function (e) {
       const contenido = e.target.result;
-      textarea.value = contenido;
-      actualizarCantidad(contenido); // Mostrar cantidad después de importar
-      guardarParticipantes(contenido);
-    };
-    lector.readAsText(archivo);
-  });
-
-  // Limpiar participantes - función global redefinida aquí también
-  window.limpiarParticipantes = function () {
-    textarea.value = '';
-    mensajeCantidad.style.display = 'none';
-    mensajeCantidad.textContent = '';
-    sessionStorage.removeItem('participantesTexto');
-    sessionStorage.removeItem('participantes');
-  };
-
-  // Funciones auxiliares
-  function guardarParticipantes(texto) {
-    const lineas = texto.split('\n').filter(l => l.trim() !== '');
-
-    try {
-      sessionStorage.setItem('participantesTexto', texto);
-    } catch (error) {
-      console.warn('Error guardando en sessionStorage:', error);
-    }
-
-  };
-
-  // Función para obtener participantes (desde memoria o storage)
-  function obtenerParticipantes() {
-    if (sessionStorage.getItem('participantesGrandes') === 'true') {
-      return participantesEnMemoria;
-    } else {
-      const participantesGuardados = sessionStorage.getItem('participantes');
-      return participantesGuardados ? JSON.parse(participantesGuardados) : [];
-    }
-  }
-
-  // Función para abrir el selector de archivos
-  function importarArchivo() {
-    document.getElementById('fileInput').click();
-  }
-
-  // Evento que se ejecuta cuando la página termina de cargar
-  document.addEventListener('DOMContentLoaded', () => {
-    const fileInput = document.getElementById('fileInput');
-    const participantesTextarea = document.getElementById('participantes');
-    const errorParticipantes = document.getElementById('errorParticipantes');
-
-    // Al seleccionar un archivo
-    fileInput.addEventListener('change', function () {
-      const file = this.files[0];
-      if (!file) return;
-
-      // Verificar el tamaño del archivo
-      if (file.size > 100 * 1024 * 1024) { // 100MB, o más si gustas
-        console.log('El archivo es demasiado grande. Por favor, usa un archivo menor a 20MB.');
-        return;
-      }
-
-      const reader = new FileReader();
-
-      reader.onload = function (e) {
-        const contenido = e.target.result;
-
-        // Separar contenido por líneas no vacías
-        const lineasBrutas = contenido
-          .split(/\r?\n/)
-          .filter(linea => linea.trim() !== '');
-      }
+      
+      // Separar contenido por líneas no vacías
+      const lineasBrutas = contenido
+        .split(/\r?\n/)
+        .filter(linea => linea.trim() !== '');
 
       // Mostrar progreso para archivos grandes
       if (lineasBrutas.length > 50000) {
@@ -212,74 +123,85 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Procesar en chunks para no bloquear la UI
         setTimeout(() => {
-          procesarArchivoGrande(lineasBrutas, participantesTextarea, errorParticipantes);
+          procesarArchivoGrande(lineasBrutas, textarea, errorParticipantes);
           document.body.removeChild(progressDiv);
         }, 100);
       } else {
-        procesarArchivoNormal(lineasBrutas, participantesTextarea, errorParticipantes);
+        procesarArchivoNormal(lineasBrutas, textarea, errorParticipantes);
       }
-    });
-
-    reader.onerror = function () {
-      alert('Ocurrió un error al leer el archivo.');
     };
 
-    reader.readAsText(file);
+    lector.onerror = function () {
+      console.log('Ocurrió un error al leer el archivo.');
+    };
+
+    lector.readAsText(archivo);
   });
+
+  // Limpiar participantes - función global redefinida aquí también
+  window.limpiarParticipantes = function () {
+    textarea.value = '';
+    mensajeCantidad.style.display = 'none';
+    mensajeCantidad.textContent = '';
+    sessionStorage.removeItem('participantesTexto');
+    sessionStorage.removeItem('participantes');
+    
+    // Limpiar también la lista si existe
+    const listaDiv = document.getElementById('listaParticipantes');
+    if (listaDiv) {
+      listaDiv.innerHTML = '';
+    }
+  };
+
+  // Funciones auxiliares
+  function guardarParticipantes(texto) {
+    const lineas = texto.split('\n').filter(l => l.trim() !== '');
+
+    try {
+      sessionStorage.setItem('participantesTexto', texto);
+      // Guardar también como array para config.html
+      sessionStorage.setItem('participantes', JSON.stringify(lineas));
+    } catch (error) {
+      console.warn('Error guardando en sessionStorage:', error);
+    }
+  }
 
   // Función para procesar archivos normales
   function procesarArchivoNormal(lineasBrutas, participantesTextarea, errorParticipantes) {
-    // Detectar el separador más común entre: , ; tabulación o espacios dobles
-    let separadorDetectado = '\t';
-    const muestras = lineasBrutas.slice(0, 3);
-    const separadores = [',', ';', '\t', /\s{2,}/];
-    const conteos = separadores.map(sep =>
-      muestras.reduce((acc, linea) =>
-        acc + (typeof sep === 'string' ? linea.split(sep).length : linea.split(sep).length), 0)
-    );
-    const maxIndex = conteos.indexOf(Math.max(...conteos));
-    const separador = separadores[maxIndex];
-
-    // Dividir cada línea con el separador detectado y unificar con tabulaciones
-    const lineasFinales = lineasBrutas.map(linea => {
-      let columnas = typeof separador === 'string' ? linea.split(separador) : linea.split(separador);
-      return columnas.map(col => col.trim()).join('\t');
-    });
-
-    participantesTextarea.value = lineasFinales.join('\n');
-
+    const contenidoFinal = lineasBrutas.join('\n');
+    participantesTextarea.value = contenidoFinal;
+    
     // Actualizar cantidad después de procesar
-    actualizarCantidad(lineasFinales.join('\n'));
+    actualizarCantidad(contenidoFinal);
+    mostrarListaParticipantes(contenidoFinal);
+    guardarParticipantes(contenidoFinal);
 
-    validarParticipantes(lineasFinales, errorParticipantes, participantesTextarea);
+    validarParticipantes(lineasBrutas, errorParticipantes, participantesTextarea);
   }
 
   // Función para procesar archivos grandes
   function procesarArchivoGrande(lineasBrutas, participantesTextarea, errorParticipantes) {
-    //mostrar lineas
-    participantesTextarea.value = lineasBrutas.join('\n');
+    const contenidoFinal = lineasBrutas.join('\n');
+    participantesTextarea.value = contenidoFinal;
 
     // Guardar todas las líneas en memoria
     participantesEnMemoria = lineasBrutas;
 
     // Actualizar cantidad con el total real
-    const mensajeCantidad = document.getElementById('mensajeCantidad');
-    mensajeCantidad.textContent = `Participantes cargados: ${lineasBrutas.length.toLocaleString()}`;
-    mensajeCantidad.style.display = 'block';
+    actualizarCantidad(contenidoFinal);
+    mostrarListaParticipantes(contenidoFinal);
 
-    // Mostrar información adicional del archivo
-    const info = document.createElement('div');
-    info.innerHTML = `<strong>Archivo procesado:</strong> ${lineasBrutas.length.toLocaleString()} participantes total`;
-    info.style.cssText = 'color: #0B6938; margin-top: 10px; font-weight: bold; text-align: center;';
-
-    // Verificar si ya existe un mensaje similar para evitar duplicados
-    const existingInfo = participantesTextarea.parentNode.querySelector('.archivo-info');
-    if (existingInfo) {
-      existingInfo.remove();
+    // Guardar en sessionStorage
+    try {
+      sessionStorage.setItem('participantesTexto', contenidoFinal);
+      sessionStorage.setItem('participantes', JSON.stringify(lineasBrutas));
+      console.log(`Guardando ${lineasBrutas.length} participantes grandes en sessionStorage`);
+    } catch (error) {
+      console.warn('Error guardando archivo grande:', error);
+      // Fallback a memoria
+      sessionStorage.setItem('participantesGrandes', 'true');
+      window.participantesEnMemoria = lineasBrutas;
     }
-
-    info.classList.add('archivo-info');
-    participantesTextarea.parentNode.appendChild(info);
 
     validarParticipantes(lineasBrutas, errorParticipantes, participantesTextarea);
   }
@@ -297,6 +219,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // Función para obtener participantes (desde memoria o storage)
+  function obtenerParticipantes() {
+    if (sessionStorage.getItem('participantesGrandes') === 'true') {
+      return participantesEnMemoria;
+    } else {
+      const participantesGuardados = sessionStorage.getItem('participantes');
+      return participantesGuardados ? JSON.parse(participantesGuardados) : [];
+    }
+  }
+
   // Función para mostrar el mensaje de "copiado" al usuario
   function showCopyMessage(element, message) {
     const msgSpan = element.querySelector(".copy-msg");
@@ -309,24 +241,22 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Eventos para copiar números de teléfono
-  document.addEventListener('DOMContentLoaded', () => {
-    const phone1 = document.getElementById("numberPhone1");
-    const phone2 = document.getElementById("numberPhone2");
+  const phone1 = document.getElementById("numberPhone1");
+  const phone2 = document.getElementById("numberPhone2");
 
-    if (phone1) {
-      phone1.addEventListener("click", () => {
-        navigator.clipboard.writeText("809-575-3854");
-        showCopyMessage(phone1, "¡Número copiado!");
-      });
-    }
+  if (phone1) {
+    phone1.addEventListener("click", () => {
+      navigator.clipboard.writeText("809-575-3854");
+      showCopyMessage(phone1, "¡Número copiado!");
+    });
+  }
 
-    if (phone2) {
-      phone2.addEventListener("click", () => {
-        navigator.clipboard.writeText("829-745-2433");
-        showCopyMessage(phone2, "¡Número copiado!");
-      });
-    }
-  });
+  if (phone2) {
+    phone2.addEventListener("click", () => {
+      navigator.clipboard.writeText("829-745-2433");
+      showCopyMessage(phone2, "¡Número copiado!");
+    });
+  }
 
   // Diccionario de traducciones por idioma
   const traducciones = {
@@ -381,7 +311,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // Función para cambiar el contenido según el idioma
-  function cambiarIdioma() {
+  window.cambiarIdioma = function() {
     const idioma = document.getElementById("idioma").value;
     const t = traducciones[idioma];
 
@@ -411,69 +341,36 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (e) {
       // Si falla, no pasa nada
     }
-  }
+  };
 
   // Al cargar la página, restaurar el idioma elegido anteriormente
-  document.addEventListener("DOMContentLoaded", () => {
-    const idiomaGuardado = sessionStorage.getItem("idioma");
-    if (idiomaGuardado) {
-      document.getElementById("idioma").value = idiomaGuardado;
-      cambiarIdioma();
+  const idiomaGuardado = sessionStorage.getItem("idioma");
+  if (idiomaGuardado) {
+    document.getElementById("idioma").value = idiomaGuardado;
+    cambiarIdioma();
+  }
+
+  // Recuperar título desde sessionStorage
+  const tituloGuardado = sessionStorage.getItem('tituloSorteo');
+  if (tituloGuardado) {
+    document.getElementById('titulo').value = tituloGuardado;
+  }
+
+  // Guardar automáticamente el título
+  document.getElementById('titulo').addEventListener('input', (e) => {
+    try {
+      sessionStorage.setItem('tituloSorteo', e.target.value.trim());
+    } catch (error) {
+      // Si falla, no pasa nada
     }
-  });
-
-  // Evento para cargar datos previos guardados al escribir o importar
-  document.addEventListener('DOMContentLoaded', () => {
-    const tituloInput = document.getElementById('titulo');
-    const participantesInput = document.getElementById('participantes');
-
-    // Recuperar título desde sessionStorage
-    const tituloGuardado = sessionStorage.getItem('tituloSorteo');
-    if (tituloGuardado) tituloInput.value = tituloGuardado;
-
-    // Solo recuperar participantes si no es un archivo grande
-    if (sessionStorage.getItem('participantesGrandes') !== 'true') {
-      const participantesGuardado = sessionStorage.getItem('participantesTexto');
-      if (participantesGuardado) {
-        participantesInput.value = participantesGuardado;
-        actualizarCantidad(participantesGuardado); // Mostrar cantidad al cargar
-      }
-    }
-
-    // Guardar automáticamente el título
-    tituloInput.addEventListener('input', () => {
-      try {
-        sessionStorage.setItem('tituloSorteo', tituloInput.value.trim());
-      } catch (e) {
-        // Si falla, no pasa nada
-      }
-    });
-
-    // Para archivos pequeños, guardar automáticamente
-    participantesInput.addEventListener('input', () => {
-      const texto = participantesInput.value.trim();
-      const lineas = texto.split('\n').filter(l => l.trim() !== '');
-
-      if (lineas.length <= 10000) {
-        try {
-          sessionStorage.setItem('participantesTexto', texto);
-        } catch (e) {
-          // Si falla por espacio, limpiar otros datos
-          sessionStorage.removeItem('participantesTexto');
-          sessionStorage.removeItem('participantes');
-        }
-      }
-    });
   });
 
   // Activar/desactivar modo oscuro
-  document.addEventListener('DOMContentLoaded', () => {
-    const toggle = document.getElementById('darkModeToggle');
-    const body = document.body;
-    const logo = document.getElementById('logoPrincipal');
+  const toggle = document.getElementById('darkModeToggle');
+  const body = document.body;
+  const logo = document.getElementById('logoPrincipal');
 
-    if (!toggle || !logo) return;
-
+  if (toggle && logo) {
     // Función para aplicar el modo oscuro o claro
     function aplicarModoOscuro(activar) {
       if (activar) {
@@ -497,21 +394,5 @@ document.addEventListener('DOMContentLoaded', () => {
       aplicarModoOscuro(activarOscuro);
       localStorage.setItem('modo', activarOscuro ? 'oscuro' : 'claro');
     });
-  });
-
-  // Función para procesar archivos grandes
-  function procesarArchivoGrande(lineasBrutas, participantesTextarea, errorParticipantes) {
-    // Guardar todas las líneas en memoria
-    participantesEnMemoria = lineasBrutas;
-
-    // Actualizar cantidad con el total real
-    const mensajeCantidad = document.getElementById('mensajeCantidad');
-    mensajeCantidad.textContent = `Participantes cargados: ${lineasBrutas.length.toLocaleString()}`;
-    mensajeCantidad.style.display = 'block';
-
-    // *** CÓDIGO ELIMINADO: Ya no se muestra el mensaje "Archivo procesado" ***
-    // El mensaje amarillo de "Archivo procesado: X participantes total" ha sido removido
-
-      validarParticipantes(lineasBrutas, errorParticipantes, participantesTextarea)
-    }
-  });
+  }
+});
