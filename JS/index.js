@@ -1,70 +1,298 @@
 // Función para limpiar el área de texto de participantes
 function limpiarParticipantes() {
+  document.getElementById("titulo").value = "";
   document.getElementById("participantes").value = "";
   document.getElementById("mensajeCantidad").style.display = "none";
   document.getElementById("mensajeCantidad").textContent = "";
   // Limpiar también el almacenamiento
   sessionStorage.removeItem('participantesTexto');
   sessionStorage.removeItem('participantes');
+  sessionStorage.removeItem('titulo');
 }
 
-// Función comenzarSorteo movida fuera del DOMContentLoaded para que sea accesible globalmente
-function comenzarSorteo() {
-  const participantesTextarea = document.getElementById('participantes');
-  const participantesTexto = participantesTextarea.value.trim();
-
-  if (!participantesTexto) {
-    console.log('Por favor ingresa al menos un participante.');
-    return;
-  }
-
-  const titulo = document.getElementById('titulo').value.trim();
-  if (titulo) sessionStorage.setItem('tituloSorteo', titulo);
-
-  // Crear un Blob con los participantes
-  const blob = new Blob([participantesTexto], { type: 'text/plain' });
-  const blobUrl = URL.createObjectURL(blob);
-
-  // Redirigir a config.html con la URL del blob como parámetro
-  window.location.href = `config.html?dataUrl=${encodeURIComponent(blobUrl)}`;
-}
-
-
-// Función para actualizar y mostrar la cantidad de participantes
-function actualizarCantidad(texto) {
-  const lineas = texto.split('\n').filter(linea => linea.trim() !== '');
-  const mensajeCantidad = document.getElementById('mensajeCantidad');
-
-  if (lineas.length > 0) {
-    mensajeCantidad.textContent = `Participantes ingresados: ${lineas.length.toLocaleString()}`;
-    mensajeCantidad.style.display = 'block';
-  } else {
-    mensajeCantidad.style.display = 'none';
-  }
-}
-
-// Función para mostrar lista de participantes (corregida)
+// Función para mostrar lista de participantes (mejorada)
 function mostrarListaParticipantes(texto) {
   const listaDiv = document.getElementById('listaParticipantes');
-  if (!listaDiv) return; // Si no existe el elemento, no hacer nada
+  const totalParticipantesSpan = document.getElementById('totalParticipantes');
+  
+  if (!listaDiv) return;
 
   const lineas = texto.split('\n').filter(linea => linea.trim() !== '');
 
+  // Actualizar contador total
+  if (totalParticipantesSpan) {
+    totalParticipantesSpan.textContent = `Total: ${lineas.length.toLocaleString()}`;
+  }
+
   if (lineas.length === 0) {
-    listaDiv.innerHTML = '<em>No hay participantes para mostrar</em>';
+    listaDiv.innerHTML = '<div class="no-participantes"><em>No hay participantes para mostrar</em></div>';
     return;
   }
 
-  // Mostrar solo los primeros 100 para rendimiento
-  const participantesParaMostrar = lineas.slice(0, 100);
-  let listaHTML = participantesParaMostrar.map((nombre, i) => `<div>${i + 1}. ${nombre}</div>`).join('');
-  
-  if (lineas.length > 100) {
-    listaHTML += `<div><em>... y ${(lineas.length - 100).toLocaleString()} participantes más</em></div>`;
-  }
+  // Mostrar solo los primeros 200 para mejor rendimiento
+  const participantesParaMostrar = lineas.slice(0, 5000000);
+  let listaHTML = participantesParaMostrar.map((nombre, i) => 
+    `<div class="participante-item">
+      <span class="participante-numero">${i + 1}.</span>
+      <span class="participante-nombre">${nombre.trim()}</span>
+    </div>`
+  ).join('');
   
   listaDiv.innerHTML = listaHTML;
 }
+
+// Función comenzarSorteo mejorada
+function comenzarSorteo() {
+  const participantesTextarea = document.getElementById('participantes');
+  const participantesTexto = participantesTextarea.value.trim();
+  const titulo = document.getElementById('titulo').value.trim();
+  const errorTitulo = document.getElementById('errorTitulo');
+  const errorParticipantes = document.getElementById('errorParticipantes');
+
+  // Validar campos
+  if (!titulo) {
+    errorTitulo.textContent = 'Por favor ingresa un título.';
+    return;
+  } else {
+    errorTitulo.textContent = '';
+  }
+
+  if (!participantesTexto) {
+    errorParticipantes.textContent = 'Por favor ingresa al menos un participante.';
+    return;
+  } else {
+    errorParticipantes.textContent = '';
+  }
+
+  // Mostrar floatConfig
+  document.getElementById('floatConfig').style.display = 'block';
+  
+  // Cargar el título en el panel de opciones
+  document.getElementById('tituloSorteo').value = titulo;
+
+  // Mostrar automáticamente la lista de participantes en el floatConfig
+  mostrarListaParticipantes(participantesTexto);
+
+  // Guardar en sessionStorage
+  sessionStorage.setItem('tituloSorteo', titulo);
+  const lineas = participantesTexto.split('\n').filter(p => p.trim() !== '');
+  sessionStorage.setItem('participantes', JSON.stringify(lineas));
+}
+
+// Función para mezclar participantes
+function mezclarParticipantes() {
+  const participantesTextarea = document.getElementById('participantes');
+  if (!participantesTextarea) return;
+  
+  const texto = participantesTextarea.value.trim();
+  if (!texto) return;
+  
+  const lineas = texto.split('\n').filter(linea => linea.trim() !== '');
+  
+  // Algoritmo Fisher-Yates para mezclar
+  for (let i = lineas.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [lineas[i], lineas[j]] = [lineas[j], lineas[i]];
+  }
+  
+  const textoMezclado = lineas.join('\n');
+  participantesTextarea.value = textoMezclado;
+  
+  // Actualizar la lista mostrada
+  mostrarListaParticipantes(textoMezclado);
+  
+  // Guardar en sessionStorage
+  guardarParticipantes(textoMezclado);
+}
+
+// Actualizar el DOMContentLoaded para incluir los nuevos eventos
+document.addEventListener('DOMContentLoaded', () => {
+  const textarea = document.getElementById('participantes');
+  const errorParticipantes = document.getElementById('errorParticipantes');
+  const mensajeCantidad = document.getElementById('mensajeCantidad');
+  const fileInput = document.getElementById('fileInput');
+  const shuffleBtn = document.getElementById('shuffleBtn');
+
+  // Evento para cerrar floatConfig
+  document.getElementById('cerrarFloatConfig').addEventListener('click', () => {
+    document.getElementById('floatConfig').style.display = 'none';
+  });
+
+  // Evento para mezclar participantes
+  if (shuffleBtn) {
+    shuffleBtn.addEventListener('click', mezclarParticipantes);
+  }
+
+  // Cargar participantes guardados previamente
+  const participantesGuardado = sessionStorage.getItem('participantesTexto');
+  if (participantesGuardado) {
+    textarea.value = participantesGuardado;
+    actualizarCantidad(participantesGuardado);
+  }
+
+  // Evento al escribir - actualizar ambas listas
+  textarea.addEventListener('input', () => {
+    const texto = textarea.value.trim();
+    actualizarCantidad(texto);
+    
+    // Si el floatConfig está visible, actualizar también esa lista
+    const floatConfig = document.getElementById('floatConfig');
+    if (floatConfig && floatConfig.style.display === 'block') {
+      mostrarListaParticipantes(texto);
+    }
+    
+    guardarParticipantes(texto);
+  });
+
+  // Resto del código existente...
+  // (mantén todas las funciones que ya tienes como importarArchivo, etc.)
+
+  // Función auxiliar para guardar participantes
+  function guardarParticipantes(texto) {
+    const lineas = texto.split('\n').filter(l => l.trim() !== '');
+
+    try {
+      sessionStorage.setItem('participantesTexto', texto);
+      sessionStorage.setItem('participantes', JSON.stringify(lineas));
+    } catch (error) {
+      console.warn('Error guardando en sessionStorage:', error);
+    }
+  }
+
+  // Función para actualizar cantidad
+  function actualizarCantidad(texto) {
+    const lineas = texto.split('\n').filter(l => l.trim() !== '');
+    const cantidad = lineas.length;
+    
+    if (cantidad > 0) {
+      mensajeCantidad.textContent = `${cantidad.toLocaleString()} participante${cantidad !== 1 ? 's' : ''}`;
+      mensajeCantidad.style.display = 'block';
+    } else {
+      mensajeCantidad.style.display = 'none';
+    }
+  }
+
+  // Importar archivo
+  window.importarArchivo = function () {
+    fileInput.click();
+  };
+
+  fileInput.addEventListener('change', function () {
+    const archivo = this.files[0];
+    if (!archivo) return;
+
+    if (archivo.size > 100 * 1024 * 1024) {
+      alert('El archivo es demasiado grande. Por favor, usa un archivo menor a 100MB.');
+      return;
+    }
+
+    const lector = new FileReader();
+    lector.onload = function (e) {
+      const contenido = e.target.result;
+      const lineasBrutas = contenido
+        .split(/\r?\n/)
+        .filter(linea => linea.trim() !== '');
+
+      if (lineasBrutas.length > 50000) {
+        const progressDiv = document.createElement('div');
+        progressDiv.innerHTML = 'Procesando archivo grande... Por favor espera.';
+        progressDiv.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;padding:20px;border:1px solid #ccc;z-index:9999;';
+        document.body.appendChild(progressDiv);
+
+        setTimeout(() => {
+          procesarArchivoGrande(lineasBrutas, textarea, errorParticipantes);
+          document.body.removeChild(progressDiv);
+        }, 100);
+      } else {
+        procesarArchivoNormal(lineasBrutas, textarea, errorParticipantes);
+      }
+    };
+
+    lector.onerror = function () {
+      console.log('Ocurrió un error al leer el archivo.');
+    };
+
+    lector.readAsText(archivo);
+  });
+
+  // Función para procesar archivos normales
+  function procesarArchivoNormal(lineasBrutas, participantesTextarea, errorParticipantes) {
+    const contenidoFinal = lineasBrutas.join('\n');
+    participantesTextarea.value = contenidoFinal;
+    
+    actualizarCantidad(contenidoFinal);
+    guardarParticipantes(contenidoFinal);
+    
+    // Si floatConfig está visible, actualizar también
+    const floatConfig = document.getElementById('floatConfig');
+    if (floatConfig && floatConfig.style.display === 'block') {
+      mostrarListaParticipantes(contenidoFinal);
+    }
+
+    validarParticipantes(lineasBrutas, errorParticipantes, participantesTextarea);
+  }
+
+  // Función para procesar archivos grandes
+  function procesarArchivoGrande(lineasBrutas, participantesTextarea, errorParticipantes) {
+    const contenidoFinal = lineasBrutas.join('\n');
+    participantesTextarea.value = contenidoFinal;
+
+    participantesEnMemoria = lineasBrutas;
+    actualizarCantidad(contenidoFinal);
+
+    // Si floatConfig está visible, actualizar también
+    const floatConfig = document.getElementById('floatConfig');
+    if (floatConfig && floatConfig.style.display === 'block') {
+      mostrarListaParticipantes(contenidoFinal);
+    }
+
+    try {
+      sessionStorage.setItem('participantesTexto', contenidoFinal);
+      sessionStorage.setItem('participantes', JSON.stringify(lineasBrutas));
+    } catch (error) {
+      console.warn('Error guardando archivo grande:', error);
+      sessionStorage.setItem('participantesGrandes', 'true');
+      window.participantesEnMemoria = lineasBrutas;
+    }
+
+    validarParticipantes(lineasBrutas, errorParticipantes, participantesTextarea);
+  }
+
+  function validarParticipantes(lineasFinales, errorParticipantes, participantesTextarea) {
+    if (lineasFinales.length < 2) {
+      errorParticipantes.textContent = 'El archivo debe contener al menos 2 participantes.';
+      errorParticipantes.classList.add('show');
+      participantesTextarea.classList.add('error-border');
+    } else {
+      errorParticipantes.textContent = '';
+      errorParticipantes.classList.remove('show');
+      participantesTextarea.classList.remove('error-border');
+    }
+  }
+
+  // Limpiar participantes
+  window.limpiarParticipantes = function () {
+    textarea.value = '';
+    mensajeCantidad.style.display = 'none';
+    mensajeCantidad.textContent = '';
+    sessionStorage.removeItem('participantesTexto');
+    sessionStorage.removeItem('participantes');
+    
+    const listaDiv = document.getElementById('listaParticipantes');
+    const totalParticipantesSpan = document.getElementById('totalParticipantes');
+    
+    if (listaDiv) {
+      listaDiv.innerHTML = '<div class="no-participantes"><em>No hay participantes para mostrar</em></div>';
+    }
+    
+    if (totalParticipantesSpan) {
+      totalParticipantesSpan.textContent = 'Total: 0';
+    }
+  };
+
+  // Resto de tu código existente (traducciones, modo oscuro, etc.)
+  // ...
+});istaDiv.innerHTML = listaHTML;
 
 document.addEventListener('DOMContentLoaded', () => {
   const textarea = document.getElementById('participantes');
@@ -74,6 +302,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const comenzarBtn = document.getElementById('comenzarBtn');
 
   let participantesEnMemoria = null;
+  //funcion de la X
+  document.getElementById('cerrarFloatConfig').addEventListener('click', () => {
+  document.getElementById('floatConfig').style.display = 'none';
+});
+
 
   // Cargar participantes guardados previamente
   const participantesGuardado = sessionStorage.getItem('participantesTexto');

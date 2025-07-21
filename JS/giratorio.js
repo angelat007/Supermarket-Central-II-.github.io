@@ -1,56 +1,41 @@
 document.addEventListener('DOMContentLoaded', () => {
   const lista = document.getElementById('listaParticipantesfinal');
   const total = document.getElementById('totalParticipantes');
-
   const participantesJSON = sessionStorage.getItem('participantesFinal');
 
   if (participantesJSON) {
-    const participantes = JSON.parse(participantesJSON);
-    lista.innerHTML = '';
+    try {
+      const participantes = JSON.parse(participantesJSON);
 
-    participantes.forEach(nombre => {
-      const li = document.createElement('li');
-      li.textContent = nombre;
-      lista.appendChild(li);
-    });
+      lista.innerHTML = '';
+      participantes.forEach((nombre, index) => {
+        const li = document.createElement('li');
+        li.textContent = `${index + 1}. ${nombre}`;
+        li.style.whiteSpace = 'pre'; // Mantiene espacios y tabulaciones
+        li.style.wordBreak = 'break-word';
+        lista.appendChild(li);
+      });
 
-    total.textContent = `Total: ${participantes.length}`;
+      total.textContent = `Total: ${participantes.length}`;
+    } catch (e) {
+      console.error("Error al parsear participantesFinal:", e);
+    }
+  } else {
+    console.warn("No se encontraron datos en sessionStorage con la clave 'participantesFinal'");
   }
 });
 
-//funcion para mantener tabulaciones y espacios en los nombres
-document.addEventListener('DOMContentLoaded', () => {
-  const lista = document.getElementById('listaParticipantesfinal');
-  const total = document.getElementById('totalParticipantes');
-  
-
-  const participantesJSON = sessionStorage.getItem('participantesFinal');
-
-  if (participantesJSON) {
-    const participantes = JSON.parse(participantesJSON);
-    lista.innerHTML = '';
-
-    participantes.forEach(nombre => {
-      const li = document.createElement('li');
-      li.textContent = nombre;
-      li.style.fontFamily = '"Segoe UI", sans-serif;';
-      li.style.whiteSpace = 'pre'; //conserva tabulaciones y espacios
-      lista.appendChild(li);
-    });
-
-    total.textContent = `Total: ${participantes.length}`;
-  }
-});
-
+// Función para iniciar la ruleta
 function comenzarRulea() {
   const lista = [];
   document.querySelectorAll("#listaParticipantesfinal li").forEach((li) => {
-    lista.push(li.textContent.trim());
+    const texto = li.textContent.replace(/^\d+\.\s*/, ''); // Eliminar numeración si hay
+    lista.push(texto.trim());
   });
 
-  // Guardar en localStorage
+  // Guardar en localStorage para usar en giratorio.html
   localStorage.setItem("participantes", JSON.stringify(lista));
 
-  // Redirigir a giratorio.html
+  // Redirigir
   window.location.href = "opciones/giratorio.html";
 }

@@ -32,11 +32,9 @@ body {
   height: 80px;
   border-bottom: 1px solid #eee;
   background: linear-gradient(to bottom, #ffffff, #f8f8fc);
-
   box-shadow: 1px 1px 05px 0px rgb(0, 0, 0, 0.5);
   border: none;
 }
-
 
 /*idioma*/
 #language-selector {
@@ -250,7 +248,7 @@ textarea.error-border {
 }
 
 .error {
-  color: red;
+  color: rgb(255, 0, 0);
   font-size: 0.9em;
   margin-top: 4px;
   opacity: 0;

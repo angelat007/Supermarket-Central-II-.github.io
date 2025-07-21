@@ -1,103 +1,3 @@
-// Función optimizada para cargar participantes desde sessionStorage o localStorage
-function cargarParticipantes() {
-  const lista = document.getElementById('listaParticipantes');
-  const total = document.getElementById('totalParticipantes');
-
-  // Verificar que los elementos existen
-  if (!lista || !total) {
-    console.error('No se encontraron los elementos listaParticipantes o totalParticipantes');
-    return;
-  }
-
-  let participantes = [];
-
-  console.log('Intentando cargar participantes...');
-
-  // Prioridad 1: Intentar cargar desde sessionStorage (datos más recientes)
-  const participantesSessionJSON = sessionStorage.getItem('participantes');
-  if (participantesSessionJSON) {
-    try {
-      participantes = JSON.parse(participantesSessionJSON);
-      console.log('Participantes cargados desde sessionStorage JSON:', participantes.length);
-    } catch (error) {
-      console.error('Error parsing sessionStorage participants:', error);
-    }
-  }
-
-  // Prioridad 2: Si no hay en sessionStorage JSON, intentar desde texto
-  if (participantes.length === 0) {
-    const participantesTexto = sessionStorage.getItem('participantesTexto');
-    if (participantesTexto) {
-      participantes = participantesTexto.split('\n').map(p => p.trim()).filter(p => p !== '');
-      console.log('Participantes cargados desde sessionStorage texto:', participantes.length);
-    }
-  }
-
-  // Prioridad 3: Si no hay en sessionStorage, intentar desde localStorage
-  if (participantes.length === 0) {
-    const participantesLocalJSON = localStorage.getItem('participantes');
-    if (participantesLocalJSON) {
-      try {
-        participantes = JSON.parse(participantesLocalJSON);
-        console.log('Participantes cargados desde localStorage:', participantes.length);
-      } catch (error) {
-        console.error('Error parsing localStorage participants:', error);
-      }
-    }
-  }
-
-  // Prioridad 4: Intentar desde localStorage texto
-  if (participantes.length === 0) {
-    const participantesTexto = localStorage.getItem('participantesTexto');
-    if (participantesTexto) {
-      participantes = participantesTexto.split('\n').map(p => p.trim()).filter(p => p !== '');
-      console.log('Participantes cargados desde localStorage texto:', participantes.length);
-    }
-  }
-
-  // Prioridad 5: Intentar desde memoria global
-  if (participantes.length === 0 && window.participantesEnMemoria) {
-    participantes = window.participantesEnMemoria;
-    console.log('Participantes cargados desde memoria global:', participantes.length);
-  }
-
-  // Prioridad 6: Intentar cargar desde URL (blob)
-  if (participantes.length === 0) {
-    const urlParams = new URLSearchParams(window.location.search);
-    const dataUrl = urlParams.get('dataUrl');
-    if (dataUrl) {
-      console.log('Intentando cargar desde URL blob:', dataUrl);
-      fetch(dataUrl)
-        .then(response => response.text())
-        .then(texto => {
-          participantes = texto.split('\n').map(p => p.trim()).filter(p => p !== '');
-          console.log('Participantes cargados desde blob URL:', participantes.length);
-          mostrarParticipantes(participantes, lista, total);
-          
-          // Guardar en storage para uso posterior
-          try {
-            sessionStorage.setItem('participantes', JSON.stringify(participantes));
-            sessionStorage.setItem('participantesTexto', texto);
-          } catch (error) {
-            console.warn('No se pudo guardar en sessionStorage');
-          }
-        })
-        .catch(error => {
-          console.error('Error cargando desde blob URL:', error);
-          mostrarError(lista, total);
-        });
-      return; // Salir aquí porque fetch es asíncrono
-    }
-  }
-
-  // Si llegamos aquí, mostrar participantes o error
-  if (participantes.length === 0) {
-    mostrarError(lista, total);
-  } else {
-    mostrarParticipantes(participantes, lista, total);
-  }
-}
-
 // Función separada para mostrar participantes
 function mostrarParticipantes(participantes, lista, total) {
   // Limpiar lista antes de llenarla
@@ -135,12 +35,6 @@ function mostrarParticipantes(participantes, lista, total) {
       console.warn('No se pudo guardar en localStorage (quota exceeded)');
     }
   }
-}
-
-// Función separada para mostrar error
-function mostrarError(lista, total) {
-  lista.innerHTML = '<li style="color: red; font-weight: bold;">No se cargaron participantes. Regresa a la página anterior.</li>';
-  total.textContent = 'Total: 0';
 }
 
 // Función optimizada para mezclar participantes
@@ -218,7 +112,7 @@ function mezclarParticipantes() {
 function guardarOpciones() {
   const mensajeError = document.getElementById('mensajeError');
   const tituloInput = document.getElementById("tituloSorteo");
-  
+
   // Verificar que los elementos existen
   if (!tituloInput) {
     console.error('No se encontró el elemento tituloSorteo');
@@ -227,7 +121,7 @@ function guardarOpciones() {
 
   const titulo = tituloInput.value;
   localStorage.setItem("tituloSorteo", titulo);
-  
+
   if (mensajeError) {
     mensajeError.textContent = '';
   }
@@ -365,46 +259,40 @@ function guardarOpciones() {
     }
     return;
   }
+
+  localStorage.setItem('opcionesSorteo', JSON.stringify(opciones));
+  localStorage.setItem('premios', JSON.stringify(premios));
+
+  // También guardar los participantes bajo otra clave para nombresGiratorios.html
+  try {
+    const listaDOM = document.querySelectorAll('#listaParticipantes li');
+    const participantesDOM = Array.from(listaDOM).map(li => li.textContent.replace(/^\d+\.\s*/, '').trim());
+
+    sessionStorage.setItem("participantesFinal", JSON.stringify(participantesDOM));
+    console.log("participantesFinal guardados desde el DOM:", participantesDOM.length);
+  } catch (e) {
+    console.warn("No se pudo guardar participantesFinal desde el DOM:", e);
+  }
+
+
+
+  // Redirigir según la animación
+  switch (animacionSeleccionada) {
+    case "ruleta":
+      window.open("nombresAleatorios/nombresGiratorios.html", '_blank');
+      break;
+    case "cuenta":
+      window.open("nombresAleatorios/countdown.html", '_blank');
+      break;
+    case "fortuna":
+      window.open("nombresAleatorios/viewRuleta.html", '_blank');
+      break;
+    default:
+      console.warn("Animación no reconocida:", animacionSeleccionada);
+  }
 }
 
 // Función auxiliar para aplicar color principal
 function aplicarColorPrincipal(color) {
   document.documentElement.style.setProperty('--color-principal', color);
 }
-
-// Función para mezclar array (Fisher-Yates shuffle)
-function mezclarArray(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
-}
-
-// Inicialización cuando se carga el DOM
-document.addEventListener('DOMContentLoaded', function() {
-  console.log('DOM cargado, iniciando carga de participantes...');
-  
-  // Cargar participantes
-  cargarParticipantes();
-  
-  // Asignar eventos solo si los elementos existen
-  const shuffleBtn = document.getElementById('shuffleBtn');
-  if (shuffleBtn) {
-    shuffleBtn.addEventListener('click', mezclarParticipantes);
-  }
-  
-  const guardarOpcionesBtn = document.getElementById('guardarOpcionesBtn');
-  if (guardarOpcionesBtn) {
-    guardarOpcionesBtn.addEventListener('click', guardarOpciones);
-  } else {
-    console.warn('No se encontró el elemento guardarOpcionesBtn');
-  }
-  
-  // Cargar título guardado si existe
-  const tituloGuardado = localStorage.getItem('tituloSorteo') || sessionStorage.getItem('tituloSorteo');
-  const tituloInput = document.getElementById('tituloSorteo');
-  if (tituloInput && tituloGuardado) {
-    tituloInput.value = tituloGuardado;
-  }
-});

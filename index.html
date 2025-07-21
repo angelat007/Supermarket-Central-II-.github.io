@@ -6,10 +6,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="styles icon" href="Media/Medio-logo.webp" />
   <link rel="stylesheet" href="CSS/style.css" />
+  <link rel="stylesheet" href="CSS/config.css">
   <title>Super Plaza Venezuela Sorteo</title>
+
 </head>
 
 <body>
+  <!-- Overlay para oscurecer el fondo -->
+  <div class="overlay" id="overlay"></div>
+
   <header class="navbar">
     <a href="index.html">
       <img id="logoPrincipal" class="logo" src="Media/Log-super-plaza-venezuela_2.webp" width="200px"
@@ -28,7 +33,6 @@
       </div>
       <button class="btn tema" id="darkModeToggle">🌙</button>
     </div>
-
   </header>
 
   <main class="contenedor">
@@ -39,9 +43,9 @@
       <label for="titulo">Título</label>
       <input type="text" id="titulo" placeholder="Titulo del sorteo" />
       <small class="error" id="errorTitulo"></small>
-      
+
       <label for="participantes">Participantes</label>
-      <textarea id="participantes" rows="10"></textarea>
+      <textarea id="participantes" rows="10" placeholder="Ingresa los nombres de los participantes, uno por línea"></textarea>
       <small class="error" id="errorParticipantes"></small>
       <small style="display: none;" id="mensajeCantidad"></small>
 
@@ -51,8 +55,134 @@
     </form><br>
 
     <button class="btn comenzar" id="comenzarBtn" onclick="comenzarSorteo()">Comenzar</button>
-
+    <div id="progress" style="display: none; color: #555; margin-top: 10px;"></div>
   </main><br><br><br><br>
+
+  <div class="configuracion-flotante" id="floatConfig" style="display: none;">
+    <button id="cerrarFloatConfig">✖</button>
+
+    <header class="logo-header">
+      <div class="containerImg">
+        <a href="index.html" class="tooltip-logo">
+          <img src="Media/Log-super-plaza-venezuela_2.webp" width="200" alt="Logo" class="logo" />
+          <span class="tooltip-text">Ir a la página principal</span>
+        </a>
+      </div>
+    </header>
+    
+    <section class="panel-opciones" id="panel">
+      <h2>Opciones</h2>
+      <hr>
+
+      <label for="tituloSorteo">Título</label>
+      <input type="text" id="tituloSorteo" placeholder="Ej. Sorteo especial" />
+
+      <div class="input-group">
+        <label for="numGanadores"># Ganadores</label>
+        <div class="number-control">
+          <input type="number" id="numGanadores" value="1" min="1">
+          <div class="arrow-buttons">
+            <button type="button" class="btn-arrow up" onclick="changeValue('numGanadores', 1)" title="Incrementar">▲</button>
+            <button type="button" class="btn-arrow down" onclick="changeValue('numGanadores', -1)" title="Desaumentar">▼</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="numSuplentes"># Suplentes</label>
+        <div class="number-control">
+          <input type="number" id="numSuplentes" value="0" min="0">
+          <div class="arrow-buttons">
+            <button type="button" class="btn-arrow up" onclick="changeValue('numSuplentes', 1)" title="Incrementar">▲</button>
+            <button type="button" class="btn-arrow down" onclick="changeValue('numSuplentes', -1)" title="Desaumentar">▼</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="divPremio">
+        <div class="premio-header">
+          <h3>Premios</h3>
+          <a href="#IrVentanaFlotante">
+            <button type="button" class="premios">Definir</button>
+          </a>
+        </div>
+        <ul id="premiosConfirmados" class="premio-confirmado-lista"></ul>
+      </div>
+
+      <!-- Ventana flotante de premios -->
+      <div id="IrVentanaFlotante" class="modal" role="dialog" style="display: none;">
+        <div class="ventana">
+          <h1>Premios</h1>
+          <p>Agrega los premios de tu sorteo, uno por cada ganador</p>
+          <div id="inputsPremios"></div>
+          <button class="boton-confirmar" id="btnConfirmar">Confirmar</button>
+          <button type="button" class="boton-cancelar" id="btnCancelar">Cancelar</button>
+        </div>
+      </div>
+
+      <!--Filtrar Duplicados-->
+      <div class="toggle-container">
+        <span>Filtrar Duplicados</span>
+        <div class="switch-wrapper">
+          <label class="switch">
+            <input type="checkbox" id="filtrarDuplicados" onchange="toggleText(this)">
+            <span class="slider"></span>
+          </label>
+          <span class="toggle-text">NO</span>
+        </div>
+      </div>
+      <hr>
+
+      <label for="animacionTipo">Animación</label>
+      <select id="animacionTipo">
+        <option value="ruleta">Nombres Giratorios</option>
+        <option value="cuenta">Cuenta Regresiva</option>
+        <option value="fortuna">Ruleta de la Fortuna (MANTENIMIENTO)</option>
+      </select>
+
+      <div class="input-group">
+        <label for="duracionAnimacion">Duración en seg.</label>
+        <div class="number-control">
+          <input type="number" id="duracionAnimacion" value="5" min="1">
+          <div class="arrow-buttons">
+            <button type="button" class="btn-arrow up" onclick="changeValue('duracionAnimacion', 1)">▲</button>
+            <button type="button" class="btn-arrow down" onclick="changeValue('duracionAnimacion', -1)">▼</button>
+          </div>
+        </div>
+      </div>
+
+      <hr>
+
+      <label for="colorPrincipal">Color Principal</label>
+      <input type="color" id="colorPrincipal" value="#0a5c2f" />
+
+      <div class="logo-upload-container">
+        <div class="logo-label">
+          <span>Logo</span>
+          <small>Tamaño recomendado (200×50px)</small>
+        </div>
+        <input type="file" id="logoInput" accept="image/*" style="display: none;" />
+        <div id="logoPreview" style="margin-top: 10px;"></div>
+        <label for="logoInput" class="upload-button">Subir</label>
+      </div>
+
+      <button class="btn confirmar" onclick="guardarOpciones()">Confirmar</button>
+      <div id="mensajeError" style="color: red; font-weight: bold;"></div>
+    </section>
+
+    <section class="participantes-container">
+      <div class="contenedor-participantes" id="contenedorParticipantes">
+        <div class="encabezado">
+          <strong>Participantes</strong>
+          <span id="totalParticipantes">Total: 0</span>
+          <button id="shuffleBtn" class="shuffle-btn" title="Mezclar participantes">
+            <img src="https://cdn-icons-png.flaticon.com/512/724/724863.png" width="20px" alt="🔄">
+          </button>
+        </div>
+        <div id="listaParticipantes"></div>
+      </div>
+    </section>
+  </div>
 
   <hr class="hr2"><br><br><br><br>
 
@@ -71,6 +201,7 @@
         <p>Al finalizar, se generará una <strong>imagen o documento con un certificado</strong>
           que muestra los resultados del sorteo.</p>
       </div>
+    </div>
   </section><br><br><br><br><br>
 
   <hr class="hr2">
@@ -78,10 +209,12 @@
   <section id="redes">
     <h2>Redes Sociales</h2>
     <div class="container">
-      <a class="insta" href="https://www.instagram.com/superplazavenezuela/" target="_blank"><img src="Media/Insta.webp"
-          width="120px" alt="Instagram"></a><br><br><br><br>
-      <a class="face" href="https://www.facebook.com/superplazavenezuela" target="_blank"><img src="Media/Facebook.webp"
-          width="170px" alt="Facebook"></a>
+      <a class="insta" href="https://www.instagram.com/superplazavenezuela/" target="_blank">
+        <img src="Media/Insta.webp" width="120px" alt="Instagram">
+      </a><br><br><br><br>
+      <a class="face" href="https://www.facebook.com/superplazavenezuela" target="_blank">
+        <img src="Media/Facebook.webp" width="170px" alt="Facebook">
+      </a>
     </div>
   </section>
 
@@ -94,21 +227,28 @@
           ¡Bendecidos Para Bendecir! <br>
           Abiertos 24 horas para servirles siempre <br>
           Tu supermercado de confianza <br>
-          Frescura, calidad y los mejores precios</p>
+          Frescura, calidad y los mejores precios
+        </p>
       </div>
       <div class="footer-seccion">
         <h4>Redes Sociales</h4>
         <ul>
-          <li class="ins"><a href="https://www.instagram.com/angelpj007/" target="_blank"><img src="Media/Insta.webp"
-                width="20px">
-              Instagram</a></li>
-          <li id="numberPhone1">📞809-575-3854 <span class="copy-msg"
-              style="display: none; color: #0B6938; margin-left: 10px;"></span></li>
-          <li id="numberPhone2">📞829-745-2433 <span class="copy-msg"
-              style="display: none; color: #0B6938; margin-left: 10px;"></span></li>
-          <li class="ins"><a href="https://maps.app.goo.gl/syGxfdKwZaqkD4sG6" target="_blank">📍Avenida Estrella
-              Sadhala, Santiago,
-              Dominican Republic 51000</a></li>
+          <li class="ins">
+            <a href="https://www.instagram.com/angelpj007/" target="_blank">
+              <img src="Media/Insta.webp" width="20px"> Instagram
+            </a>
+          </li>
+          <li id="numberPhone1">📞809-575-3854 
+            <span class="copy-msg" style="display: none; color: #0B6938; margin-left: 10px;"></span>
+          </li>
+          <li id="numberPhone2">📞829-745-2433 
+            <span class="copy-msg" style="display: none; color: #0B6938; margin-left: 10px;"></span>
+          </li>
+          <li class="ins">
+            <a href="https://maps.app.goo.gl/syGxfdKwZaqkD4sG6" target="_blank">
+              📍Avenida Estrella Sadhala, Santiago, Dominican Republic 51000
+            </a>
+          </li>
         </ul>
       </div>
       <div class="footer-seccion">
@@ -123,11 +263,10 @@
       <p>&copy; Super Plaza Venezuela. Todos los derechos reservados.</p>
     </div>
   </footer>
+
+  <script src="JS/config.js"></script>
+  <script src="JS/index.js"></script>
   <script src="https://unpkg.com/mammoth/mammoth.browser.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
-  <script src="JS/index.js"></script>
-
-</body>
-
-</html>
+  </body>
