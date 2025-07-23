@@ -14,7 +14,7 @@ function limpiarParticipantes() {
 function mostrarListaParticipantes(texto) {
   const listaDiv = document.getElementById('listaParticipantes');
   const totalParticipantesSpan = document.getElementById('totalParticipantes');
-  
+
   if (!listaDiv) return;
 
   const lineas = texto.split('\n').filter(linea => linea.trim() !== '');
@@ -31,76 +31,167 @@ function mostrarListaParticipantes(texto) {
 
   // Mostrar solo los primeros 200 para mejor rendimiento
   const participantesParaMostrar = lineas.slice(0, 5000000);
-  let listaHTML = participantesParaMostrar.map((nombre, i) => 
-    `<div class="participante-item">
+  let listaHTML = participantesParaMostrar.map((linea, i) => {
+    const [codigo, nombre] = linea.split(',');
+    return `
+    <div class="participante-item">
       <span class="participante-numero">${i + 1}.</span>
-      <span class="participante-nombre">${nombre.trim()}</span>
-    </div>`
-  ).join('');
-  
+      <span class="participante-codigo">${codigo?.trim() || ''}</span>
+      <span class="participante-nombre">${nombre?.trim() || ''}</span>
+    </div>`;
+  }).join('');
+
+
   listaDiv.innerHTML = listaHTML;
 }
 
 // Función comenzarSorteo mejorada
 function comenzarSorteo() {
-  const participantesTextarea = document.getElementById('participantes');
-  const participantesTexto = participantesTextarea.value.trim();
-  const titulo = document.getElementById('titulo').value.trim();
-  const errorTitulo = document.getElementById('errorTitulo');
-  const errorParticipantes = document.getElementById('errorParticipantes');
+  const tituloInput = document.getElementById("titulo");
+  const participantesInput = document.getElementById("participantes");
+  const errorTitulo = document.getElementById("errorTitulo");
+  const errorParticipantes = document.getElementById("errorParticipantes");
+  const mensajeCantidad = document.getElementById("mensajeCantidad");
+  const progressDiv = document.getElementById("progress");
 
-  // Validar campos
+  const titulo = tituloInput.value.trim();
+  const participantesTexto = participantesInput.value.trim();
+
+  // Validaciones
+  errorTitulo.textContent = "";
+  errorParticipantes.textContent = "";
+  mensajeCantidad.style.display = "none";
+
   if (!titulo) {
-    errorTitulo.textContent = 'Por favor ingresa un título.';
+    errorTitulo.textContent = "Por favor, ingresa un título para el sorteo.";
     return;
-  } else {
-    errorTitulo.textContent = '';
   }
 
   if (!participantesTexto) {
-    errorParticipantes.textContent = 'Por favor ingresa al menos un participante.';
+    errorParticipantes.textContent = "Debes ingresar al menos un participante.";
     return;
-  } else {
-    errorParticipantes.textContent = '';
   }
 
-  // Mostrar floatConfig
-  document.getElementById('floatConfig').style.display = 'block';
-  
-  // Cargar el título en el panel de opciones
-  document.getElementById('tituloSorteo').value = titulo;
+  const participantes = participantesTexto
+    .split("\n")
+    .map((nombre) => nombre.trim())
+    .filter((nombre) => nombre !== "");
 
-  // Mostrar automáticamente la lista de participantes en el floatConfig
-  mostrarListaParticipantes(participantesTexto);
+  if (participantes.length < 2) {
+    mensajeCantidad.textContent = "Debes ingresar al menos 2 participantes.";
+    mensajeCantidad.style.display = "block";
+    return;
+  }
 
-  // Guardar en sessionStorage
-  sessionStorage.setItem('tituloSorteo', titulo);
-  const lineas = participantesTexto.split('\n').filter(p => p.trim() !== '');
-  sessionStorage.setItem('participantes', JSON.stringify(lineas));
+  // Mostrar mensaje de transferencia (nuevo)
+  progressDiv.style.display = "block";
+  progressDiv.innerHTML = 'Transfiriendo participantes a config... Por favor espera.';
+
+  // Simular una pequeña espera para mostrar el mensaje
+  setTimeout(() => {
+    // Llenar el panel flotante con participantes
+    const lista = document.getElementById("listaParticipantes");
+    const total = document.getElementById("totalParticipantes");
+    mostrarParticipantes(participantes, lista, total);
+
+    document.getElementById("tituloSorteo").value = titulo;
+    document.getElementById("floatConfig").style.display = "flex";
+    document.getElementById("overlay").style.display = "block";
+
+    // Ocultar el mensaje de progreso
+    progressDiv.style.display = "none";
+  }, 500); // puedes ajustar el tiempo si deseas que se vea más
 }
+
+// Esta función debe estar ya definida:
+let participantesGlobal = []; // Se guarda globalmente
+let cantidadMostrada = 100;   // Inicialmente muestra 100
+
+function mostrarParticipantes(participantes, lista, total) {
+  participantesGlobal = participantes; // Guardar para usar en "ver más"
+  lista.innerHTML = '';
+
+  const mostrarHasta = Math.min(participantes.length, cantidadMostrada);
+
+  for (let i = 0; i < mostrarHasta; i++) {
+    const div = document.createElement('div');
+    div.textContent = `${i + 1}. ${participantes[i]}`;
+    lista.appendChild(div);
+  }
+
+  total.textContent = `Total: ${participantes.length}`;
+
+  // Si hay más de 100, muestra botón "Ver más"
+  const verMasBtn = document.createElement('button');
+  verMasBtn.textContent = 'Ver más';
+  verMasBtn.classList.add('btn', 'ver-mas');
+  verMasBtn.style.marginTop = '10px';
+
+  verMasBtn.onclick = () => {
+    cantidadMostrada += 100;
+    mostrarParticipantes(participantesGlobal, lista, total);
+  };
+
+  if (participantes.length > cantidadMostrada) {
+    lista.appendChild(verMasBtn);
+  }
+}
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const btnVerMas = document.getElementById("verMasBtn");
+  if (btnVerMas) {
+    btnVerMas.addEventListener("click", mostrarMasParticipantes);
+  }
+
+  // Llama aquí a cargarParticipantes() o mostrarParticipantes(...) según tu flujo
+});
+
+
+function mostrarMasParticipantes() {
+  const lista = document.getElementById('listaParticipantes');
+  const fin = participantesMostrados + CANTIDAD_POR_CARGA;
+  const nuevos = participantesGlobal.slice(participantesMostrados, fin);
+
+  nuevos.forEach(nombre => {
+    const div = document.createElement("div");
+    div.className = "participante";
+    div.textContent = nombre;
+    lista.appendChild(div);
+  });
+
+  participantesMostrados += nuevos.length;
+
+  // Ocultar el botón si ya se mostraron todos
+  if (participantesMostrados >= participantesGlobal.length) {
+    document.getElementById('verMasBtn').style.display = 'none';
+  }
+}
+
+
 
 // Función para mezclar participantes
 function mezclarParticipantes() {
   const participantesTextarea = document.getElementById('participantes');
   if (!participantesTextarea) return;
-  
+
   const texto = participantesTextarea.value.trim();
   if (!texto) return;
-  
+
   const lineas = texto.split('\n').filter(linea => linea.trim() !== '');
-  
+
   // Algoritmo Fisher-Yates para mezclar
   for (let i = lineas.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [lineas[i], lineas[j]] = [lineas[j], lineas[i]];
   }
-  
+
   const textoMezclado = lineas.join('\n');
   participantesTextarea.value = textoMezclado;
-  
+
   // Actualizar la lista mostrada
   mostrarListaParticipantes(textoMezclado);
-  
+
   // Guardar en sessionStorage
   guardarParticipantes(textoMezclado);
 }
@@ -134,13 +225,13 @@ document.addEventListener('DOMContentLoaded', () => {
   textarea.addEventListener('input', () => {
     const texto = textarea.value.trim();
     actualizarCantidad(texto);
-    
+
     // Si el floatConfig está visible, actualizar también esa lista
     const floatConfig = document.getElementById('floatConfig');
     if (floatConfig && floatConfig.style.display === 'block') {
       mostrarListaParticipantes(texto);
     }
-    
+
     guardarParticipantes(texto);
   });
 
@@ -163,7 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function actualizarCantidad(texto) {
     const lineas = texto.split('\n').filter(l => l.trim() !== '');
     const cantidad = lineas.length;
-    
+
     if (cantidad > 0) {
       mensajeCantidad.textContent = `${cantidad.toLocaleString()} participante${cantidad !== 1 ? 's' : ''}`;
       mensajeCantidad.style.display = 'block';
@@ -219,10 +310,10 @@ document.addEventListener('DOMContentLoaded', () => {
   function procesarArchivoNormal(lineasBrutas, participantesTextarea, errorParticipantes) {
     const contenidoFinal = lineasBrutas.join('\n');
     participantesTextarea.value = contenidoFinal;
-    
+
     actualizarCantidad(contenidoFinal);
     guardarParticipantes(contenidoFinal);
-    
+
     // Si floatConfig está visible, actualizar también
     const floatConfig = document.getElementById('floatConfig');
     if (floatConfig && floatConfig.style.display === 'block') {
@@ -277,14 +368,14 @@ document.addEventListener('DOMContentLoaded', () => {
     mensajeCantidad.textContent = '';
     sessionStorage.removeItem('participantesTexto');
     sessionStorage.removeItem('participantes');
-    
+
     const listaDiv = document.getElementById('listaParticipantes');
     const totalParticipantesSpan = document.getElementById('totalParticipantes');
-    
+
     if (listaDiv) {
       listaDiv.innerHTML = '<div class="no-participantes"><em>No hay participantes para mostrar</em></div>';
     }
-    
+
     if (totalParticipantesSpan) {
       totalParticipantesSpan.textContent = 'Total: 0';
     }
@@ -292,7 +383,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Resto de tu código existente (traducciones, modo oscuro, etc.)
   // ...
-});istaDiv.innerHTML = listaHTML;
+}); istaDiv.innerHTML = listaHTML;
 
 document.addEventListener('DOMContentLoaded', () => {
   const textarea = document.getElementById('participantes');
@@ -304,8 +395,8 @@ document.addEventListener('DOMContentLoaded', () => {
   let participantesEnMemoria = null;
   //funcion de la X
   document.getElementById('cerrarFloatConfig').addEventListener('click', () => {
-  document.getElementById('floatConfig').style.display = 'none';
-});
+    document.getElementById('floatConfig').style.display = 'none';
+  });
 
 
   // Cargar participantes guardados previamente
@@ -341,7 +432,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const lector = new FileReader();
     lector.onload = function (e) {
       const contenido = e.target.result;
-      
+
       // Separar contenido por líneas no vacías
       const lineasBrutas = contenido
         .split(/\r?\n/)
@@ -378,7 +469,7 @@ document.addEventListener('DOMContentLoaded', () => {
     mensajeCantidad.textContent = '';
     sessionStorage.removeItem('participantesTexto');
     sessionStorage.removeItem('participantes');
-    
+
     // Limpiar también la lista si existe
     const listaDiv = document.getElementById('listaParticipantes');
     if (listaDiv) {
@@ -390,20 +481,21 @@ document.addEventListener('DOMContentLoaded', () => {
   function guardarParticipantes(texto) {
     const lineas = texto.split('\n').filter(l => l.trim() !== '');
 
+    // Guarda todos los participantes originales (sin truncarlos)
     try {
-      sessionStorage.setItem('participantesTexto', texto);
-      // Guardar también como array para config.html
-      sessionStorage.setItem('participantes', JSON.stringify(lineas));
-    } catch (error) {
-      console.warn('Error guardando en sessionStorage:', error);
+      localStorage.setItem("todosParticipantes", JSON.stringify(participantes));
+      console.log("Participantes completos guardados:", participantes.length);
+    } catch (e) {
+      console.error("Error al guardar todos los participantes:", e);
     }
+
   }
 
   // Función para procesar archivos normales
   function procesarArchivoNormal(lineasBrutas, participantesTextarea, errorParticipantes) {
     const contenidoFinal = lineasBrutas.join('\n');
     participantesTextarea.value = contenidoFinal;
-    
+
     // Actualizar cantidad después de procesar
     actualizarCantidad(contenidoFinal);
     mostrarListaParticipantes(contenidoFinal);
@@ -544,7 +636,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // Función para cambiar el contenido según el idioma
-  window.cambiarIdioma = function() {
+  window.cambiarIdioma = function () {
     const idioma = document.getElementById("idioma").value;
     const t = traducciones[idioma];
 

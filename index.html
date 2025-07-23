@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="styles icon" href="Media/Medio-logo.webp" />
   <link rel="stylesheet" href="CSS/style.css" />
   <link rel="stylesheet" href="CSS/config.css">
+  <link rel="stylesheet" href="CSS/giratorio.css">
+  <link rel="stylesheet" href="CSS/countDown.css">
   <title>Super Plaza Venezuela Sorteo</title>
-
 </head>
 
 <body>
@@ -45,7 +45,8 @@
       <small class="error" id="errorTitulo"></small>
 
       <label for="participantes">Participantes</label>
-      <textarea id="participantes" rows="10" placeholder="Ingresa los nombres de los participantes, uno por línea"></textarea>
+      <textarea id="participantes" rows="10"
+        placeholder="Ingresa los nombres de los participantes, uno por línea"></textarea>
       <small class="error" id="errorParticipantes"></small>
       <small style="display: none;" id="mensajeCantidad"></small>
 
@@ -58,6 +59,7 @@
     <div id="progress" style="display: none; color: #555; margin-top: 10px;"></div>
   </main><br><br><br><br>
 
+  <!--Config float-->
   <div class="configuracion-flotante" id="floatConfig" style="display: none;">
     <button id="cerrarFloatConfig">✖</button>
 
@@ -69,7 +71,7 @@
         </a>
       </div>
     </header>
-    
+
     <section class="panel-opciones" id="panel">
       <h2>Opciones</h2>
       <hr>
@@ -82,8 +84,10 @@
         <div class="number-control">
           <input type="number" id="numGanadores" value="1" min="1">
           <div class="arrow-buttons">
-            <button type="button" class="btn-arrow up" onclick="changeValue('numGanadores', 1)" title="Incrementar">▲</button>
-            <button type="button" class="btn-arrow down" onclick="changeValue('numGanadores', -1)" title="Desaumentar">▼</button>
+            <button type="button" class="btn-arrow up" onclick="changeValue('numGanadores', 1)"
+              title="Incrementar">▲</button>
+            <button type="button" class="btn-arrow down" onclick="changeValue('numGanadores', -1)"
+              title="Desaumentar">▼</button>
           </div>
         </div>
       </div>
@@ -93,8 +97,10 @@
         <div class="number-control">
           <input type="number" id="numSuplentes" value="0" min="0">
           <div class="arrow-buttons">
-            <button type="button" class="btn-arrow up" onclick="changeValue('numSuplentes', 1)" title="Incrementar">▲</button>
-            <button type="button" class="btn-arrow down" onclick="changeValue('numSuplentes', -1)" title="Desaumentar">▼</button>
+            <button type="button" class="btn-arrow up" onclick="changeValue('numSuplentes', 1)"
+              title="Incrementar">▲</button>
+            <button type="button" class="btn-arrow down" onclick="changeValue('numSuplentes', -1)"
+              title="Desaumentar">▼</button>
           </div>
         </div>
       </div>
@@ -135,9 +141,9 @@
 
       <label for="animacionTipo">Animación</label>
       <select id="animacionTipo">
-        <option value="ruleta">Nombres Giratorios</option>
-        <option value="cuenta">Cuenta Regresiva</option>
-        <option value="fortuna">Ruleta de la Fortuna (MANTENIMIENTO)</option>
+        <option value="giratorios">Nombres Giratorios</option>
+        <option value="regresiva">Cuenta Regresiva</option>
+        <option value="ruleta">Ruleta de la Fortuna (NO FUNCIONA ⚠️)</option>
       </select>
 
       <div class="input-group">
@@ -179,11 +185,70 @@
             <img src="https://cdn-icons-png.flaticon.com/512/724/724863.png" width="20px" alt="🔄">
           </button>
         </div>
-        <div id="listaParticipantes"></div>
+        <div id="listaParticipantes" class="listaParticipantesfinal"></div>
+        <button id="verMasBtn" style="display: none; margin-top: 10px;">Ver más</button>
       </div>
     </section>
   </div>
 
+
+  <!--Nombres Giratorios-->
+  <div id="floatGiratorio" style="display: none;">
+    <button class="btn-cerrar" onclick="cerrarVentanaFlotante()">✖</button>
+    <div class="containerImg">
+      <a href="index.html" class="tooltip-logo">
+        <img src="media/Log-super-plaza-venezuela_2.webp" width="200" alt="Logo" />
+        <span class="tooltip-text">Ir a la página principal</span>
+      </a>
+    </div>
+    <section class="participantes-container">
+      <div class="contenedor-participantes" id="contenedorParticipantes">
+        <div class="encabezado">
+          <strong>Participantes</strong>
+          <span id="totalParticipantes">Total: 0</span>
+        </div>
+        <div class="scroll-container">
+          <div id="listaParticipantesfinal" class="lista-participantes"></div>
+          <button id="verMasBtn" style="display: none; margin-top: 10px;">Ver más</button>
+          <div class="highlight-overlay"></div>
+        </div>
+      </div>
+      <div class="contenedorbuton">
+        <button class="btn confirmar" onclick="comenzarRulea()">Comenzar</button>
+      </div>
+    </section><br><br>
+  </div>
+
+  <!--countDown-->
+  <div id="floatRegresiva" style="display: none;">
+    <button class="btn-cerrar" onclick="cerrarVentanaFlotante()">✖</button>
+    <div class="containerImg">
+      <a href="index.html" class="tooltip-logo">
+        <img src="Media/Log-super-plaza-venezuela_2.webp" width="200" alt="Logo" />
+        <span class="tooltip-text">Ir a la página principal</span>
+      </a>
+    </div>
+    <section class="participantes-container">
+      <div class="contenedor-participantes" id="contenedorParticipantes">
+        <div class="encabezado">
+          <strong>Participantes</strong>
+          <span id="totalParticipantes">Total: 0</span>
+        </div>
+        <div class="scroll-container">
+          <ul id="listaParticipantesfinal" class="lista-participantes"></ul>
+          <button id="verMasBtn" style="display: none; margin-top: 10px;">Ver más</button>
+          <div class="highlight-overlay"></div>
+        </div>
+      </div>
+      <div class="contenedorbuton">
+        <button class="btn confirmar" onclick="comenzarRuleta()">Comenzar</button>
+      </div>
+    </section><br><br>
+  </div>
+
+
+
+  <!--footer-->
   <hr class="hr2"><br><br><br><br>
 
   <section id="containerHelp">
@@ -238,10 +303,10 @@
               <img src="Media/Insta.webp" width="20px"> Instagram
             </a>
           </li>
-          <li id="numberPhone1">📞809-575-3854 
+          <li id="numberPhone1">📞809-575-3854
             <span class="copy-msg" style="display: none; color: #0B6938; margin-left: 10px;"></span>
           </li>
-          <li id="numberPhone2">📞829-745-2433 
+          <li id="numberPhone2">📞829-745-2433
             <span class="copy-msg" style="display: none; color: #0B6938; margin-left: 10px;"></span>
           </li>
           <li class="ins">
@@ -264,9 +329,11 @@
     </div>
   </footer>
 
+
+  <script src="JS/countDown.js"></script>
+  <script src="JS/giratorio.js"></script>
   <script src="JS/config.js"></script>
   <script src="JS/index.js"></script>
   <script src="https://unpkg.com/mammoth/mammoth.browser.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
-  </body>
+</body>

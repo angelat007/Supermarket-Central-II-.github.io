@@ -37,5 +37,5 @@ function comenzarRulea() {
   localStorage.setItem("participantes", JSON.stringify(lista));
 
   // Redirigir
-  window.location.href = "opciones/giratorio.html";
+  window.location.href = "nombresAleatorios/opciones/giratorio.html";
 }

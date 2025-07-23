@@ -10,32 +10,32 @@ body {
 
 .configuracion-flotante {
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
   background-color: white;
   z-index: 1000;
-  max-width: 90vw;
-  max-height: 90vh;
   overflow-y: auto;
   overflow-x: hidden;
   padding: 0;
-  width: 100%;
-  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .configuracion-flotante #cerrarFloatConfig {
-  position: absolute;
-  top: 10px;
-  right: 15px;
+  position: fixed;
+  top: 15px;
+  right: 20px;
   background: #ff4444;
   color: white;
   border: none;
   border-radius: 50%;
-  width: 30px;
-  height: 30px;
+  width: 35px;
+  height: 35px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -59,8 +59,9 @@ hr {
 
 .configuracion-flotante .logo-header {
   text-align: center;
-  margin: 0;
+  margin: 20px 0;
   transition: transform 0.3s ease;
+  width: 100%;
 }
 
 .configuracion-flotante .logo-header:hover {
@@ -113,7 +114,8 @@ hr {
   padding: 2.5rem;
   border-radius: 10px;
   max-width: 800px;
-  margin: auto;
+  width: 90%;
+  margin: 20px auto;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
@@ -122,6 +124,7 @@ hr {
 .configuracion-flotante .panel-opciones small,
 .participantes-container {
   cursor: context-menu;
+  width: 100%;
 }
 
 .configuracion-flotante .panel-opciones h2 {
@@ -655,7 +658,8 @@ body.modal-abierto {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   background: #fff;
   max-width: 800px;
-  margin: 1em auto;
+  width: 90%;
+  margin: 20px auto;
   overflow: hidden;
 }
 
@@ -696,12 +700,41 @@ body.modal-abierto {
 }
 
 /*separar participante*/
-.configuracion-flotante #listaParticipantes ul {
+.configuracion-flotante #listaParticipantes div {
+  border-bottom: 1px solid #ddd !important; 
+  padding: 8px 12px !important;
   font-family: monospace;
   white-space: pre;
   list-style: none;
-  border-bottom: 1px solid #ddd;
+  margin-bottom: 2px;
+  background-color: #f9f9f9;
+  border-radius: 3px;
 }
+
+
+.configuracion-flotante .ver-mas {
+  background-color: transparent;
+  color: #006938;
+  border: none;
+  padding: 6px 12px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.configuracion-flotante .ver-mas:hover {
+  color: #008f4c;
+}
+
+#inputsPremios input.premioInput {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+
+/*visualizar lista bien*/
+
 
 /*responsive*/
 /* Tablets */
@@ -710,9 +743,10 @@ body.modal-abierto {
     font-size: 1.1em;
   }
 
-  .panel-opciones {
+  .configuracion-flotante .panel-opciones {
     padding: 1.5rem;
     margin: 1rem;
+    width: 95%;
   }
 
   .logo-upload-container {
@@ -721,28 +755,29 @@ body.modal-abierto {
     gap: 15px;
   }
 
-  .contenedor-participantes {
+  .configuracion-flotante .contenedor-participantes {
     margin: 1em;
     max-width: 95%;
+    width: 95%;
   }
 
-  .encabezado {
+  .configuracion-flotante .encabezado {
     flex-direction: column;
     gap: 10px;
     text-align: center;
   }
 
-  .shuffle-btn {
+  .configuracion-flotante .shuffle-btn {
     margin-left: 0;
     margin-top: 10px;
   }
 
-  .input-group {
+  .configuracion-flotante .input-group {
     flex-direction: column;
     align-items: flex-start;
   }
 
-  .input-group label {
+  .configuracion-flotante .input-group label {
     margin-bottom: 0.3rem;
   }
 
@@ -752,14 +787,14 @@ body.modal-abierto {
   }
 
   /* Modal responsive para tablets */
-  .ventana {
+  .configuracion-flotante .ventana {
     max-width: 95%;
     padding: 25px;
     max-height: 85vh;
   }
 
-  .boton-confirmar,
-  .boton-cancelar {
+  .configuracion-flotante .boton-confirmar,
+  .configuracion-flotante .boton-cancelar {
     width: 40%;
     padding: 12px 15px;
   }
@@ -771,69 +806,71 @@ body.modal-abierto {
     font-size: 1em;
   }
 
-  .panel-opciones {
+  .configuracion-flotante .panel-opciones {
     padding: 1rem;
     margin: 0.5rem;
+    width: 95%;
   }
 
-  .panel-opciones h2 {
+  .configuracion-flotante .panel-opciones h2 {
     font-size: 1.3rem;
   }
 
-  .btn.confirmar {
+  .configuracion-flotante .btn.confirmar {
     width: 100%;
     font-size: 1rem;
     padding: 0.6rem;
   }
 
-  #tituloSorteo,
-  #animacionTipo,
-  .panel-opciones input,
-  .panel-opciones select {
+  .configuracion-flotante #tituloSorteo,
+  .configuracion-flotante #animacionTipo,
+  .configuracion-flotante .panel-opciones input,
+  .configuracion-flotante .panel-opciones select {
     font-size: 1rem;
   }
 
-  .number-control input,
-  .input-group .input-num,
-  #numGanadores,
-  #numSuplentes,
-  #duracionAnimacion {
+  .configuracion-flotante .number-control input,
+  .configuracion-flotante .input-group .input-num,
+  .configuracion-flotante #numGanadores,
+  .configuracion-flotante #numSuplentes,
+  .configuracion-flotante #duracionAnimacion {
     width: 50px;
     font-size: 1rem;
   }
 
-  .logo-upload-container {
+  .configuracion-flotante .logo-upload-container {
     flex-direction: column;
     align-items: stretch;
     gap: 10px;
   }
 
-  .upload-button {
+  .configuracion-flotante .upload-button {
     width: 100%;
     text-align: center;
   }
 
-  .encabezado {
+  .configuracion-flotante .encabezado {
     flex-direction: column;
     font-size: 1rem;
     padding: 10px;
   }
 
-  .shuffle-btn {
+  .configuracion-flotante .shuffle-btn {
     font-size: 24px;
   }
 
-  .lista-participantes li {
+  .configuracion-flotante .lista-participantes li {
     font-size: 0.95rem;
     padding: 8px 10px;
   }
 
-  .contenedor-participantes {
+  .configuracion-flotante .contenedor-participantes {
     margin: 1em 0.5em;
     border-radius: 10px;
+    width: 95%;
   }
 
-  .toggle-container {
+  .configuracion-flotante .toggle-container {
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
@@ -845,32 +882,32 @@ body.modal-abierto {
   }
 
   /* Modal responsive para móviles */
-  .modal {
+  .configuracion-flotante .modal {
     padding: 10px;
   }
 
-  .ventana {
+  .configuracion-flotante .ventana {
     max-width: 95%;
     padding: 20px;
     max-height: 90vh;
   }
 
-  .ventana h1 {
+  .configuracion-flotante .ventana h1 {
     font-size: 22px;
   }
 
-  .ventana input {
+  .configuracion-flotante .ventana input {
     font-size: 16px;
     /* Evita zoom en iOS */
   }
 
-  .ventana ul,
-  .ventana ol {
+  .configuracion-flotante .ventana ul,
+  .configuracion-flotante .ventana ol {
     max-height: 180px;
   }
 
-  .boton-confirmar,
-  .boton-cancelar {
+  .configuracion-flotante .boton-confirmar,
+  .configuracion-flotante .boton-cancelar {
     width: 45%;
     padding: 12px 10px;
     font-size: 14px;

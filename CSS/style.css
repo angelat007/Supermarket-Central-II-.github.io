@@ -242,23 +242,47 @@ textarea {
   transition: border 0.3s ease;
 }
 
-input.error-border,
-textarea.error-border {
-  border: 2px solid red;
-}
-
+/* ESTILOS PARA LOS MENSAJES DE ERROR - ESTO ES LO IMPORTANTE */
 .error {
-  color: rgb(255, 0, 0);
-  font-size: 0.9em;
-  margin-top: 4px;
+  display: block;
+  color: #dc3545;
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  padding: 5px 8px;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
   opacity: 0;
-  transform: translateY(-5px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
 }
 
+/* Cuando el error está visible */
 .error.show {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* Cuando el error tiene contenido (alternativa) */
+.error:not(:empty) {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Borde rojo para campos con error */
+.error-border {
+  border-color: #dc3545 !important;
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+/* Mensaje de cantidad */
+#mensajeCantidad {
+  color: #28a745;
+  font-size: 13px;
+  margin-top: 5px;
+  font-weight: 500;
 }
 
 #labelArchivo:hover {
@@ -632,6 +656,7 @@ textarea.error-border {
 .footer-seccion ul li a:hover[href*="maps.app"] {
   color: #0B6938;
 }
+
 .footer-contenido h3,
 .footer-contenido h4 {
   color: #0B6938;
@@ -650,6 +675,7 @@ textarea.error-border {
   font-size: 14px;
   color: #ccc;
 }
+
 /* Estilos adicionales para el textarea bloqueado y mensaje de cantidad */
 /* Textarea bloqueado después de importar */
 .formulario textarea[readonly] {
@@ -676,8 +702,15 @@ textarea.error-border {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Scroll personalizado para el textarea cuando no está bloqueado */
@@ -715,7 +748,7 @@ textarea.error-border {
   border: 2px solid #0B6938;
   border-radius: 10px;
   z-index: 9999;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   font-weight: bold;
   text-align: center;
 }
@@ -726,13 +759,14 @@ textarea.error-border {
     font-size: 0.9rem;
     padding: 8px;
   }
-  
+
   .loading-indicator {
     width: 90%;
     max-width: 300px;
     font-size: 0.9rem;
   }
 }
+
 /* === RESPONSIVE === */
 @media (max-width: 992px) {
   .navbar {

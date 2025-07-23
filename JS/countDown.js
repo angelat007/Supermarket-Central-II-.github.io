@@ -41,5 +41,5 @@ function comenzarRuleta() {
   localStorage.setItem("participantes", JSON.stringify(ordenados));
 
   // Redirigir a cuenta regresiva
-  window.location.href = "opciones/countdown.html";
+  window.location.href = "nombreaAleatorios/opciones/countdown.html";
 }

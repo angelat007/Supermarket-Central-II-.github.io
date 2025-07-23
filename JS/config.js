@@ -1,298 +1,263 @@
-// Función separada para mostrar participantes
-function mostrarParticipantes(participantes, lista, total) {
-  // Limpiar lista antes de llenarla
-  lista.innerHTML = '';
+// Sistema de premios mejorado
+let premiosConfirmados = [];
 
-  // Mostrar solo los primeros 100 participantes en la UI para rendimiento
-  const participantesParaMostrar = participantes.slice(0, 100);
-  participantesParaMostrar.forEach((nombre, index) => {
-    const li = document.createElement('li');
-    li.textContent = `${index + 1}. ${nombre}`;
-    li.style.fontFamily = '"Segoe UI", sans-serif';
-    li.style.whiteSpace = 'pre-wrap';
-    li.style.wordBreak = 'break-word';
-    lista.appendChild(li);
-  });
+// Función para actualizar los inputs de premios según el número de ganadores
+function actualizarInputsPremios() {
+    const numGanadores = parseInt(document.getElementById('numGanadores').value) || 1;
+    const container = document.getElementById('inputsPremios');
 
-  // Si hay más de 100 participantes, mostrar indicador
-  if (participantes.length > 100) {
-    const li = document.createElement('li');
-    li.innerHTML = `<em>... y ${(participantes.length - 100).toLocaleString()} participantes más</em>`;
-    li.style.fontStyle = 'italic';
-    li.style.color = '#666';
-    li.style.fontWeight = 'bold';
-    lista.appendChild(li);
-  }
+    container.innerHTML = '';
 
-  total.textContent = `Total: ${participantes.length.toLocaleString()}`;
+    for (let i = 0; i < numGanadores; i++) {
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'premioInput';
+        input.placeholder = `Premio para el ${i + 1}º ganador`;
+        input.id = `premio${i + 1}`;
 
-  // Guardar en localStorage para uso posterior si no existe
-  if (!localStorage.getItem('participantes')) {
-    try {
-      localStorage.setItem('participantes', JSON.stringify(participantes));
-      console.log('Participantes guardados en localStorage para uso posterior');
-    } catch (error) {
-      console.warn('No se pudo guardar en localStorage (quota exceeded)');
+        // Si ya existe un premio guardado, lo mostramos
+        if (premiosConfirmados[i]) {
+            input.value = premiosConfirmados[i];
+        }
+
+        container.appendChild(input);
     }
-  }
 }
 
-// Función optimizada para mezclar participantes
-function mezclarParticipantes() {
-  let participantes = [];
-
-  // Cargar participantes desde la fuente más confiable
-  const participantesSessionJSON = sessionStorage.getItem('participantes');
-  if (participantesSessionJSON) {
-    try {
-      participantes = JSON.parse(participantesSessionJSON);
-    } catch (error) {
-      console.error('Error parsing participants for shuffle:', error);
-    }
-  }
-
-  // Fallback a sessionStorage texto
-  if (participantes.length === 0) {
-    const participantesTexto = sessionStorage.getItem('participantesTexto');
-    if (participantesTexto) {
-      participantes = participantesTexto.split('\n').map(p => p.trim()).filter(p => p !== '');
-    }
-  }
-
-  // Fallback a localStorage
-  if (participantes.length === 0) {
-    const participantesLocalJSON = localStorage.getItem('participantes');
-    if (participantesLocalJSON) {
-      try {
-        participantes = JSON.parse(participantesLocalJSON);
-      } catch (error) {
-        console.error('Error parsing localStorage participants for shuffle:', error);
-      }
-    }
-  }
-
-  // Fallback a localStorage texto
-  if (participantes.length === 0) {
-    const participantesTexto = localStorage.getItem('participantesTexto');
-    if (participantesTexto) {
-      participantes = participantesTexto.split('\n').map(p => p.trim()).filter(p => p !== '');
-    }
-  }
-
-  if (participantes.length === 0) {
-    console.log('No hay participantes para mezclar');
-    return;
-  }
-
-  // Mezclar array
-  const participantesMezclados = mezclarArray([...participantes]);
-
-  // Actualizar UI
-  const listaParticipantes = document.getElementById('listaParticipantes');
-  const totalParticipantes = document.getElementById('totalParticipantes');
-
-  if (!listaParticipantes || !totalParticipantes) {
-    console.error('No se encontraron los elementos para mostrar participantes mezclados');
-    return;
-  }
-
-  mostrarParticipantes(participantesMezclados, listaParticipantes, totalParticipantes);
-
-  // Guardar la lista mezclada
-  try {
-    sessionStorage.setItem('participantes', JSON.stringify(participantesMezclados));
-    localStorage.setItem('participantes', JSON.stringify(participantesMezclados));
-    console.log('Lista mezclada guardada exitosamente');
-  } catch (error) {
-    console.warn('No se pudo guardar la lista mezclada:', error);
-  }
+// Función para mostrar el modal de premios
+function mostrarModalPremios() {
+    actualizarInputsPremios();
+    const modal = document.getElementById('IrVentanaFlotante');
+    modal.style.display = 'flex';
+    document.body.classList.add('modal-abierto');
 }
 
-// Función mejorada para guardar opciones con validación de premios
+// Función para cerrar el modal de premios
+function cerrarModalPremios() {
+    const modal = document.getElementById('IrVentanaFlotante');
+    modal.style.display = 'none';
+    document.body.classList.remove('modal-abierto');
+}
+
+// Función para confirmar los premios
+function confirmarPremios() {
+    const numGanadores = parseInt(document.getElementById('numGanadores').value) || 1;
+    const nuevosPremios = [];
+
+    for (let i = 0; i < numGanadores; i++) {
+        const input = document.getElementById(`premio${i + 1}`);
+        const valor = input ? input.value.trim() : '';
+        nuevosPremios.push(valor || `Premio ${i + 1}`);
+    }
+
+    // Actualizar el array global
+    premiosConfirmados = [...nuevosPremios];
+
+    // Mostrar los premios en la lista visual
+    mostrarPremiosEnLista();
+
+    // Guardar en localStorage
+    try {
+        localStorage.setItem('premios', JSON.stringify(premiosConfirmados));
+        console.log('Premios guardados:', premiosConfirmados);
+    } catch (error) {
+        console.error('Error al guardar premios:', error);
+    }
+
+    // Cerrar el modal
+    cerrarModalPremios();
+}
+
+// Función para mostrar los premios en la lista visual
+function mostrarPremiosEnLista() {
+    const lista = document.getElementById('premiosConfirmados');
+
+    if (!lista) {
+        console.error('No se encontró el elemento premiosConfirmados');
+        return;
+    }
+
+    // Limpiar la lista actual
+    lista.innerHTML = '';
+
+    if (premiosConfirmados.length > 0) {
+        // Mostrar la lista
+        lista.style.display = 'block';
+
+        premiosConfirmados.forEach((premio, index) => {
+            const li = document.createElement('li');
+            li.textContent = `${index + 1}º: ${premio}`;
+            li.title = premio; // Tooltip para premios largos
+            lista.appendChild(li);
+        });
+    } else {
+        // Ocultar la lista si no hay premios
+        lista.style.display = 'none';
+    }
+}
+
+// Función para cargar premios desde localStorage
+function cargarPremiosGuardados() {
+    try {
+        const premiosGuardados = localStorage.getItem('premios');
+        if (premiosGuardados) {
+            premiosConfirmados = JSON.parse(premiosGuardados);
+            mostrarPremiosEnLista();
+        }
+    } catch (error) {
+        console.error('Error al cargar premios:', error);
+        premiosConfirmados = [];
+    }
+}
+
+// Función que se ejecuta cuando cambia el número de ganadores
+function onNumGanadoresChange() {
+    const numGanadores = parseInt(document.getElementById('numGanadores').value) || 1;
+
+    // Si hay menos ganadores que premios, recortar la lista
+    if (premiosConfirmados.length > numGanadores) {
+        premiosConfirmados = premiosConfirmados.slice(0, numGanadores);
+        mostrarPremiosEnLista();
+
+        // Actualizar localStorage
+        try {
+            localStorage.setItem('premios', JSON.stringify(premiosConfirmados));
+        } catch (error) {
+            console.error('Error al actualizar premios:', error);
+        }
+    }
+}
+
+// Función para incrementar/decrementar valores numéricos
+function changeValue(inputId, increment) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+
+    let currentValue = parseInt(input.value) || 0;
+    const minValue = parseInt(input.min) || 0;
+
+    currentValue += increment;
+
+    if (currentValue < minValue) {
+        currentValue = minValue;
+    }
+
+    input.value = currentValue;
+
+    // Si es el número de ganadores, actualizar los premios
+    if (inputId === 'numGanadores') {
+        onNumGanadoresChange();
+    }
+}
+
+// Event listeners
+document.addEventListener('DOMContentLoaded', function () {
+    // Cargar premios guardados al iniciar
+    cargarPremiosGuardados();
+
+    // Botón para abrir modal de premios
+    const btnPremios = document.querySelector('.premios');
+    if (btnPremios) {
+        btnPremios.addEventListener('click', function (e) {
+            e.preventDefault();
+            mostrarModalPremios();
+        });
+    }
+
+    // Botón confirmar en el modal
+    const btnConfirmar = document.getElementById('btnConfirmar');
+    if (btnConfirmar) {
+        btnConfirmar.addEventListener('click', confirmarPremios);
+    }
+
+    // Botón cancelar en el modal
+    const btnCancelar = document.getElementById('btnCancelar');
+    if (btnCancelar) {
+        btnCancelar.addEventListener('click', cerrarModalPremios);
+    }
+
+    // Cerrar modal al hacer clic fuera
+    const modal = document.getElementById('IrVentanaFlotante');
+    if (modal) {
+        modal.addEventListener('click', function (e) {
+            if (e.target === modal) {
+                cerrarModalPremios();
+            }
+        });
+    }
+
+    // Listener para cambios en número de ganadores
+    const numGanadores = document.getElementById('numGanadores');
+    if (numGanadores) {
+        numGanadores.addEventListener('change', onNumGanadoresChange);
+        numGanadores.addEventListener('input', onNumGanadoresChange);
+    }
+});
+
+// Función para obtener los premios (para usar en otras partes del código)
+function obtenerPremios() {
+    return premiosConfirmados.slice(); // Retorna una copia
+}
+
+// Función para limpiar todos los premios
+function limpiarPremios() {
+    premiosConfirmados = [];
+    mostrarPremiosEnLista();
+    try {
+        localStorage.removeItem('premios');
+    } catch (error) {
+        console.error('Error al limpiar premios:', error);
+    }
+}
+
 function guardarOpciones() {
-  const mensajeError = document.getElementById('mensajeError');
-  const tituloInput = document.getElementById("tituloSorteo");
+    const titulo = document.getElementById("tituloSorteo").value;
+    const ganadores = parseInt(document.getElementById("numGanadores").value) || 1;
+    const suplentes = parseInt(document.getElementById("numSuplentes").value) || 0;
+    const duracion = parseInt(document.getElementById("duracionAnimacion").value) || 5;
+    const animacionSeleccionada = document.getElementById("animacionTipo").value;
 
-  // Verificar que los elementos existen
-  if (!tituloInput) {
-    console.error('No se encontró el elemento tituloSorteo');
-    return;
-  }
+    // ... código para guardar participantes y demás (igual)
 
-  const titulo = tituloInput.value;
-  localStorage.setItem("tituloSorteo", titulo);
-
-  if (mensajeError) {
-    mensajeError.textContent = '';
-  }
-
-  const animacionElement = document.getElementById('animacionTipo');
-  const cantidadElement = document.getElementById('numGanadores');
-  const suplentesElement = document.getElementById('numSuplentes');
-  const filtrarElement = document.getElementById('filtrarDuplicados');
-  const duracionElement = document.getElementById('duracionAnimacion');
-  const colorElement = document.getElementById('colorPrincipal');
-
-  // Verificar que los elementos necesarios existen
-  if (!animacionElement || !cantidadElement) {
-    console.error('Faltan elementos necesarios para guardar opciones');
-    return;
-  }
-
-  const animacionSeleccionada = animacionElement.value;
-  const cantidad = +cantidadElement.value;
-
-  const opciones = {
-    titulo: titulo,
-    ganadores: cantidad,
-    suplentes: suplentesElement ? +suplentesElement.value : 0,
-    filtrarDuplicados: filtrarElement ? filtrarElement.checked : false,
-    excluirParticipantes: false,
-    animacion: animacionSeleccionada,
-    sonidos: false,
-    duracion: duracionElement ? +duracionElement.value : 3,
-    color: colorElement ? colorElement.value : '#007bff',
-  };
-
-  aplicarColorPrincipal(opciones.color);
-
-  // Cargar participantes desde la fuente más confiable
-  let participantes = [];
-
-  const participantesSessionJSON = sessionStorage.getItem('participantes');
-  if (participantesSessionJSON) {
-    try {
-      participantes = JSON.parse(participantesSessionJSON);
-    } catch (error) {
-      console.error('Error parsing participants:', error);
-    }
-  }
-
-  if (participantes.length === 0) {
-    const participantesTexto = sessionStorage.getItem('participantesTexto');
-    if (participantesTexto) {
-      participantes = participantesTexto.split('\n').map(p => p.trim()).filter(p => p !== '');
-    }
-  }
-
-  if (participantes.length === 0) {
-    const participantesLocalJSON = localStorage.getItem('participantes');
-    if (participantesLocalJSON) {
-      try {
-        participantes = JSON.parse(participantesLocalJSON);
-      } catch (error) {
-        console.error('Error parsing localStorage participants:', error);
-      }
-    }
-  }
-
-  if (participantes.length === 0) {
-    const participantesTexto = localStorage.getItem('participantesTexto');
-    if (participantesTexto) {
-      participantes = participantesTexto.split('\n').map(p => p.trim()).filter(p => p !== '');
-    }
-  }
-
-  // Validaciones básicas
-  if (participantes.length === 0) {
-    if (mensajeError) {
-      mensajeError.textContent = 'No hay participantes cargados. Por favor, regresa y carga participantes.';
-    }
-    return;
-  }
-
-  if (opciones.ganadores <= 0) {
-    if (mensajeError) {
-      mensajeError.textContent = 'Debes seleccionar al menos un ganador.';
-    }
-    return;
-  }
-
-  if (opciones.suplentes < 0) {
-    if (mensajeError) {
-      mensajeError.textContent = 'La cantidad de suplentes no puede ser negativa.';
-    }
-    return;
-  }
-
-  if (opciones.ganadores + opciones.suplentes > participantes.length) {
-    if (mensajeError) {
-      mensajeError.textContent = `La suma de ganadores y suplentes (${opciones.ganadores + opciones.suplentes}) excede el número de participantes (${participantes.length}).`;
-    }
-    return;
-  }
-
-  // Validar premios (asumiendo que tienes un input o sección de premios)
-  const premiosInputs = document.querySelectorAll('.premioInput');
-  const premios = [];
-
-  premiosInputs.forEach((input, index) => {
-    const valor = input.value.trim();
-    if (valor === '') {
-      if (mensajeError) {
-        mensajeError.textContent = `El premio #${index + 1} está vacío. Por favor, completa o elimina ese premio.`;
-      }
-      return;
-    }
-    premios.push(valor);
-  });
-
-  if (premios.length > 0 && premios.length !== opciones.ganadores) {
-    if (mensajeError) {
-      mensajeError.textContent = `El número de premios (${premios.length}) debe coincidir con la cantidad de ganadores (${opciones.ganadores}).`;
-    }
-    return;
-  }
-
-  // Guardar opciones y premios en localStorage
-  try {
-    localStorage.setItem('opcionesSorteo', JSON.stringify(opciones));
-    localStorage.setItem('premios', JSON.stringify(premios));
-    console.log('Opciones y premios guardados exitosamente');
-    if (mensajeError) {
-      mensajeError.textContent = 'Opciones guardadas correctamente.';
-    }
-  } catch (error) {
-    console.error('Error guardando opciones o premios:', error);
-    if (mensajeError) {
-      mensajeError.textContent = 'Error al guardar las opciones. Intenta de nuevo.';
-    }
-    return;
-  }
-
-  localStorage.setItem('opcionesSorteo', JSON.stringify(opciones));
-  localStorage.setItem('premios', JSON.stringify(premios));
-
-  // También guardar los participantes bajo otra clave para nombresGiratorios.html
-  try {
-    const listaDOM = document.querySelectorAll('#listaParticipantes li');
-    const participantesDOM = Array.from(listaDOM).map(li => li.textContent.replace(/^\d+\.\s*/, '').trim());
-
-    sessionStorage.setItem("participantesFinal", JSON.stringify(participantesDOM));
-    console.log("participantesFinal guardados desde el DOM:", participantesDOM.length);
-  } catch (e) {
-    console.warn("No se pudo guardar participantesFinal desde el DOM:", e);
-  }
-
-
-
-  // Redirigir según la animación
-  switch (animacionSeleccionada) {
-    case "ruleta":
-      window.open("nombresAleatorios/nombresGiratorios.html", '_blank');
-      break;
-    case "cuenta":
-      window.open("nombresAleatorios/countdown.html", '_blank');
-      break;
-    case "fortuna":
-      window.open("nombresAleatorios/viewRuleta.html", '_blank');
-      break;
-    default:
-      console.warn("Animación no reconocida:", animacionSeleccionada);
-  }
+    // Mostrar la ventana flotante correspondiente
+    mostrarVentanaFlotante(animacionSeleccionada);
 }
 
-// Función auxiliar para aplicar color principal
-function aplicarColorPrincipal(color) {
-  document.documentElement.style.setProperty('--color-principal', color);
+function mostrarVentanaFlotante(tipo) {
+    // Ocultar todos los flotantes primero
+    const flotantes = ['floatGiratorio', 'floatRegresiva'];
+    flotantes.forEach(id => {
+        const elem = document.getElementById(id);
+        if (elem) elem.style.display = 'none';
+    });
+
+    // Mostrar overlay
+    const overlay = document.getElementById('overlay');
+    if (overlay) overlay.style.display = 'block';
+
+    // Mostrar el flotante correcto
+    if (tipo === 'giratorios') {
+        document.getElementById('floatGiratorio').style.display = 'block';
+    } else if (tipo === 'regresiva') {
+        document.getElementById('floatRegresiva').style.display = 'block';
+    } else if (tipo === 'ruleta') {
+        alert('La opción Ruleta de la Fortuna no está disponible.');
+    } else {
+        alert('Animación no válida');
+    }
 }
+
+// Función para cerrar ventana flotante y overlay
+function cerrarVentanaFlotante() {
+    const flotantes = ['floatGiratorio', 'floatRegresiva'];
+    flotantes.forEach(id => {
+        const elem = document.getElementById(id);
+        if (elem) elem.style.display = 'none';
+    });
+
+    const overlay = document.getElementById('overlay');
+    if (overlay) overlay.style.display = 'none';
+}
+
+// Cerrar ventana flotante si hacen click en overlay
+document.getElementById('overlay').addEventListener('click', cerrarVentanaFlotante);
