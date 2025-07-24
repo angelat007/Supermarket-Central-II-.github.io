@@ -277,13 +277,50 @@ function guardarOpciones() {
 
 //redirigir al sorteo
 function btnComenzarGiratorio() {
+    const listaDiv = document.querySelector('#floatGiratorio #listaParticipantes');
+    const participantesRaw = [];
+
+    if (listaDiv) {
+        listaDiv.querySelectorAll('div').forEach(div => {
+            const nombre = div.textContent.trim();
+            if (nombre) participantesRaw.push(nombre);
+        });
+    }
+
+    // Barajar aleatoriamente y tomar 1000
+    const participantesAleatorios = shuffleArray(participantesRaw).slice(0, 1000);
+
+    try {
+        localStorage.setItem('participantes', JSON.stringify(participantesAleatorios));
+    } catch (e) {
+        alert('❌ No se pudieron guardar los participantes aleatorios. Error de almacenamiento.');
+        console.error(e);
+        return;
+    }
+
+    // Guardar configuración básica
+    const opciones = {
+        ganadores: parseInt(document.getElementById("numGanadores").value) || 1
+    };
+    localStorage.setItem("opciones", JSON.stringify(opciones));
+
+    // Redirigir
     window.location.href = 'nombresAleatorios/opciones/giratorio.html';
+}
+
+// Función para barajar (Fisher-Yates)
+function shuffleArray(array) {
+    const copia = [...array];
+    for (let i = copia.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copia[i], copia[j]] = [copia[j], copia[i]];
+    }
+    return copia;
 }
 
 function btnComenzarRegresiva() {
     window.location.href = 'nombresAleatorios/opciones/countdown.html';
 }
-
 
 //mostrar flotante
 function mostrarVentanaFlotante(tipo, participantes = []) {
@@ -297,58 +334,71 @@ function mostrarVentanaFlotante(tipo, participantes = []) {
     const mensaje = document.getElementById('mensajeTransferencia');
     if (mensaje) mensaje.style.display = 'none';
 
-
     const overlay = document.getElementById('overlay');
     if (overlay) overlay.style.display = 'block';
+
+    // Limitar a 1000 participantes aleatorios
+    const participantesLimitados = shuffleArray(participantes).slice(0, 1000);
 
     if (tipo === 'giratorios') {
         const floatGiratorio = document.getElementById('floatGiratorio');
         floatGiratorio.style.display = 'block';
         const lista = floatGiratorio.querySelector('#listaParticipantes');
         if (lista) {
-            cargarParticipantesEnLista(lista, participantes);
+            cargarParticipantesEnLista(lista, participantesLimitados);
         }
     } else if (tipo === 'regresiva') {
         const floatRegresiva = document.getElementById('floatRegresiva');
         floatRegresiva.style.display = 'block';
         const lista = floatRegresiva.querySelector('#listaParticipantes');
         if (lista) {
-            cargarParticipantesEnLista(lista, participantes);
+            cargarParticipantesEnLista(lista, participantesLimitados);
         }
     } else {
         alert('Animación no válida');
     }
 }
 
+
 //mostrar participantes en float
 function cargarParticipantesEnLista(lista, participantes) {
-    // Limpiar la lista
     lista.innerHTML = '';
 
-    // Convertir todos los participantes en <li> ocultando el número
     const fragment = document.createDocumentFragment();
     participantes.forEach(participante => {
-        const li = document.createElement('div');
+        const div = document.createElement('div');
+        div.classList.add('participante-item');
 
-        // Eliminar número si viene como "123. Nombre"
-        const sinNumero = participante.replace(/^\d+\.\s*/, '');
+        let [codigo, nombre] = participante.split(',');
+        codigo = (codigo || '').trim();
+        nombre = (nombre || '').trim();
 
-        li.textContent = sinNumero;
-        fragment.appendChild(li);
+        // Crear subelementos para formato y estilo
+        const spanCodigo = document.createElement('span');
+        spanCodigo.className = 'codigo';
+        spanCodigo.textContent = codigo;
+
+        const spanNombre = document.createElement('span');
+        spanNombre.className = 'nombre';
+        spanNombre.textContent = nombre;
+
+        div.appendChild(spanCodigo);
+        div.appendChild(document.createTextNode(' ')); // espacio entre columnas
+        div.appendChild(spanNombre);
+
+        fragment.appendChild(div);
     });
 
     lista.appendChild(fragment);
 
-    // Aplicar estilos para bloquear la lista (visual y rendimiento)
+    // Estilos comunes
     lista.style.pointerEvents = 'none';
     lista.style.userSelect = 'none';
-    lista.style.overflowY = 'hidden'; // evita scroll sin ocultar contenido
-    lista.style.height = '10em'; // altura para ~10 líneas (ajustable)
-    lista.style.lineHeight = '1em'; // asegúrate que cada línea mide 1em
+    lista.style.overflowY = 'hidden';
+    lista.style.height = '10em';
+    lista.style.lineHeight = '1.2em';
     lista.style.opacity = '0.4';
-
 }
-
 
 // Función para cerrar ventana flotante y overlay
 function cerrarVentanaFlotante() {

@@ -8,6 +8,25 @@ body {
   font-size: 1.2em;
 }
 
+.participante-item {
+    display: flex;
+    justify-content: start;
+    gap: 1em;
+    font-family: monospace;
+    margin-bottom: 0.2em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.participante-item .codigo {
+    min-width: 150px;
+}
+
+.participante-item .nombre {
+    flex-grow: 1;
+}
+
 
 .configuracion-flotante {
   position: fixed;

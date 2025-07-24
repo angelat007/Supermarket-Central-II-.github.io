@@ -268,6 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
     fileInput.click();
   };
 
+  //inportar archivo
   fileInput.addEventListener('change', function () {
     const archivo = this.files[0];
     if (!archivo) return;
@@ -303,7 +304,7 @@ document.addEventListener('DOMContentLoaded', () => {
       console.log('Ocurrió un error al leer el archivo.');
     };
 
-    lector.readAsText(archivo);
+    lector.readAsText(archivo, 'UTF-8'); // ✅ Forzar codificación correcta
   });
 
   // Función para procesar archivos normales
@@ -423,8 +424,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const archivo = this.files[0];
     if (!archivo) return;
 
-    // Verificar el tamaño del archivo
-    if (archivo.size > 100 * 1024 * 1024) { // 100MB
+    if (archivo.size > 100 * 1024 * 1024) {
       alert('El archivo es demasiado grande. Por favor, usa un archivo menor a 100MB.');
       return;
     }
@@ -432,20 +432,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const lector = new FileReader();
     lector.onload = function (e) {
       const contenido = e.target.result;
-
-      // Separar contenido por líneas no vacías
       const lineasBrutas = contenido
         .split(/\r?\n/)
         .filter(linea => linea.trim() !== '');
 
-      // Mostrar progreso para archivos grandes
       if (lineasBrutas.length > 50000) {
         const progressDiv = document.createElement('div');
         progressDiv.innerHTML = 'Procesando archivo grande... Por favor espera.';
         progressDiv.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;padding:20px;border:1px solid #ccc;z-index:9999;';
         document.body.appendChild(progressDiv);
 
-        // Procesar en chunks para no bloquear la UI
         setTimeout(() => {
           procesarArchivoGrande(lineasBrutas, textarea, errorParticipantes);
           document.body.removeChild(progressDiv);
@@ -459,8 +455,9 @@ document.addEventListener('DOMContentLoaded', () => {
       console.log('Ocurrió un error al leer el archivo.');
     };
 
-    lector.readAsText(archivo);
+    lector.readAsText(archivo, 'UTF-8'); // ✅ <-- AQUI ES LA CLAVE
   });
+
 
   // Limpiar participantes - función global redefinida aquí también
   window.limpiarParticipantes = function () {
