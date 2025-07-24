@@ -41,31 +41,47 @@ function cerrarModalPremios() {
 
 // Función para confirmar los premios
 function confirmarPremios() {
+    // Guardar los premios definidos
     const numGanadores = parseInt(document.getElementById('numGanadores').value) || 1;
     const nuevosPremios = [];
-
     for (let i = 0; i < numGanadores; i++) {
         const input = document.getElementById(`premio${i + 1}`);
         const valor = input ? input.value.trim() : '';
         nuevosPremios.push(valor || `Premio ${i + 1}`);
     }
-
-    // Actualizar el array global
     premiosConfirmados = [...nuevosPremios];
-
-    // Mostrar los premios en la lista visual
     mostrarPremiosEnLista();
 
     // Guardar en localStorage
     try {
         localStorage.setItem('premios', JSON.stringify(premiosConfirmados));
-        console.log('Premios guardados:', premiosConfirmados);
     } catch (error) {
         console.error('Error al guardar premios:', error);
     }
 
-    // Cerrar el modal
+    // Obtener participantes (ejemplo: desde textarea de index.html)
+    // Ajusta esto según cómo tengas almacenados los participantes
+    const participantesTexto = document.getElementById('participantes').value.trim();
+    const participantes = participantesTexto ? participantesTexto.split('\n') : [];
+
+    // Actualizar la cantidad total de participantes en el floatConfig
+    const totalParticipantesElem = document.querySelector('#floatConfig #totalParticipantes');
+    if (totalParticipantesElem) {
+        totalParticipantesElem.textContent = `Total: ${participantes.length}`;
+    }
+
+    // Cerrar el modal de premios
     cerrarModalPremios();
+
+    // Obtener animación seleccionada (giratorio o regresiva)
+    const animacionSeleccionada = document.getElementById('animacionTipo').value;
+
+    // Mostrar mensaje flotante
+    const mensaje = document.getElementById('mensajeTransferencia');
+    if (mensaje) mensaje.style.display = 'block';
+
+    // Mostrar la ventana flotante correspondiente con participantes
+    mostrarVentanaFlotante(animacionSeleccionada, participantes);
 }
 
 // Función para mostrar los premios en la lista visual
@@ -211,41 +227,128 @@ function limpiarPremios() {
 }
 
 function guardarOpciones() {
-    const titulo = document.getElementById("tituloSorteo").value;
+    // Obtener datos desde inputs
+    const titulo = document.getElementById("tituloSorteo").value.trim();
     const ganadores = parseInt(document.getElementById("numGanadores").value) || 1;
     const suplentes = parseInt(document.getElementById("numSuplentes").value) || 0;
     const duracion = parseInt(document.getElementById("duracionAnimacion").value) || 5;
     const animacionSeleccionada = document.getElementById("animacionTipo").value;
 
-    // ... código para guardar participantes y demás (igual)
+    // Validar que haya participantes en el textarea principal (fuente de verdad)
+    const participantesTexto = document.getElementById('participantes').value.trim();
+    if (!participantesTexto) {
+        alert('No hay participantes para el sorteo.');
+        return;
+    }
+    const participantes = participantesTexto.split('\n').filter(linea => linea.trim() !== '');
 
-    // Mostrar la ventana flotante correspondiente
-    mostrarVentanaFlotante(animacionSeleccionada);
+    // Actualizar total participantes en la ventana flotante correspondiente
+    let floatId = '';
+    if (animacionSeleccionada === 'giratorios') {
+        floatId = 'floatGiratorio';
+    } else if (animacionSeleccionada === 'regresiva') {
+        floatId = 'floatRegresiva';
+    } else {
+        alert('Animación no válida');
+        return;
+    }
+
+    // Mostrar solo la ventana flotante seleccionada y overlay
+    mostrarVentanaFlotante(animacionSeleccionada, participantes);
+
+    // Actualizar el texto de total participantes en la ventana flotante
+    const floatElem = document.getElementById(floatId);
+    if (floatElem) {
+        const totalSpan = floatElem.querySelector('#totalParticipantes');
+        if (totalSpan) {
+            totalSpan.textContent = `Total: ${participantes.length}`;
+        }
+    }
+
+    // Opcional: puedes guardar otras opciones en localStorage o variables si quieres
+
+    // Cerrar la ventana de configuración flotante para mejor UX
+    const floatConfig = document.getElementById('floatConfig');
+    if (floatConfig) {
+        floatConfig.style.display = 'none';
+    }
 }
 
-function mostrarVentanaFlotante(tipo) {
-    // Ocultar todos los flotantes primero
+
+//redirigir al sorteo
+function btnComenzarGiratorio() {
+    window.location.href = 'nombresAleatorios/opciones/giratorio.html';
+}
+
+function btnComenzarRegresiva() {
+    window.location.href = 'nombresAleatorios/opciones/countdown.html';
+}
+
+
+//mostrar flotante
+function mostrarVentanaFlotante(tipo, participantes = []) {
     const flotantes = ['floatGiratorio', 'floatRegresiva'];
     flotantes.forEach(id => {
         const elem = document.getElementById(id);
         if (elem) elem.style.display = 'none';
     });
 
-    // Mostrar overlay
+    // Ocultar mensaje de transferencia
+    const mensaje = document.getElementById('mensajeTransferencia');
+    if (mensaje) mensaje.style.display = 'none';
+
+
     const overlay = document.getElementById('overlay');
     if (overlay) overlay.style.display = 'block';
 
-    // Mostrar el flotante correcto
     if (tipo === 'giratorios') {
-        document.getElementById('floatGiratorio').style.display = 'block';
+        const floatGiratorio = document.getElementById('floatGiratorio');
+        floatGiratorio.style.display = 'block';
+        const lista = floatGiratorio.querySelector('#listaParticipantes');
+        if (lista) {
+            cargarParticipantesEnLista(lista, participantes);
+        }
     } else if (tipo === 'regresiva') {
-        document.getElementById('floatRegresiva').style.display = 'block';
-    } else if (tipo === 'ruleta') {
-        alert('La opción Ruleta de la Fortuna no está disponible.');
+        const floatRegresiva = document.getElementById('floatRegresiva');
+        floatRegresiva.style.display = 'block';
+        const lista = floatRegresiva.querySelector('#listaParticipantes');
+        if (lista) {
+            cargarParticipantesEnLista(lista, participantes);
+        }
     } else {
         alert('Animación no válida');
     }
 }
+
+//mostrar participantes en float
+function cargarParticipantesEnLista(lista, participantes) {
+    // Limpiar la lista
+    lista.innerHTML = '';
+
+    // Convertir todos los participantes en <li> ocultando el número
+    const fragment = document.createDocumentFragment();
+    participantes.forEach(participante => {
+        const li = document.createElement('div');
+
+        // Eliminar número si viene como "123. Nombre"
+        const sinNumero = participante.replace(/^\d+\.\s*/, '');
+
+        li.textContent = sinNumero;
+        fragment.appendChild(li);
+    });
+
+    lista.appendChild(fragment);
+
+    // Aplicar estilos para bloquear la lista (visual y rendimiento)
+    lista.style.pointerEvents = 'none';
+    lista.style.userSelect = 'none';
+    lista.style.overflowY = 'hidden'; // evita scroll sin ocultar contenido
+    lista.style.height = '10em'; // altura para ~10 líneas (ajustable)
+    lista.style.lineHeight = '1em'; // asegúrate que cada línea mide 1em
+    lista.style.opacity = '0.4';
+
+}
+
 
 // Función para cerrar ventana flotante y overlay
 function cerrarVentanaFlotante() {

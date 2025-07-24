@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="styles icon" href="Media/Medio-logo.webp" />
-  <link rel="stylesheet" href="CSS/style.css" />
+  <link rel="stylesheet" href="CSS/index.css" />
   <link rel="stylesheet" href="CSS/config.css">
   <link rel="stylesheet" href="CSS/giratorio.css">
   <link rel="stylesheet" href="CSS/countDown.css">
@@ -180,7 +180,7 @@
       <div class="contenedor-participantes" id="contenedorParticipantes">
         <div class="encabezado">
           <strong>Participantes</strong>
-          <span id="totalParticipantes">Total: 0</span>
+          <span id="totalParticipantes"></span>
           <button id="shuffleBtn" class="shuffle-btn" title="Mezclar participantes">
             <img src="https://cdn-icons-png.flaticon.com/512/724/724863.png" width="20px" alt="🔄">
           </button>
@@ -190,6 +190,21 @@
       </div>
     </section>
   </div>
+
+  <div id="mensajeTransferencia" style="
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #222;
+  color: white;
+  padding: 15px 25px;
+  border-radius: 10px;
+  font-weight: bold;
+  font-size: 16px;
+  z-index: 9999;
+  display: none;
+">Transfiriendo datos, espera por favor...</div>
 
 
   <!--Nombres Giratorios-->
@@ -205,16 +220,16 @@
       <div class="contenedor-participantes" id="contenedorParticipantes">
         <div class="encabezado">
           <strong>Participantes</strong>
-          <span id="totalParticipantes">Total: 0</span>
+          <span id="totalParticipantes"></span>
         </div>
         <div class="scroll-container">
-          <div id="listaParticipantesfinal" class="lista-participantes"></div>
+          <div id="listaParticipantes" class="lista-participantes"></div>
           <button id="verMasBtn" style="display: none; margin-top: 10px;">Ver más</button>
           <div class="highlight-overlay"></div>
         </div>
       </div>
       <div class="contenedorbuton">
-        <button class="btn confirmar" onclick="comenzarRulea()">Comenzar</button>
+        <button class="btn confirmar" onclick="btnComenzarGiratorio()">Comenzar</button>
       </div>
     </section><br><br>
   </div>
@@ -232,21 +247,19 @@
       <div class="contenedor-participantes" id="contenedorParticipantes">
         <div class="encabezado">
           <strong>Participantes</strong>
-          <span id="totalParticipantes">Total: 0</span>
+          <span id="totalParticipantes"></span>
         </div>
         <div class="scroll-container">
-          <ul id="listaParticipantesfinal" class="lista-participantes"></ul>
+          <ul id="listaParticipantes" class="lista-participantes"></ul>
           <button id="verMasBtn" style="display: none; margin-top: 10px;">Ver más</button>
           <div class="highlight-overlay"></div>
         </div>
       </div>
       <div class="contenedorbuton">
-        <button class="btn confirmar" onclick="comenzarRuleta()">Comenzar</button>
+        <button class="btn confirmar" onclick="btnComenzarRegresiva()">Comenzar</button>
       </div>
     </section><br><br>
   </div>
-
-
 
   <!--footer-->
   <hr class="hr2"><br><br><br><br>
@@ -330,10 +343,9 @@
   </footer>
 
 
-  <script src="JS/countDown.js"></script>
-  <script src="JS/giratorio.js"></script>
-  <script src="JS/config.js"></script>
-  <script src="JS/index.js"></script>
+
+  <script src="JS/config.js"></script> <!--floatConfig-->
+  <script src="JS/index.js"></script> <!--Index-->
   <script src="https://unpkg.com/mammoth/mammoth.browser.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </body>

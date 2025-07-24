@@ -546,11 +546,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Función para obtener participantes (desde memoria o storage)
   function obtenerParticipantes() {
-    if (sessionStorage.getItem('participantesGrandes') === 'true') {
-      return participantesEnMemoria;
-    } else {
-      const participantesGuardados = sessionStorage.getItem('participantes');
-      return participantesGuardados ? JSON.parse(participantesGuardados) : [];
+    const participantesJSON = localStorage.getItem('participantes');
+    if (!participantesJSON) return [];
+    try {
+      const participantes = JSON.parse(participantesJSON);
+      return Array.isArray(participantes) ? participantes : [];
+    } catch (error) {
+      console.error('Error al obtener participantes:', error);
+      return [];
     }
   }
 

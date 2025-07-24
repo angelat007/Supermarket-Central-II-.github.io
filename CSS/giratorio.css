@@ -221,6 +221,16 @@ body {
   font-weight: bold;
 }
 
+.lista-participantes {
+  pointer-events: none;
+  user-select: none;
+  overflow-y: hidden;
+  height: 10em;
+  line-height: 1em;
+  opacity: 0.4;
+}
+
+
 .listaParticipantesfinalGiratorio {
   list-style: none;
   margin: 0;
