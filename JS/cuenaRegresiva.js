@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // Botón: Ver Ganadores
   document.getElementById('btnVerGanadores').addEventListener('click', () => {
-    // Guardar los ganadores para la página de descarga
     const ganadoresElements = document.querySelectorAll('#listaGanadores li');
     const ganadoresData = Array.from(ganadoresElements).map(li => {
       const codigo = li.querySelector('.codigo')?.textContent || '';
@@ -8,127 +8,132 @@ document.addEventListener('DOMContentLoaded', () => {
       const premio = li.querySelector('.premio')?.textContent || '';
       return { codigo, nombre, premio };
     });
-    
-    // Guardar en localStorage para que descargar.html pueda acceder
+
+    // Guardar en localStorage
     localStorage.setItem('ganadoresMultiple', JSON.stringify(ganadoresData));
     localStorage.setItem('tituloSorteo', document.getElementById('tituloSorteo').textContent);
     localStorage.setItem('fechaSorteo', new Date().toLocaleDateString());
     localStorage.setItem('participantes', JSON.stringify(
       JSON.parse(sessionStorage.getItem('participantesFinal') || '[]')
     ));
-    
-    // Navegar a descargar.html
+
     window.location.href = "../ganadores/descargar.html";
   });
 
-  /* ==== 1.  Recuperar datos guardados ==== */
-  const participantes  = JSON.parse(sessionStorage.getItem('participantesFinal') || '[]');
-  const opciones       = JSON.parse(sessionStorage.getItem('opcionesSorteo')   || '{}');
+  // Cargar opciones y participantes
+  const opciones = JSON.parse(sessionStorage.getItem('opcionesSorteo') || '{}');
+  const participantes = JSON.parse(sessionStorage.getItem('participantesFinal') || '[]');
+  const premios = JSON.parse(localStorage.getItem('premios') || '[]');
 
-  /* ==== 2.  Pintar título y lista ==== */
-  const tituloNode     = document.getElementById('tituloSorteo');
-  const listaNode      = document.getElementById('listaParticipantesfinal');
-  const totalNode      = document.getElementById('totalParticipantes');
-
+  // Pintar título
+  const tituloNode = document.getElementById('tituloSorteo');
   tituloNode.textContent = opciones.titulo || 'Cuenta regresiva';
 
-  participantes.sort((a,b) => a.localeCompare(b))
-               .forEach((nombre,i)=>{
-                  const li = document.createElement('li');
-                  li.textContent = nombre;
-                  li.className   = `fila ${i%2===0?'par':'impar'}`;
-                  listaNode.appendChild(li);
-               });
+  // Pintar participantes
+  const listaNode = document.getElementById('listaParticipantesfinal');
+  const totalNode = document.getElementById('totalParticipantes');
+  listaNode.innerHTML = '';
   totalNode.textContent = `Total: ${participantes.length}`;
 
-  /* ==== 3.  Eventos ==== */ 
-  document.getElementById('btnIniciar')
-          .addEventListener('click', () => startCountdown(opciones.duracion || 5));
+  participantes.sort((a, b) => a.localeCompare(b)).forEach((linea, i) => {
+    const li = document.createElement('li');
+    li.textContent = linea;
+    li.className = `fila ${i % 2 === 0 ? 'par' : 'impar'}`;
+    listaNode.appendChild(li);
+  });
 
+  // Evento: Iniciar cuenta regresiva
+  document.getElementById('btnIniciar')
+    .addEventListener('click', () => startCountdown(opciones.duracion || 5));
   document.getElementById('btnVolver')
-          .addEventListener('click', () => window.location.href='../../config.html');
+    .addEventListener('click', () => window.location.href = '../../index.html');
 });
 
-/* ----------  LÓGICA DE LA CUENTA ATRÁS  ---------- */
-function startCountdown(segundos){
-  const countdown   = document.getElementById('countdown');
-  const sectionGan  = document.getElementById('ganadoresSection');
-  const listaGan    = document.getElementById('listaGanadores');
-
-  // 🔥 OCULTA el botón de "Comenzar"
+/* --------- Lógica de cuenta regresiva --------- */
+function startCountdown(segundos) {
+  const countdown = document.getElementById('countdown');
   document.getElementById('btnIniciar').style.display = 'none';
-
-  countdown.style.display='block';          // aparece el número gigante
+  countdown.style.display = 'block';
   let restante = segundos;
   countdown.textContent = restante;
 
-  const intervalo = setInterval(()=>{
-      restante--;
-      if(restante<=0){
-        clearInterval(intervalo);
-        countdown.textContent = '¡GO!';
-        setTimeout(()=>{
-          countdown.style.display='none';
-          mostrarGanadores();
-        },800);
-      }else{
-        countdown.textContent = restante;
-      }
-  },1000);
+  const intervalo = setInterval(() => {
+    restante--;
+    if (restante <= 0) {
+      clearInterval(intervalo);
+      countdown.textContent = '¡GO!';
+      setTimeout(() => {
+        countdown.style.display = 'none';
+        mostrarGanadores();
+      }, 800);
+    } else {
+      countdown.textContent = restante;
+    }
+  }, 1000);
 }
 
-  /* === elige n ganadores al terminar === */
-function mostrarGanadores(){
+/* --------- Mostrar ganadores y premios --------- */
+function mostrarGanadores() {
   const participantes = Array.from(document.querySelectorAll('#listaParticipantesfinal li'))
-                             .map(li => li.textContent.trim());
+    .map(li => li.textContent.trim())
+    .filter(linea => linea.length > 0);
+
   const cantidad = (JSON.parse(sessionStorage.getItem('opcionesSorteo'))?.ganadores) || 1;
-  const ganadores = shuffle(participantes).slice(0, cantidad);
-
-  const modal      = document.getElementById('modalGanadores');
-  const listaGan   = document.getElementById('listaGanadores');
-  const countdown  = document.getElementById('countdown');
-
-  listaGan.innerHTML = '';
   const premios = JSON.parse(localStorage.getItem('premios') || '[]');
 
-ganadores.forEach((g, i) => {
-  const li = document.createElement('li');
+  const ganadores = shuffle(participantes).slice(0, cantidad);
 
-  // Extraer ID y Nombre
-  const match = g.match(/^(T\d+)\s+(.+)$/);
-  const id = match ? match[1] : '';
-  const nombre = match ? match[2] : g;
+  const modal = document.getElementById('modalGanadores');
+  const listaGan = document.getElementById('listaGanadores');
+  const countdown = document.getElementById('countdown');
 
-  // Premio asignado (si existe)
-  const premio = premios[i] || '—';
+  listaGan.innerHTML = '';
 
-  li.innerHTML = `
-    <div class="codigo">${id}</div>
-    <div class="nombre">${nombre}</div>
-    <div class="premio">${premio}</div>
-  `;
+  ganadores.forEach((g, i) => {
+    const li = document.createElement('li');
 
-  listaGan.appendChild(li);
-});
+    // Soporte coma o espacio
+    let id = '', nombre = '';
+    if (g.includes(',')) {
+      const partes = g.split(',');
+      id = partes[0].trim();
+      nombre = partes.slice(1).join(',').trim();
+    } else if (g.match(/^(T\d+)\s+(.+)/)) {
+      const match = g.match(/^(T\d+)\s+(.+)/);
+      id = match[1];
+      nombre = match[2];
+    } else {
+      nombre = g;
+    }
 
+    const premio = premios[i] || '—';
 
-  countdown.style.display = 'none'; // Oculta número grande
-  modal.classList.remove('hidden'); // Muestra ventana flotante
+    li.innerHTML = `
+      <div class="codigo">${id}</div>
+      <div class="nombre">${nombre}</div>
+      <div class="premio">${premio}</div>
+    `;
+    listaGan.appendChild(li);
+  });
+
+  countdown.style.display = 'none';
+  modal.classList.remove('hidden');
   lanzarConfetti();
 }
 
-/* ----------  utilidades ---------- */
-function shuffle(arr){
-  const copia=[...arr];
-  for(let i=copia.length-1;i>0;i--){
-    const j=Math.floor(Math.random()*(i+1));
-    [copia[i],copia[j]]=[copia[j],copia[i]];
+/* --------- Utilidades --------- */
+function shuffle(arr) {
+  const copia = [...arr];
+  for (let i = copia.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copia[i], copia[j]] = [copia[j], copia[i]];
   }
   return copia;
 }
 
-function lanzarConfetti(){
-  if(typeof confetti==='function'){
-     confetti({particleCount:120,spread:90,origin:{y:0.6}});
+/*------------Confeti------------*/
+function lanzarConfetti() {
+  if (typeof confetti === 'function') {
+    confetti({ particleCount: 120, spread: 90, origin: { y: 0.6 } });
   }
 }
