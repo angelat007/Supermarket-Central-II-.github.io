@@ -93,8 +93,6 @@ function mostrarGanadoresMultiples(ganadores) {
   certificado.classList.add("certificado");
 }
 
-
-
 // Función para cargar información del sorteo
 function cargarInformacionSorteo() {
   const titulo = localStorage.getItem("tituloSorteo") || "Título no definido";
@@ -109,7 +107,6 @@ function cargarInformacionSorteo() {
   // Si hay múltiples ganadores, usar esa información
   if (ganadoresMultiple.length > 0) {
     document.querySelector(".Fecha").textContent = fechaSorteo;
-    document.querySelector(".numParticipantes").textContent = participantes.length;
     document.querySelector(".nombreGanador").textContent = `${ganadoresMultiple.length} ganadores`;
     document.querySelector(".premio").textContent = "Múltiples premios";
     return;
@@ -117,11 +114,10 @@ function cargarInformacionSorteo() {
 
   // Funcionalidad original para un solo ganador
   const codigo = ganadorData.codigo || "Código no disponible";
-  const nombreCompleto = ganadorData.nombre || "Nombre no disponible";
+  const nombreCompleto = ganadorData.nombre || "---";
   const premio = ultimoGanador.premio || "---";
 
   document.querySelector(".Fecha").textContent = fechaSorteo;
-  document.querySelector(".numParticipantes").textContent = participantes.length;
   document.querySelector(".nombreGanador").textContent = nombreCompleto;
   document.querySelector(".premio").textContent = premio;
 }

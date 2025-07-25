@@ -287,9 +287,10 @@ function btnComenzarGiratorio() {
         return;
     }
 
-    // Guardar configuración básica
+    // 🔥 GUARDAR CONFIGURACIÓN COMPLETA INCLUYENDO LA DURACIÓN
     const opciones = {
-        ganadores: parseInt(document.getElementById("numGanadores").value) || 1
+        ganadores: parseInt(document.getElementById("numGanadores").value) || 1,
+        duracion: parseInt(document.getElementById("duracionAnimacion").value) || 5  // ← AGREGAR ESTO
     };
     localStorage.setItem("opciones", JSON.stringify(opciones));
 
