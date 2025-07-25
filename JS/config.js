@@ -72,16 +72,6 @@ function confirmarPremios() {
 
     // Cerrar el modal de premios
     cerrarModalPremios();
-
-    // Obtener animación seleccionada (giratorio o regresiva)
-    const animacionSeleccionada = document.getElementById('animacionTipo').value;
-
-    // Mostrar mensaje flotante
-    const mensaje = document.getElementById('mensajeTransferencia');
-    if (mensaje) mensaje.style.display = 'block';
-
-    // Mostrar la ventana flotante correspondiente con participantes
-    mostrarVentanaFlotante(animacionSeleccionada, participantes);
 }
 
 // Función para mostrar los premios en la lista visual
@@ -274,7 +264,6 @@ function guardarOpciones() {
     }
 }
 
-
 //redirigir al sorteo
 function btnComenzarGiratorio() {
     const listaDiv = document.querySelector('#floatGiratorio #listaParticipantes');
@@ -287,8 +276,8 @@ function btnComenzarGiratorio() {
         });
     }
 
-    // Barajar aleatoriamente y tomar 1000
-    const participantesAleatorios = shuffleArray(participantesRaw).slice(0, 1000);
+    // Barajar aleatoriamente y tomar 3k
+    const participantesAleatorios = shuffleArray(participantesRaw).slice(0, 3000);
 
     try {
         localStorage.setItem('participantes', JSON.stringify(participantesAleatorios));
@@ -319,8 +308,43 @@ function shuffleArray(array) {
 }
 
 function btnComenzarRegresiva() {
+    const listaDiv = document.querySelector('#floatRegresiva #listaParticipantes');
+    const participantesRaw = [];
+
+    if (listaDiv) {
+        listaDiv.querySelectorAll('div').forEach(div => {
+            const nombre = div.textContent.trim();
+            if (nombre) participantesRaw.push(nombre);
+        });
+    }
+
+    // Barajar aleatoriamente y tomar hasta 10k
+    const participantesAleatorios = shuffleArray(participantesRaw).slice(0, 10000);
+
+    try {
+        // Guardar en sessionStorage (lo que usa countdown.html)
+        sessionStorage.setItem('participantesFinal', JSON.stringify(participantesAleatorios));
+
+        const opciones = {
+            titulo: document.getElementById('tituloSorteo').value.trim() || "Sorteo",
+            ganadores: parseInt(document.getElementById("numGanadores").value) || 1,
+            suplentes: parseInt(document.getElementById("numSuplentes").value) || 0,
+            duracion: parseInt(document.getElementById("duracionAnimacion").value) || 5
+        };
+        sessionStorage.setItem('opcionesSorteo', JSON.stringify(opciones));
+
+        const premios = premiosConfirmados.slice(); // ya está en memoria
+        sessionStorage.setItem('premios', JSON.stringify(premios));
+    } catch (e) {
+        alert('❌ No se pudieron guardar los datos del sorteo.');
+        console.error(e);
+        return;
+    }
+
+    // Redirigir a la animación
     window.location.href = 'nombresAleatorios/opciones/countdown.html';
 }
+
 
 //mostrar flotante
 function mostrarVentanaFlotante(tipo, participantes = []) {
@@ -330,15 +354,17 @@ function mostrarVentanaFlotante(tipo, participantes = []) {
         if (elem) elem.style.display = 'none';
     });
 
-    // Ocultar mensaje de transferencia
-    const mensaje = document.getElementById('mensajeTransferencia');
-    if (mensaje) mensaje.style.display = 'none';
 
     const overlay = document.getElementById('overlay');
     if (overlay) overlay.style.display = 'block';
 
+    //const participantesLimitados = [...participantes]; // Sin límite
     // Limitar a 1000 participantes aleatorios
-    const participantesLimitados = shuffleArray(participantes).slice(0, 1000);
+    const participantesLimitados = shuffleArray(participantes).slice(0, 10000); //con limite
+
+    // Ocultar mensaje de transferencia
+    const mensaje = document.getElementById('mensajeTransferencia');
+    if (mensaje) mensaje.style.display = 'block';
 
     if (tipo === 'giratorios') {
         const floatGiratorio = document.getElementById('floatGiratorio');
@@ -354,11 +380,59 @@ function mostrarVentanaFlotante(tipo, participantes = []) {
         if (lista) {
             cargarParticipantesEnLista(lista, participantesLimitados);
         }
+        sessionStorage.setItem('participantesFinal', JSON.stringify(participantesLimitados));
+
     } else {
         alert('Animación no válida');
     }
 }
 
+document.addEventListener("DOMContentLoaded", () => {
+  const btnRegresiva = document.getElementById("btnComenzarRegresiva");
+  if (btnRegresiva) {
+    btnRegresiva.addEventListener("click", () => {
+      const listaDiv = document.querySelector('#floatRegresiva #listaParticipantes');
+      const participantesRaw = [];
+
+      if (listaDiv) {
+        listaDiv.querySelectorAll('div').forEach(div => {
+          const nombre = div.textContent.trim();
+          if (nombre) participantesRaw.push(nombre);
+        });
+      }
+
+      // Barajar y limitar a 10k
+      const participantesAleatorios = shuffleArray(participantesRaw).slice(0, 10000);
+
+      const opciones = {
+        titulo: document.getElementById('tituloSorteo').value.trim() || "Sorteo",
+        ganadores: parseInt(document.getElementById("numGanadores").value) || 1,
+        suplentes: parseInt(document.getElementById("numSuplentes").value) || 0,
+        duracion: parseInt(document.getElementById("duracionAnimacion").value) || 5
+      };
+
+      try {
+        sessionStorage.setItem('participantesFinal', JSON.stringify(participantesAleatorios));
+        sessionStorage.setItem('opcionesSorteo', JSON.stringify(opciones));
+        sessionStorage.setItem('premios', JSON.stringify(premiosConfirmados));
+        // Redirige a la animación de cuenta regresiva
+      } catch (e) {
+        alert('Error al guardar los datos del sorteo.');
+        console.error(e);
+      }
+    });
+  }
+});
+
+// Barajar
+function shuffleArray(array) {
+  const copia = [...array];
+  for (let i = copia.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copia[i], copia[j]] = [copia[j], copia[i]];
+  }
+  return copia;
+}
 
 //mostrar participantes en float
 function cargarParticipantesEnLista(lista, participantes) {

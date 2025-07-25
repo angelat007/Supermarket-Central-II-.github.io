@@ -198,7 +198,7 @@ hr {
 }
 
 .configuracion-flotante .panel-opciones input[type="checkbox"] {
-  width: auto;
+  width: 100px;
   margin-right: 0.5rem;
 }
 

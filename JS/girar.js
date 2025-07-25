@@ -273,5 +273,5 @@ function nuevaSesion() {
 
 //funcion volver a config.html
 function volverConfig() {
-	window.location.href = '../../config.html'
+	window.location.href = '../../index.html'
 }
