@@ -345,7 +345,6 @@ function btnComenzarRegresiva() {
     window.location.href = 'nombresAleatorios/opciones/countdown.html';
 }
 
-
 //mostrar flotante
 function mostrarVentanaFlotante(tipo, participantes = []) {
     const flotantes = ['floatGiratorio', 'floatRegresiva'];
@@ -361,10 +360,6 @@ function mostrarVentanaFlotante(tipo, participantes = []) {
     //const participantesLimitados = [...participantes]; // Sin límite
     // Limitar a 1000 participantes aleatorios
     const participantesLimitados = shuffleArray(participantes).slice(0, 10000); //con limite
-
-    // Ocultar mensaje de transferencia
-    const mensaje = document.getElementById('mensajeTransferencia');
-    if (mensaje) mensaje.style.display = 'block';
 
     if (tipo === 'giratorios') {
         const floatGiratorio = document.getElementById('floatGiratorio');
@@ -488,3 +483,4 @@ function cerrarVentanaFlotante() {
 
 // Cerrar ventana flotante si hacen click en overlay
 document.getElementById('overlay').addEventListener('click', cerrarVentanaFlotante);
+
