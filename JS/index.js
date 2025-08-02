@@ -4,10 +4,50 @@ function limpiarParticipantes() {
   document.getElementById("participantes").value = "";
   document.getElementById("mensajeCantidad").style.display = "none";
   document.getElementById("mensajeCantidad").textContent = "";
+
   // Limpiar también el almacenamiento
-  sessionStorage.removeItem('participantesTexto');
-  sessionStorage.removeItem('participantes');
-  sessionStorage.removeItem('titulo');
+  localStorage.removeItem('participantesTexto');
+  localStorage.removeItem('participantes');
+  localStorage.removeItem('titulo');
+  localStorage.removeItem('tituloSorteo');
+
+  // Limpiar la lista mostrada
+  const listaDiv = document.getElementById('listaParticipantes');
+  const totalParticipantesSpan = document.getElementById('totalParticipantes');
+
+  if (listaDiv) {
+    listaDiv.innerHTML = '<div class="no-participantes"><em>No hay participantes para mostrar</em></div>';
+  }
+
+  if (totalParticipantesSpan) {
+    totalParticipantesSpan.textContent = 'Total: 0';
+  }
+}
+
+// Función para guardar datos en localStorage de forma segura
+function guardarDatos(clave, valor) {
+  try {
+    localStorage.setItem(clave, valor);
+    console.log(`${clave} guardado correctamente`);
+  } catch (error) {
+    console.warn(`Error guardando ${clave}:`, error);
+    // Fallback a sessionStorage si localStorage falla
+    try {
+      sessionStorage.setItem(clave, valor);
+    } catch (e) {
+      console.warn(`También falló sessionStorage para ${clave}:`, e);
+    }
+  }
+}
+
+// Función para recuperar datos con fallback
+function recuperarDatos(clave) {
+  try {
+    return localStorage.getItem(clave) || sessionStorage.getItem(clave);
+  } catch (error) {
+    console.warn(`Error recuperando ${clave}:`, error);
+    return null;
+  }
 }
 
 // Función para mostrar lista de participantes (mejorada)
@@ -168,8 +208,6 @@ function mostrarMasParticipantes() {
   }
 }
 
-
-
 // Función para mezclar participantes
 function mezclarParticipantes() {
   const participantesTextarea = document.getElementById('participantes');
@@ -265,8 +303,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Importar archivo
   window.importarArchivo = function () {
+    fileInput.value = ""; // ← Esto deja que cuando le doy a limpiar, me deje inportar otra vez
     fileInput.click();
   };
+
 
   //inportar archivo
   fileInput.addEventListener('change', function () {
@@ -401,7 +441,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   // Cargar participantes guardados previamente
-  const participantesGuardado = sessionStorage.getItem('participantesTexto');
   if (participantesGuardado) {
     textarea.value = participantesGuardado;
     actualizarCantidad(participantesGuardado);

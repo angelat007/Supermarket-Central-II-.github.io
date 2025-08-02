@@ -80,3 +80,33 @@ document.addEventListener("DOMContentLoaded", () => {
     // Crear más confeti después de 2 segundos
     setTimeout(createConfetti, 2000);
 });
+
+//descargar resultados
+document.getElementById("downloadResults").addEventListener("click", function (e) {
+    e.preventDefault();
+
+    const numeros = obtenerNumeros();
+    if (!numeros || numeros.length === 0) {
+        alert("No hay resultados para descargar.");
+        return;
+    }
+
+    const titulo = localStorage.getItem("tituloNumeros") || "Resultados del sorteo";
+    let contenido = `${titulo}\n\n`;
+
+    numeros.forEach((num, i) => {
+        contenido += `#${i + 1}: ${num}\n`;
+    });
+
+    // Crear un blob y link de descarga
+    const blob = new Blob([contenido], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "resultados_sorteo.txt";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+});

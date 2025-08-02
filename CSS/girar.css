@@ -33,7 +33,7 @@ body {
 	border-radius: 10px;
 	box-sizing: border-box;
 	margin: 0 auto;
-	max-width: 680px;
+	max-width: 780px;
 }
 
 .lista-participantes {
@@ -43,14 +43,35 @@ body {
 }
 
 .lista-participantes li {
-	height: 50px;
 	display: flex;
+	justify-content: space-between;
 	align-items: center;
-	justify-content: center;
-	font-size: 1.2em;
+	padding: 0 20px;
+	font-size: 1.1em;
+	height: 50px;
 	background-color: #fff;
 	border-bottom: 1px solid #ccc;
 	border-radius: 10px;
+	gap: 15px;
+}
+
+/* Estilo del código a la izquierda */
+.codigo {
+	font-weight: bold;
+	flex: 1;
+	text-align: left;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+/* Estilo del nombre a la derecha */
+.nombre {
+	flex: 1;
+	text-align: right;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .highlight-overlay {
@@ -224,8 +245,10 @@ body {
 
 .nombre-ganador {
 	font-size: 1em;
-	white-space: normal; /* 👈 para que se vea completo */
-	word-break: break-word; /* por si hay nombres largos */
+	white-space: normal;
+	/* 👈 para que se vea completo */
+	word-break: break-word;
+	/* por si hay nombres largos */
 }
 
 /* Estilo del premio igual al del ganador */
@@ -253,29 +276,30 @@ body {
 
 /*texto redirigente*/
 .tooltip-logo {
-  position: relative;
-  display: inline-block;
+	position: relative;
+	display: inline-block;
 }
 
 .tooltip-text {
-  position: absolute;
-  top: 50%;
-  right: -300px; /* Posición hacia la derecha */
-  transform: translate(-100%, -50%);
-  color: rgb(38, 38, 38);
-  padding: 6px 10px;
-  border-radius: 6px;
-  font-size: 14px;
-  white-space: nowrap;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
-  z-index: 1000;
+	position: absolute;
+	top: 50%;
+	right: -300px;
+	/* Posición hacia la derecha */
+	transform: translate(-100%, -50%);
+	color: rgb(38, 38, 38);
+	padding: 6px 10px;
+	border-radius: 6px;
+	font-size: 14px;
+	white-space: nowrap;
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity 0.3s ease, visibility 0.3s ease;
+	z-index: 1000;
 }
 
 .tooltip-logo:hover .tooltip-text {
-  opacity: 1;
-  visibility: visible;
+	opacity: 1;
+	visibility: visible;
 }
 
 
@@ -311,5 +335,3 @@ body {
 	animation: agrandarGanador 0.8s ease-in-out;
 	z-index: 10;
 }
-
-/*responsive*/

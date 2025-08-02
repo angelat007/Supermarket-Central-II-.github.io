@@ -360,7 +360,16 @@ function mostrarVentanaFlotante(tipo, participantes = []) {
 
     //const participantesLimitados = [...participantes]; // Sin límite
     // Limitar a 1000 participantes aleatorios
-    const participantesLimitados = shuffleArray(participantes).slice(0, 10000); //con limite
+    let participantesFiltrados = participantes;
+
+    // Verificar si está activado el checkbox de duplicados
+    const checkboxDuplicados = document.getElementById('filtrarDuplicados');
+    if (checkboxDuplicados && checkboxDuplicados.checked) {
+        participantesFiltrados = eliminarDuplicados(participantes);
+    }
+
+    const participantesLimitados = shuffleArray(participantesFiltrados).slice(0, 10000);
+    //con limite
 
     if (tipo === 'giratorios') {
         const floatGiratorio = document.getElementById('floatGiratorio');
@@ -384,51 +393,42 @@ function mostrarVentanaFlotante(tipo, participantes = []) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  const btnRegresiva = document.getElementById("btnComenzarRegresiva");
-  if (btnRegresiva) {
-    btnRegresiva.addEventListener("click", () => {
-      const listaDiv = document.querySelector('#floatRegresiva #listaParticipantes');
-      const participantesRaw = [];
+    const btnRegresiva = document.getElementById("btnComenzarRegresiva");
+    if (btnRegresiva) {
+        btnRegresiva.addEventListener("click", () => {
+            const listaDiv = document.querySelector('#floatRegresiva #listaParticipantes');
+            const participantesRaw = [];
 
-      if (listaDiv) {
-        listaDiv.querySelectorAll('div').forEach(div => {
-          const nombre = div.textContent.trim();
-          if (nombre) participantesRaw.push(nombre);
+            if (listaDiv) {
+                listaDiv.querySelectorAll('div').forEach(div => {
+                    const nombre = div.textContent.trim();
+                    if (nombre) participantesRaw.push(nombre);
+                });
+            }
+
+            // Barajar y limitar a 10k
+            const participantesAleatorios = shuffleArray(participantesRaw).slice(0, 10000);
+
+            const opciones = {
+                titulo: document.getElementById('tituloSorteo').value.trim() || "Sorteo",
+                ganadores: parseInt(document.getElementById("numGanadores").value) || 1,
+                suplentes: parseInt(document.getElementById("numSuplentes").value) || 0,
+                duracion: parseInt(document.getElementById("duracionAnimacion").value) || 5
+            };
+
+            try {
+                sessionStorage.setItem('participantesFinal', JSON.stringify(participantesAleatorios));
+                sessionStorage.setItem('opcionesSorteo', JSON.stringify(opciones));
+                sessionStorage.setItem('premios', JSON.stringify(premiosConfirmados));
+                // Redirige a la animación de cuenta regresiva
+            } catch (e) {
+                alert('Error al guardar los datos del sorteo.');
+                console.error(e);
+            }
         });
-      }
-
-      // Barajar y limitar a 10k
-      const participantesAleatorios = shuffleArray(participantesRaw).slice(0, 10000);
-
-      const opciones = {
-        titulo: document.getElementById('tituloSorteo').value.trim() || "Sorteo",
-        ganadores: parseInt(document.getElementById("numGanadores").value) || 1,
-        suplentes: parseInt(document.getElementById("numSuplentes").value) || 0,
-        duracion: parseInt(document.getElementById("duracionAnimacion").value) || 5
-      };
-
-      try {
-        sessionStorage.setItem('participantesFinal', JSON.stringify(participantesAleatorios));
-        sessionStorage.setItem('opcionesSorteo', JSON.stringify(opciones));
-        sessionStorage.setItem('premios', JSON.stringify(premiosConfirmados));
-        // Redirige a la animación de cuenta regresiva
-      } catch (e) {
-        alert('Error al guardar los datos del sorteo.');
-        console.error(e);
-      }
-    });
-  }
+    }
 });
 
-// Barajar
-function shuffleArray(array) {
-  const copia = [...array];
-  for (let i = copia.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [copia[i], copia[j]] = [copia[j], copia[i]];
-  }
-  return copia;
-}
 
 //mostrar participantes en float
 function cargarParticipantesEnLista(lista, participantes) {
@@ -484,4 +484,16 @@ function cerrarVentanaFlotante() {
 
 // Cerrar ventana flotante si hacen click en overlay
 document.getElementById('overlay').addEventListener('click', cerrarVentanaFlotante);
+
+
+//fltrar duplicate
+function eliminarDuplicados(participantes) {
+    const set = new Set();
+    return participantes.filter(p => {
+        const key = p.trim().toLowerCase(); // normaliza para evitar errores
+        if (set.has(key)) return false;
+        set.add(key);
+        return true;
+    });
+}
 
